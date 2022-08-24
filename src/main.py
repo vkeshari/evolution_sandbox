@@ -11,7 +11,7 @@ class CrossoverParams:
 class EvolutionConstraints:
   RESTRICT_CROSSOVER = False
   RESTRICT_ASSIGNMENT = False
-  #GROUP_BY_ASSIGNMENT = False
+  GROUP_BY_ASSIGNMENT = False
 
 class PopulationParams:
   POPULATION_SIZE = 100
@@ -19,12 +19,13 @@ class PopulationParams:
   NUM_ASSIGNMENTS = 10
 
 class WorldParams:
-  NUM_GENERATIONS = 1000
+  NUM_GENERATIONS = 100
 
 def validate_params():
   assert (PopulationParams.POPULATION_SIZE % PopulationParams.NUM_GROUPS == 0)
   assert (PopulationParams.POPULATION_SIZE / PopulationParams.NUM_GROUPS > 1)
   assert (EvolutionConstraints.RESTRICT_CROSSOVER or not EvolutionConstraints.RESTRICT_ASSIGNMENT)
+  assert (not EvolutionConstraints.RESTRICT_ASSIGNMENT or EvolutionConstraints.GROUP_BY_ASSIGNMENT)
 
 def main():
   args = sys.argv[1:]
@@ -46,7 +47,8 @@ def main():
     crossover = c,
     num_generations = WorldParams.NUM_GENERATIONS,
     restrict_crossover = EvolutionConstraints.RESTRICT_CROSSOVER,
-    restrict_assignment = EvolutionConstraints.RESTRICT_ASSIGNMENT)
+    restrict_assignment = EvolutionConstraints.RESTRICT_ASSIGNMENT,
+    group_by_assignment = EvolutionConstraints.GROUP_BY_ASSIGNMENT)
 
   w.evolve()
 

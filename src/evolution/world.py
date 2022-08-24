@@ -7,15 +7,28 @@ from containers import group as grp
 
 class World:
 
-  def __init__(self, initial_population, crossover, num_generations, restrict_crossover = False, restrict_assignment = False):
+  def __init__(
+      self, initial_population, crossover, num_generations,
+      restrict_crossover = False,
+      restrict_assignment = False,
+      group_by_assignment = True):
     self.crossover = crossover
     self.num_generations = num_generations
     self.restrict_crossover = restrict_crossover
     self.restrict_assignment = restrict_assignment
+    self.group_by_assignment = group_by_assignment
 
     self.current_generation = initial_population
     self.update_assignments(self.current_generation)
     self.generation_history = [initial_population]
+
+  def shuffle_by_assignment(self, population):
+    all_individuals = []
+    for g in population.groups:
+      all_individuals += g.individuals
+
+    for a in range(population.genome_size):
+      population.groups[a].individuals = [i for i in all_individuals if i.assignment == a]
 
   def update_assignments(self, population):
     if self.restrict_assignment:
@@ -37,6 +50,9 @@ class World:
           group_no = unassigned[k][0]
           individual_no = unassigned[k][1]
           population.groups[group_no].individuals[individual_no].assignment = a
+
+      if self.group_by_assignment:
+        self.shuffle_by_assignment(population)
 
   def new_generation(self, population):
     new_groups = []
