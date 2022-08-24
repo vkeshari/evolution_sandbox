@@ -3,9 +3,10 @@ from containers import population as pop
 from evolution import crossover as crs
 from evolution import world as wrd
 
-class EvolutionParams:
+class CrossoverParams:
   CROSSOVER_FRACTION = 0.8
-  MUTATION_RATE = 0.1
+  INTERPOLATE_GENES = True
+  MUTATION_RATE = 0.01
 
 class EvolutionConstraints:
   RESTRICT_CROSSOVER = False
@@ -17,7 +18,7 @@ class PopulationParams:
   NUM_ASSIGNMENTS = 10
 
 class WorldParams:
-  NUM_GENERATIONS = 100
+  NUM_GENERATIONS = 1000
 
 def validate_params():
   assert (PopulationParams.POPULATION_SIZE % PopulationParams.NUM_GROUPS == 0)
@@ -34,8 +35,9 @@ def main():
     genome_size = PopulationParams.NUM_ASSIGNMENTS)
 
   c = crs.Crossover(
-    crossover_fraction = EvolutionParams.CROSSOVER_FRACTION,
-    mutation_rate = EvolutionParams.MUTATION_RATE)
+    crossover_fraction = CrossoverParams.CROSSOVER_FRACTION,
+    mutation_rate = CrossoverParams.MUTATION_RATE,
+    interpolate_genes = CrossoverParams.INTERPOLATE_GENES)
 
   w = wrd.World(
     initial_population = p,

@@ -8,20 +8,27 @@ class Crossover:
   CROSSOVER_RANDOMIZER = np.random.RandomState()
   MUTATION_RANDOMIZER = np.random.RandomState()
   MUTATED_GENE_RANDOMIZER = np.random.RandomState()
+  CROSSOVER_BETA_PARAM = 0.25
 
-  def __init__(self, crossover_fraction, mutation_rate):
+  def __init__(self, crossover_fraction, mutation_rate, interpolate_genes):
     self.crossover_fraction = crossover_fraction
     self.mutation_rate = mutation_rate
+    self.interpolate_genes = interpolate_genes
 
   def crossover_genomes(self, genome1, genome2, genome_size):
     g = gen.Genome(genome_size = genome_size, randomize = False)
 
     for i in range(genome_size):
-      choice = self.CROSSOVER_RANDOMIZER.randint(0, 2)
-      if choice == 0:
-        g.genes[i] = genome1[i]
-      elif choice == 1:
-        g.genes[i] = genome2[i]
+      if self.interpolate_genes:
+        sample = self.CROSSOVER_RANDOMIZER.beta(self.CROSSOVER_BETA_PARAM, self.CROSSOVER_BETA_PARAM)
+        g.genes[i] = genome1[i] + sample * (genome2[i] - genome1[i])
+
+      else:
+        choice = self.CROSSOVER_RANDOMIZER.randint(0, 2)
+        if choice == 0:
+          g.genes[i] = genome1[i]
+        elif choice == 1:
+          g.genes[i] = genome2[i]
 
       if self.MUTATION_RANDOMIZER.rand() < self.mutation_rate:
         g.genes[i] = self.MUTATED_GENE_RANDOMIZER.rand()
