@@ -51,8 +51,12 @@ class Crossover:
 
     out = []
     for i in range(out_size):
-      g1 = i1[self.INDIVIDUAL_RANDOMIZER.randint(0, i1_size)].genome.genes
-      g2 = i2[self.INDIVIDUAL_RANDOMIZER.randint(0, i2_size)].genome.genes
+      index1 = index2 = 0
+      while (index1 == index2):
+        index1 = self.INDIVIDUAL_RANDOMIZER.randint(0, i1_size)
+        index2 = self.INDIVIDUAL_RANDOMIZER.randint(0, i2_size)
+      g1 = i1[index1].genome.genes
+      g2 = i2[index2].genome.genes
 
       o = ind.Individual(genome_size = genome_size, genome = self.crossover_genomes(g1, g2, genome_size))
       out.append(o)

@@ -4,13 +4,14 @@ from evolution import crossover as crs
 from evolution import world as wrd
 
 class CrossoverParams:
-  CROSSOVER_FRACTION = 0.8
+  CROSSOVER_FRACTION = 0.7
   INTERPOLATE_GENES = True
   MUTATION_RATE = 0.01
 
 class EvolutionConstraints:
   RESTRICT_CROSSOVER = False
   RESTRICT_ASSIGNMENT = False
+  #GROUP_BY_ASSIGNMENT = False
 
 class PopulationParams:
   POPULATION_SIZE = 100
@@ -22,6 +23,7 @@ class WorldParams:
 
 def validate_params():
   assert (PopulationParams.POPULATION_SIZE % PopulationParams.NUM_GROUPS == 0)
+  assert (PopulationParams.POPULATION_SIZE / PopulationParams.NUM_GROUPS > 1)
   assert (EvolutionConstraints.RESTRICT_CROSSOVER or not EvolutionConstraints.RESTRICT_ASSIGNMENT)
 
 def main():

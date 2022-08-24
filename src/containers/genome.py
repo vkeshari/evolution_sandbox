@@ -13,5 +13,5 @@ class Genome:
       self.genes = np.zeros(genome_size)
 
   def __str__(self):
-    np.set_printoptions(precision = 4)
+    np.set_printoptions(precision = 2)
     return str(self.genes)
