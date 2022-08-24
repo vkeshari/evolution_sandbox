@@ -1,4 +1,5 @@
 import numpy as np
+from containers import genome as gen
 from containers import individual as ind
 
 class Crossover:
@@ -13,7 +14,7 @@ class Crossover:
     self.mutation_rate = mutation_rate
 
   def crossover_genomes(self, genome1, genome2, genome_size):
-    g = Genome(genome_size = genome_size, randomize = False)
+    g = gen.Genome(genome_size = genome_size, randomize = False)
 
     for i in range(genome_size):
       choice = self.CROSSOVER_RANDOMIZER.randint(0, 2)
@@ -43,10 +44,10 @@ class Crossover:
 
     out = []
     for i in range(out_size):
-      g1 = i1[self.INDIVIDUAL_RANDOMIZER.randint(0, i1_size)].gene
-      g2 = i2[self.INDIVIDUAL_RANDOMIZER.randint(0, i2_size)].gene
+      g1 = i1[self.INDIVIDUAL_RANDOMIZER.randint(0, i1_size)].genome.genes
+      g2 = i2[self.INDIVIDUAL_RANDOMIZER.randint(0, i2_size)].genome.genes
 
-      o = ind.Individual(genome_size = genome_size, genome = crossover_genomes(g1, g2, genome_size))
+      o = ind.Individual(genome_size = genome_size, genome = self.crossover_genomes(g1, g2, genome_size))
       out.append(o)
 
     return out

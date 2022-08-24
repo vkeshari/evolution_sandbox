@@ -22,5 +22,6 @@ class Group:
     return (
       "GROUP\n" +
       "Assignment: {},\tGroup Size: {}\n".format(self.assignment, self.group_size) +
+      "Fitness: {:.2}\n".format(self.get_fitness() / self.group_size) +
       "".join([str(i) for i in self.individuals]) +
       "\n")
