@@ -1,7 +1,9 @@
 import sys
 from containers import population as pop
+from evolution import crossover as crs
 
 class EvolutionParams:
+  CROSSOVER_FRACTION = 0.8
   MUTATION_RATE = 0.01
 
 class EvolutionConstraints:
@@ -9,9 +11,9 @@ class EvolutionConstraints:
   RESTRICT_ASSIGNMENT = False
 
 class WorldParams:
-  POPULATION_SIZE = 100
+  POPULATION_SIZE = 20
   NUM_GROUPS = 4
-  GENOME_SIZE = 4
+  NUM_ASSIGNMENTS = 4
 
 def validate_params():
   assert (WorldParams.POPULATION_SIZE % WorldParams.NUM_GROUPS == 0)
@@ -23,9 +25,11 @@ def main():
   p = pop.Population(
     num_groups = WorldParams.NUM_GROUPS,
     group_size = int(WorldParams.POPULATION_SIZE / WorldParams.NUM_GROUPS),
-    genome_size = WorldParams.GENOME_SIZE
-  )
-  print(p)
+    genome_size = WorldParams.NUM_ASSIGNMENTS)
+
+  c = crs.Crossover(
+    crossover_fraction = EvolutionParams.CROSSOVER_FRACTION,
+    mutation_rate = EvolutionParams.MUTATION_RATE)
 
 if __name__=="__main__":
   main()
