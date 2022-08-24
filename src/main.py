@@ -5,7 +5,7 @@ from evolution import world as wrd
 
 class EvolutionParams:
   CROSSOVER_FRACTION = 0.8
-  MUTATION_RATE = 0.001
+  MUTATION_RATE = 0.1
 
 class EvolutionConstraints:
   RESTRICT_CROSSOVER = False
@@ -17,10 +17,11 @@ class PopulationParams:
   NUM_ASSIGNMENTS = 10
 
 class WorldParams:
-  NUM_GENERATIONS = 10000
+  NUM_GENERATIONS = 100
 
 def validate_params():
   assert (PopulationParams.POPULATION_SIZE % PopulationParams.NUM_GROUPS == 0)
+  assert (EvolutionConstraints.RESTRICT_CROSSOVER or not EvolutionConstraints.RESTRICT_ASSIGNMENT)
 
 def main():
   args = sys.argv[1:]

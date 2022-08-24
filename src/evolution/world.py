@@ -30,7 +30,7 @@ class World:
         for j, individual in enumerate(group.individuals):
           enumerated.append(tuple([i, j, individual]))
 
-      for a in range(population.num_groups):
+      for a in range(population.genome_size):
         sorted_for_a = sorted(enumerated, key = lambda e: e[2].genome.genes[a], reverse = True)
         unassigned = [e for e in sorted_for_a if e[2].assignment == -1]
         for k in range(population.group_size):
@@ -70,3 +70,16 @@ class World:
       self.generation_history.append(updated_generation)
       self.current_generation = updated_generation
 
+    print("FINAL POPULATION\n")
+    print(self.current_generation)
+
+    print("FITNESS BY ASSIGNMENT\n")
+    for a in range(self.current_generation.genome_size):
+      a_sum = 0.0
+      a_count = 0
+      for g in self.current_generation.groups:
+        for i in g.individuals:
+          if i.assignment == a:
+            a_sum += i.genome.genes[a]
+            a_count += 1
+      print("Assignment {}\tCount: {}\tFitness: {:.2}".format(a, a_count, a_sum / a_count))
