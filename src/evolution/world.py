@@ -43,8 +43,8 @@ class World:
 
     if self.restrict_crossover:
       for g in population.groups:
-        crossed = crossover.crossover(g.individuals, g.individuals, population.group_size)
-        new_groups.append(Group(population.group_size, population.genome_size, individuals = crossed))
+        crossed = self.crossover.crossover(g.individuals, g.individuals, population.group_size)
+        new_groups.append(grp.Group(population.group_size, population.genome_size, individuals = crossed))
 
     else:
       all_individuals = []
