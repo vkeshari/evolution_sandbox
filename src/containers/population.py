@@ -2,13 +2,12 @@ from . import group as grp
 
 class Population:
 
-  def __init__(self, constraints, num_groups, group_size, genome_size):
-    self.constraints = constraints
+  def __init__(self, num_groups, group_size, genome_size):
     self.num_groups = num_groups
     self.group_size = group_size
     self.genome_size = genome_size
 
-    self.groups = [grp.Group(group_size, genome_size)] * num_groups
+    self.groups = [grp.Group(group_size, genome_size) for i in range(num_groups)]
 
   def __str__(self):
     return (

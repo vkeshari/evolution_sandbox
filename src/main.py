@@ -4,7 +4,7 @@ from containers import population as pop
 class EvolutionParams:
   MUTATION_RATE = 0.01
 
-class Constraints:
+class EvolutionConstraints:
   RESTRICT_CROSSOVER = False
   RESTRICT_ASSIGNMENT = False
 
@@ -21,7 +21,6 @@ def main():
   validate_params()
 
   p = pop.Population(
-    constraints = None,
     num_groups = WorldParams.NUM_GROUPS,
     group_size = int(WorldParams.POPULATION_SIZE / WorldParams.NUM_GROUPS),
     genome_size = WorldParams.GENOME_SIZE

@@ -11,6 +11,7 @@ class Group:
 
   def __str__(self):
     return (
+      "GROUP\n" +
       "Assignment: {},\tGroup Size: {}\n".format(self.assignment, self.group_size) +
       "".join([str(i) for i in self.individuals]) +
       "\n"
