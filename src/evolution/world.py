@@ -7,52 +7,13 @@ from containers import group as grp
 
 class World:
 
-  def __init__(
-      self, initial_population, crossover, num_generations,
-      restrict_crossover = False,
-      restrict_assignment = False,
-      group_by_assignment = True):
+  def __init__(self, initial_population, crossover, num_generations, restrict_crossover = False):
     self.crossover = crossover
     self.num_generations = num_generations
     self.restrict_crossover = restrict_crossover
-    self.restrict_assignment = restrict_assignment
-    self.group_by_assignment = group_by_assignment
 
     self.current_generation = initial_population
-    self.update_assignments(self.current_generation)
     self.generation_history = [initial_population]
-
-  def shuffle_by_assignment(self, population):
-    all_individuals = []
-    for g in population.groups:
-      all_individuals += g.individuals
-
-    for a in range(population.genome_size):
-      population.groups[a].individuals = [i for i in all_individuals if i.assignment == a]
-
-  def update_assignments(self, population):
-    if self.restrict_assignment:
-      for i, group in enumerate(population.groups):
-        group.assignment = i
-        for individual in group.individuals:
-          individual.assignment = i
-
-    else:
-      enumerated = []
-      for i, group in enumerate(population.groups):
-        for j, individual in enumerate(group.individuals):
-          enumerated.append(tuple([i, j, individual]))
-
-      for a in range(population.genome_size):
-        sorted_for_a = sorted(enumerated, key = lambda e: e[2].genome.genes[a], reverse = True)
-        unassigned = [e for e in sorted_for_a if e[2].assignment == -1]
-        for k in range(population.group_size):
-          group_no = unassigned[k][0]
-          individual_no = unassigned[k][1]
-          population.groups[group_no].individuals[individual_no].assignment = a
-
-      if self.group_by_assignment:
-        self.shuffle_by_assignment(population)
 
   def new_generation(self, population):
     new_groups = []
@@ -66,14 +27,20 @@ class World:
       all_individuals = []
       for g in population.groups:
         all_individuals += g.individuals
-      crossed = self.crossover.crossover(all_individuals, all_individuals, population.group_size * population.num_groups)
+      crossed = self.crossover.crossover(all_individuals, all_individuals, population.population_size)
       random.shuffle(crossed)
       for i in range(population.num_groups):
         group_individuals = crossed[i * population.group_size : (i + 1) * population.group_size]
         new_groups.append(grp.Group(population.group_size, population.genome_size, individuals = group_individuals))
 
-    new_generation = pop.Population(population.population_size, population.num_groups, population.group_size, population.genome_size, groups = new_groups)
-    self.update_assignments(new_generation)
+    new_generation = pop.Population(population.population_size,
+                                    population.num_groups,
+                                    population.group_size,
+                                    population.genome_size,
+                                    population.restrict_assignment,
+                                    population.group_by_assignment,
+                                    groups = new_groups)
+    new_generation.update_assignments()
 
     return new_generation
 
