@@ -35,7 +35,7 @@ class Fitness:
         it = "N/A"
       else:
         it = str(self.history['time_to']['population'][v])
-      population_string += "{}: {}\t".format(v, it)
+      population_string += "{}: {:3}\t".format(v, it)
     print ("Population:\t" + population_string)
 
     for a in range(self.genome_size):
@@ -45,5 +45,5 @@ class Fitness:
           it = "N/A"
         else:
           it = str(self.history['time_to']['assignment'][a][v])
-        assignment_string += "{}: {}\t".format(v, it)
+        assignment_string += "{}: {:3}\t".format(v, it)
       print ("Assignment {}:\t".format(a) + assignment_string)
