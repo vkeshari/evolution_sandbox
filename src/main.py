@@ -8,14 +8,14 @@ from evolution import fitness as fit
 from evolution import world as wrd
 
 class DebugParams:
-  SHOW_ITERATIONS = True
+  SHOW_ITERATIONS = False
   NUM_CHECKPOINTS = 10
 
   SHOW_FINAL_GENOMES = False
   SHOW_FINAL_FITNESS = True
 
 class FitnessParams:
-  TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
+  TIME_TO_FITNESS_VALUES = [0.8, 0.9, 0.95, 0.99]
 
 class CrossoverParams:
   CROSSOVER_BETA_PARAM = 2.5
@@ -28,7 +28,8 @@ class PopulationParams:
   NUM_ASSIGNMENTS = 10
 
 class WorldParams:
-  NUM_GENERATIONS = 1000
+  NUM_GENERATIONS = 100
+  NUM_RUNS = 1
 
 class EvolutionStrategy(Enum):
   NO_RESTRICTIONS = 0                      #000
@@ -84,12 +85,16 @@ def main():
   args = sys.argv[1:]
   validate_params()
 
-  w = initialize_world()
-  w.evolve(show_iterations = DebugParams.SHOW_ITERATIONS,
-            show_every_n_iteration = int(WorldParams.NUM_GENERATIONS / DebugParams.NUM_CHECKPOINTS),
-            show_final_genomes = DebugParams.SHOW_FINAL_GENOMES,
-            show_final_fitness = DebugParams.SHOW_FINAL_FITNESS)
-  fitness_history = w.fitness
+  all_fitness_data = {}
+  for r in range(WorldParams.NUM_RUNS):
+    print ("RUN: {}".format(r))
+    w = initialize_world()
+    w.evolve(show_iterations = DebugParams.SHOW_ITERATIONS,
+              show_every_n_iteration = int(WorldParams.NUM_GENERATIONS / DebugParams.NUM_CHECKPOINTS),
+              show_final_genomes = DebugParams.SHOW_FINAL_GENOMES,
+              show_final_fitness = DebugParams.SHOW_FINAL_FITNESS)
+    fitness_history = w.fitness
+    all_fitness_data[r] = fitness_history
 
 if __name__=="__main__":
   main()
