@@ -46,6 +46,7 @@ def get_evolution_constraints():
   return (restrict_crossover, restrict_assignment, group_by_assignment)                                              
 
 def validate_params():
+  assert (PopulationParams.NUM_GROUPS == PopulationParams.NUM_ASSIGNMENTS)
   assert (PopulationParams.POPULATION_SIZE % PopulationParams.NUM_GROUPS == 0)
   assert (PopulationParams.POPULATION_SIZE / PopulationParams.NUM_GROUPS > 2.0)
 
