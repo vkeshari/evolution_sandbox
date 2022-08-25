@@ -14,7 +14,7 @@ class DebugParams:
   SHOW_ALL_FITNESS = True
 
 class CrossoverParams:
-  CROSSOVER_ROOT_MULTIPLIER = 2
+  CROSSOVER_BETA_PARAM = 2.5
   INTERPOLATE_GENES = True
   MUTATION_RATE = 0.01
 
@@ -32,7 +32,7 @@ class EvolutionStrategy(Enum):
   CROSSOVER_BY_GROUP_ONLY = 2              #100
   CROSSOVER_BY_ASSIGNMENT_ONLY = 3         #101
   ALL_RESTRICTIONS = 4                     #11_
-EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
+EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT
 print(EVOLUTION_STRATEGY)
 
 def get_evolution_constraints():
@@ -62,7 +62,7 @@ def initialize_world():
                       group_by_assignment = group_by_assignment)
   a.update_assignments(population = p)
 
-  c = crs.Crossover(crossover_root_multiplier = CrossoverParams.CROSSOVER_ROOT_MULTIPLIER,
+  c = crs.Crossover(crossover_beta_param = CrossoverParams.CROSSOVER_BETA_PARAM,
                     mutation_rate = CrossoverParams.MUTATION_RATE,
                     interpolate_genes = CrossoverParams.INTERPOLATE_GENES)
 

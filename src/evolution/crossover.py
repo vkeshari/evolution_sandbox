@@ -9,10 +9,9 @@ class Crossover:
   CROSSOVER_RANDOMIZER = np.random.RandomState()
   MUTATION_RANDOMIZER = np.random.RandomState()
   MUTATED_GENE_RANDOMIZER = np.random.RandomState()
-  CROSSOVER_BETA_PARAM = 0.25
 
-  def __init__(self, crossover_root_multiplier, mutation_rate, interpolate_genes):
-    self.crossover_root_multiplier = crossover_root_multiplier
+  def __init__(self, crossover_beta_param, mutation_rate, interpolate_genes):
+    self.crossover_beta_param = crossover_beta_param
     self.mutation_rate = mutation_rate
     self.interpolate_genes = interpolate_genes
 
@@ -21,7 +20,7 @@ class Crossover:
 
     for i in range(genome_size):
       if self.interpolate_genes:
-        sample = self.CROSSOVER_RANDOMIZER.beta(self.CROSSOVER_BETA_PARAM, self.CROSSOVER_BETA_PARAM)
+        sample = self.CROSSOVER_RANDOMIZER.beta(self.crossover_beta_param, self.crossover_beta_param)
         g.genes[i] = genome1[i] + sample * (genome2[i] - genome1[i])
 
       else:
@@ -36,9 +35,6 @@ class Crossover:
 
     return g
 
-  def get_crossover_pool_size(self, num_individuals):
-    return int(np.rint(np.sqrt(num_individuals) * self.crossover_root_multiplier))
-
   def crossover(self, individuals_1, individuals_2, out_size):
     if len(individuals_1) == 0 or len(individuals_2) == 0:
       return []
@@ -47,17 +43,16 @@ class Crossover:
     genome_size_check = individuals_2[0].genome_size
     assert(genome_size == genome_size_check)
 
-    i1 = sorted(individuals_1, key = lambda i: i.get_fitness(), reverse = True)[:self.get_crossover_pool_size(len(individuals_1))]
-    i2 = sorted(individuals_2, key = lambda i: i.get_fitness(), reverse = True)[:self.get_crossover_pool_size(len(individuals_2))]
+    i1 = sorted(individuals_1, key = lambda i: i.get_fitness(), reverse = True)
+    i2 = sorted(individuals_2, key = lambda i: i.get_fitness(), reverse = True)
+
+    i1_indices = [int(x * len(i1)) for x in self.INDIVIDUAL_RANDOMIZER.beta(1.0, self.crossover_beta_param, out_size)]
+    i2_indices = [int(x * len(i2)) for x in self.INDIVIDUAL_RANDOMIZER.beta(1.0, self.crossover_beta_param, out_size)]
 
     out = []
     for i in range(out_size):
-      index1 = index2 = 0
-      while (index1 == index2):
-        index1 = self.INDIVIDUAL_RANDOMIZER.randint(0, len(i1))
-        index2 = self.INDIVIDUAL_RANDOMIZER.randint(0, len(i2))
-      g1 = i1[index1].genome.genes
-      g2 = i2[index2].genome.genes
+      g1 = i1[i1_indices[i]].genome.genes
+      g2 = i2[i2_indices[i]].genome.genes
 
       o = ind.Individual(genome_size = genome_size, genome = self.crossover_genomes(g1, g2, genome_size))
       out.append(o)
