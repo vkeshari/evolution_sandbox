@@ -34,4 +34,4 @@ class Assignment:
           population.groups[group_no].individuals[individual_no].assignment = a
 
       if self.group_by_assignment:
-        self.shuffle_by_assignment()
+        self.shuffle_by_assignment(population)

@@ -11,8 +11,8 @@ class Crossover:
   MUTATED_GENE_RANDOMIZER = np.random.RandomState()
   CROSSOVER_BETA_PARAM = 0.25
 
-  def __init__(self, crossover_fraction, mutation_rate, interpolate_genes):
-    self.crossover_fraction = crossover_fraction
+  def __init__(self, crossover_root_multiplier, mutation_rate, interpolate_genes):
+    self.crossover_root_multiplier = crossover_root_multiplier
     self.mutation_rate = mutation_rate
     self.interpolate_genes = interpolate_genes
 
@@ -36,6 +36,9 @@ class Crossover:
 
     return g
 
+  def get_crossover_pool_size(self, num_individuals):
+    return int(np.rint(np.sqrt(num_individuals) * self.crossover_root_multiplier))
+
   def crossover(self, individuals_1, individuals_2, out_size):
     if len(individuals_1) == 0 or len(individuals_2) == 0:
       return []
@@ -44,18 +47,15 @@ class Crossover:
     genome_size_check = individuals_2[0].genome_size
     assert(genome_size == genome_size_check)
 
-    i1_size = int(len(individuals_1) * self.crossover_fraction)
-    i1 = sorted(individuals_1, key = lambda i: i.get_fitness(), reverse = True)[:i1_size]
-
-    i2_size = int(len(individuals_2) * self.crossover_fraction)
-    i2 = sorted(individuals_2, key = lambda i: i.get_fitness(), reverse = True)[:i2_size]
+    i1 = sorted(individuals_1, key = lambda i: i.get_fitness(), reverse = True)[:self.get_crossover_pool_size(len(individuals_1))]
+    i2 = sorted(individuals_2, key = lambda i: i.get_fitness(), reverse = True)[:self.get_crossover_pool_size(len(individuals_2))]
 
     out = []
     for i in range(out_size):
       index1 = index2 = 0
       while (index1 == index2):
-        index1 = self.INDIVIDUAL_RANDOMIZER.randint(0, i1_size)
-        index2 = self.INDIVIDUAL_RANDOMIZER.randint(0, i2_size)
+        index1 = self.INDIVIDUAL_RANDOMIZER.randint(0, len(i1))
+        index2 = self.INDIVIDUAL_RANDOMIZER.randint(0, len(i2))
       g1 = i1[index1].genome.genes
       g2 = i2[index2].genome.genes
 

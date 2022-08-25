@@ -43,10 +43,13 @@ class World:
 
     return new_generation
 
-  def evolve(self, show_iterations = False, show_all_genomes = False, show_all_fitness = False):
+  def evolve(self, show_iterations = False, show_every_n_iteration = 1, show_all_genomes = False, show_all_fitness = False):
     print("NUM_ITERATIONS: {}".format(self.num_generations))
+    if (show_every_n_iteration == 0):
+      show_every_n_iteration = 1
+
     for i in range(self.num_generations):
-      if show_iterations:
+      if show_iterations and i % show_every_n_iteration == 0:
         total_fitness = self.current_generation.get_fitness() / self.current_generation.population_size
         print("ITERATION: {}\tFitness: {:.2}".format(i, total_fitness))
 
