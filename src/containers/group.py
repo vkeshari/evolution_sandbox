@@ -12,12 +12,6 @@ class Group:
       self.individuals = [ind.Individual(genome_size) for _ in range(group_size)]
     self.assignment = -1
 
-  def get_fitness(self):
-    sum = 0.0
-    for i in self.individuals:
-      sum += i.get_fitness()
-    return sum
-
   def __str__(self):
     return (
       "GROUP\n" +
@@ -25,3 +19,9 @@ class Group:
       "Fitness: {:.2}\n".format(self.get_fitness() / self.group_size) +
       "".join([str(i) for i in self.individuals]) +
       "\n")
+
+  def get_fitness(self):
+    sum = 0.0
+    for i in self.individuals:
+      sum += i.get_fitness()
+    return sum

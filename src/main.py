@@ -5,6 +5,11 @@ from containers import population as pop
 from evolution import crossover as crs
 from evolution import world as wrd
 
+class DebugParams:
+  SHOW_ITERATIONS = False
+  SHOW_ALL_GENOMES = False
+  SHOW_ALL_FITNESS = True
+
 class CrossoverParams:
   CROSSOVER_FRACTION = 0.7
   INTERPOLATE_GENES = True
@@ -70,7 +75,9 @@ def main():
   validate_params()
 
   w = initialize_world()
-  w.evolve()
+  w.evolve(show_iterations = DebugParams.SHOW_ITERATIONS,
+            show_all_genomes = DebugParams.SHOW_ALL_GENOMES,
+            show_all_fitness = DebugParams.SHOW_ALL_FITNESS)
 
 if __name__=="__main__":
   main()

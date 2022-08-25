@@ -44,19 +44,10 @@ class World:
 
     return new_generation
 
-  def evolve(self):
-    for i in range(self.num_generations):
-      total_fitness = self.current_generation.get_fitness() / self.current_generation.population_size
-      print("ITERATION: {}\tFitness: {:.2}".format(i, total_fitness))
-
-      updated_generation = self.new_generation(self.current_generation)
-      self.generation_history.append(updated_generation)
-      self.current_generation = updated_generation
-
-    print("FINAL POPULATION\n")
-    print(self.current_generation)
-
-    print("FITNESS BY ASSIGNMENT\n")
+  def show_all_fitness(self):
+    total_fitness = self.current_generation.get_fitness() / self.current_generation.population_size
+    print("TOTAL FITNESS: {:.2}".format(total_fitness))
+    print("FITNESS BY ASSIGNMENT")
     for a in range(self.current_generation.genome_size):
       a_sum = 0.0
       a_count = 0
@@ -66,3 +57,23 @@ class World:
             a_sum += i.genome.genes[a]
             a_count += 1
       print("Assignment {}\tCount: {}\tFitness: {:.2}".format(a, a_count, a_sum / a_count))
+
+  def show_final_stats(self, show_all_genomes = False, show_all_fitness = False):
+    if show_all_genomes:
+      print("FINAL POPULATION\n")
+      print(self.current_generation)
+    if show_all_fitness:
+      self.show_all_fitness()
+
+  def evolve(self, show_iterations = False, show_all_genomes = False, show_all_fitness = False):
+    print("NUM_ITERATIONS: {}".format(self.num_generations))
+    for i in range(self.num_generations):
+      if show_iterations:
+        total_fitness = self.current_generation.get_fitness() / self.current_generation.population_size
+        print("ITERATION: {}\tFitness: {:.2}".format(i, total_fitness))
+
+      updated_generation = self.new_generation(self.current_generation)
+      self.generation_history.append(updated_generation)
+      self.current_generation = updated_generation
+
+    self.show_final_stats(show_all_genomes, show_all_fitness)

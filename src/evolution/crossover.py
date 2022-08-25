@@ -1,4 +1,5 @@
 import numpy as np
+
 from containers import genome as gen
 from containers import individual as ind
 

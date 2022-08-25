@@ -11,11 +11,11 @@ class Individual:
       self.genome = gen.Genome(genome_size, randomize = True)
     self.assignment = -1
 
+  def __str__(self):
+    return "Assignment: {}\tGene: {}\n".format(self.assignment, self.genome)
+
   def get_fitness(self):
     if self.assignment == -1:
       return 0.0
     else:
       return self.genome.genes[self.assignment]
-
-  def __str__(self):
-    return "Assignment: {}\tGene: {}\n".format(self.assignment, self.genome)
