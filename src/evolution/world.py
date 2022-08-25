@@ -7,7 +7,8 @@ from containers import group as grp
 
 class World:
 
-  def __init__(self, initial_population, crossover, num_generations, restrict_crossover = False):
+  def __init__(self, initial_population, assignment, crossover, num_generations, restrict_crossover = False):
+    self.assignment = assignment
     self.crossover = crossover
     self.num_generations = num_generations
     self.restrict_crossover = restrict_crossover
@@ -37,33 +38,10 @@ class World:
                                     population.num_groups,
                                     population.group_size,
                                     population.genome_size,
-                                    population.restrict_assignment,
-                                    population.group_by_assignment,
                                     groups = new_groups)
-    new_generation.update_assignments()
+    self.assignment.update_assignments(new_generation)
 
     return new_generation
-
-  def show_all_fitness(self):
-    total_fitness = self.current_generation.get_fitness() / self.current_generation.population_size
-    print("TOTAL FITNESS: {:.2}".format(total_fitness))
-    print("FITNESS BY ASSIGNMENT")
-    for a in range(self.current_generation.genome_size):
-      a_sum = 0.0
-      a_count = 0
-      for g in self.current_generation.groups:
-        for i in g.individuals:
-          if i.assignment == a:
-            a_sum += i.genome.genes[a]
-            a_count += 1
-      print("Assignment {}\tCount: {}\tFitness: {:.2}".format(a, a_count, a_sum / a_count))
-
-  def show_final_stats(self, show_all_genomes = False, show_all_fitness = False):
-    if show_all_genomes:
-      print("FINAL POPULATION\n")
-      print(self.current_generation)
-    if show_all_fitness:
-      self.show_all_fitness()
 
   def evolve(self, show_iterations = False, show_all_genomes = False, show_all_fitness = False):
     print("NUM_ITERATIONS: {}".format(self.num_generations))
@@ -76,4 +54,4 @@ class World:
       self.generation_history.append(updated_generation)
       self.current_generation = updated_generation
 
-    self.show_final_stats(show_all_genomes, show_all_fitness)
+    self.current_generation.show_stats(show_all_genomes, show_all_fitness)

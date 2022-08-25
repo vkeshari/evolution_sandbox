@@ -3,6 +3,7 @@ from enum import Enum
 
 from containers import population as pop
 from evolution import crossover as crs
+from evolution import assignment as ass
 from evolution import world as wrd
 
 class DebugParams:
@@ -48,25 +49,24 @@ def validate_params():
 def initialize_world():
   (restrict_crossover, restrict_assignment, group_by_assignment) = get_evolution_constraints()
 
-  p = pop.Population(
-    population_size = PopulationParams.POPULATION_SIZE,
-    num_groups = PopulationParams.NUM_GROUPS,
-    group_size = int(PopulationParams.POPULATION_SIZE / PopulationParams.NUM_GROUPS),
-    genome_size = PopulationParams.NUM_ASSIGNMENTS,
-    restrict_assignment = restrict_assignment,
-    group_by_assignment = group_by_assignment)
-  p.update_assignments()
+  p = pop.Population(population_size = PopulationParams.POPULATION_SIZE,
+                      num_groups = PopulationParams.NUM_GROUPS,
+                      group_size = int(PopulationParams.POPULATION_SIZE / PopulationParams.NUM_GROUPS),
+                      genome_size = PopulationParams.NUM_ASSIGNMENTS)
 
-  c = crs.Crossover(
-    crossover_fraction = CrossoverParams.CROSSOVER_FRACTION,
-    mutation_rate = CrossoverParams.MUTATION_RATE,
-    interpolate_genes = CrossoverParams.INTERPOLATE_GENES)
+  a = ass.Assignment(restrict_assignment = restrict_assignment,
+                      group_by_assignment = group_by_assignment)
+  a.update_assignments(population = p)
 
-  w = wrd.World(
-    initial_population = p,
-    crossover = c,
-    num_generations = WorldParams.NUM_GENERATIONS,
-    restrict_crossover = restrict_crossover)
+  c = crs.Crossover(crossover_fraction = CrossoverParams.CROSSOVER_FRACTION,
+                    mutation_rate = CrossoverParams.MUTATION_RATE,
+                    interpolate_genes = CrossoverParams.INTERPOLATE_GENES)
+
+  w = wrd.World(initial_population = p,
+                assignment = a,
+                crossover = c,
+                num_generations = WorldParams.NUM_GENERATIONS,
+                restrict_crossover = restrict_crossover)
   return w
 
 
