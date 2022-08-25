@@ -19,7 +19,7 @@ class CrossoverParams:
   MUTATION_RATE = 0.01
 
 class PopulationParams:
-  POPULATION_SIZE = 1000
+  POPULATION_SIZE = 100
   NUM_GROUPS = 10
   NUM_ASSIGNMENTS = 10
 

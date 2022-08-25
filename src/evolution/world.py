@@ -7,6 +7,8 @@ from containers import group as grp
 
 class World:
 
+  TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
+
   def __init__(self, initial_population, assignment, crossover, num_generations, restrict_crossover = False):
     self.assignment = assignment
     self.crossover = crossover
@@ -14,7 +16,27 @@ class World:
     self.restrict_crossover = restrict_crossover
 
     self.current_generation = initial_population
-    self.fitness_history = [initial_population.get_fitness_data()]
+
+    self.initialize_fitness_history(initial_population.genome_size)
+    self.fitness_history[0] = initial_population.get_fitness_data()
+
+  def initialize_fitness_history(self, genome_size):
+    self.fitness_history = {}
+    self.fitness_history['iterations'] = {}
+    self.fitness_history['time_to'] = {}
+    self.fitness_history['time_to']['population'] = {}
+    self.fitness_history['time_to']['assignment'] = {}
+    for a in range(genome_size):
+      if a not in self.fitness_history['time_to']['assignment']:
+        self.fitness_history['time_to']['assignment'][a] = {}
+
+  def update_time_to_history(self, fitness_data, iteration_no):
+    for f in self.TIME_TO_FITNESS_VALUES:
+      if f not in self.fitness_history['time_to']['population'] and fitness_data['population']['fitness'] > f:
+        self.fitness_history['time_to']['population'][f] = iteration_no
+      for a in fitness_data['assignment']:
+        if f not in self.fitness_history['time_to']['assignment'][a] and fitness_data['assignment'][a]['fitness'] > f:
+          self.fitness_history['time_to']['assignment'][a][f] = iteration_no
 
   def new_generation(self, population):
     new_groups = []
@@ -54,7 +76,11 @@ class World:
         print("ITERATION: {}\tFitness: {:.2}".format(i, total_fitness))
 
       updated_generation = self.new_generation(self.current_generation)
-      self.fitness_history.append(updated_generation.get_fitness_data())
+
+      fitness_data = updated_generation.get_fitness_data()
+      self.fitness_history['iterations'][i + 1] = fitness_data
+      self.update_time_to_history(fitness_data, i + 1)
+
       self.current_generation = updated_generation
 
     self.current_generation.show_stats(show_all_genomes, show_all_fitness)
