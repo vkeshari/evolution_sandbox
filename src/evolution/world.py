@@ -14,7 +14,7 @@ class World:
     self.restrict_crossover = restrict_crossover
 
     self.current_generation = initial_population
-    self.generation_history = [initial_population]
+    self.fitness_history = [initial_population.get_fitness_data()]
 
   def new_generation(self, population):
     new_groups = []
@@ -54,7 +54,9 @@ class World:
         print("ITERATION: {}\tFitness: {:.2}".format(i, total_fitness))
 
       updated_generation = self.new_generation(self.current_generation)
-      self.generation_history.append(updated_generation)
+      self.fitness_history.append(updated_generation.get_fitness_data())
       self.current_generation = updated_generation
 
     self.current_generation.show_stats(show_all_genomes, show_all_fitness)
+
+    return self.fitness_history

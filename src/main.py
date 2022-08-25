@@ -19,7 +19,7 @@ class CrossoverParams:
   MUTATION_RATE = 0.01
 
 class PopulationParams:
-  POPULATION_SIZE = 100
+  POPULATION_SIZE = 1000
   NUM_GROUPS = 10
   NUM_ASSIGNMENTS = 10
 
@@ -79,10 +79,10 @@ def main():
   validate_params()
 
   w = initialize_world()
-  w.evolve(show_iterations = DebugParams.SHOW_ITERATIONS,
-            show_every_n_iteration = int(WorldParams.NUM_GENERATIONS / DebugParams.NUM_CHECKPOINTS),
-            show_all_genomes = DebugParams.SHOW_ALL_GENOMES,
-            show_all_fitness = DebugParams.SHOW_ALL_FITNESS)
+  fitness_data = w.evolve(show_iterations = DebugParams.SHOW_ITERATIONS,
+                          show_every_n_iteration = int(WorldParams.NUM_GENERATIONS / DebugParams.NUM_CHECKPOINTS),
+                          show_all_genomes = DebugParams.SHOW_ALL_GENOMES,
+                          show_all_fitness = DebugParams.SHOW_ALL_FITNESS)
 
 if __name__=="__main__":
   main()
