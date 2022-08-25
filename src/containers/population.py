@@ -69,7 +69,7 @@ class Population:
 
     return fitness_data
 
-  def show_all_fitness(self):
+  def show_fitness(self):
     all_individuals = self.get_all_individuals(sort = True)
     print("TOTAL FITNESS: {:.2}".format(self.get_subgroup_fitness(all_individuals)))
     print("Percentiles: {}".format(self.pretty_print_percentiles(self.get_percentiles(all_individuals))))
@@ -80,9 +80,9 @@ class Population:
         .format(a, len(assignment_individuals), self.get_subgroup_fitness(assignment_individuals)))
       print("Percentiles: {}".format(self.pretty_print_percentiles(self.get_percentiles(assignment_individuals))))
 
-  def show_stats(self, show_all_genomes = False, show_all_fitness = False):
-    if show_all_genomes:
+  def show_stats(self, show_genomes = False, show_fitness = False):
+    if show_genomes:
       print("FINAL POPULATION\n")
       print(self)
-    if show_all_fitness:
-      self.show_all_fitness()
+    if show_fitness:
+      self.show_fitness()

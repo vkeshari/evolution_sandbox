@@ -7,36 +7,15 @@ from containers import group as grp
 
 class World:
 
-  TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
-
-  def __init__(self, initial_population, assignment, crossover, num_generations, restrict_crossover = False):
+  def __init__(self, initial_population, assignment, crossover, fitness, num_generations, restrict_crossover = False):
     self.assignment = assignment
     self.crossover = crossover
+    self.fitness = fitness
     self.num_generations = num_generations
     self.restrict_crossover = restrict_crossover
 
     self.current_generation = initial_population
-
-    self.initialize_fitness_history(initial_population.genome_size)
-    self.fitness_history[0] = initial_population.get_fitness_data()
-
-  def initialize_fitness_history(self, genome_size):
-    self.fitness_history = {}
-    self.fitness_history['iterations'] = {}
-    self.fitness_history['time_to'] = {}
-    self.fitness_history['time_to']['population'] = {}
-    self.fitness_history['time_to']['assignment'] = {}
-    for a in range(genome_size):
-      if a not in self.fitness_history['time_to']['assignment']:
-        self.fitness_history['time_to']['assignment'][a] = {}
-
-  def update_time_to_history(self, fitness_data, iteration_no):
-    for f in self.TIME_TO_FITNESS_VALUES:
-      if f not in self.fitness_history['time_to']['population'] and fitness_data['population']['fitness'] > f:
-        self.fitness_history['time_to']['population'][f] = iteration_no
-      for a in fitness_data['assignment']:
-        if f not in self.fitness_history['time_to']['assignment'][a] and fitness_data['assignment'][a]['fitness'] > f:
-          self.fitness_history['time_to']['assignment'][a][f] = iteration_no
+    self.fitness.update_iteration(0, initial_population.get_fitness_data())
 
   def new_generation(self, population):
     new_groups = []
@@ -65,7 +44,7 @@ class World:
 
     return new_generation
 
-  def evolve(self, show_iterations = False, show_every_n_iteration = 1, show_all_genomes = False, show_all_fitness = False):
+  def evolve(self, show_iterations = False, show_every_n_iteration = 1, show_final_genomes = False, show_final_fitness = False):
     print("NUM_ITERATIONS: {}".format(self.num_generations))
     if (show_every_n_iteration == 0):
       show_every_n_iteration = 1
@@ -78,11 +57,11 @@ class World:
       updated_generation = self.new_generation(self.current_generation)
 
       fitness_data = updated_generation.get_fitness_data()
-      self.fitness_history['iterations'][i + 1] = fitness_data
-      self.update_time_to_history(fitness_data, i + 1)
+      self.fitness.update_iteration(i + 1, fitness_data)
+      self.fitness.update_time_to(i + 1, fitness_data)
 
       self.current_generation = updated_generation
 
-    self.current_generation.show_stats(show_all_genomes, show_all_fitness)
-
-    return self.fitness_history
+    self.current_generation.show_stats(show_final_genomes, show_final_fitness)
+    if show_final_fitness:
+      self.fitness.print_time_to()
