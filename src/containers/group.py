@@ -16,12 +16,12 @@ class Group:
     return (
       "GROUP\n" +
       "Assignment: {},\tGroup Size: {}\n".format(self.assignment, self.group_size) +
-      "Fitness: {:.2}\n".format(self.get_fitness() / self.group_size) +
+      "Fitness: {:.2}\n".format(self.get_fitness()) +
       "".join([str(i) for i in self.individuals]) +
       "\n")
 
   def get_fitness(self):
     sum = 0.0
     for i in self.individuals:
-      sum += i.get_fitness()
+      sum += i.get_fitness() / self.group_size
     return sum

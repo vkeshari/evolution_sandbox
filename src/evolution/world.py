@@ -51,7 +51,7 @@ class World:
 
     for i in range(self.num_generations):
       if show_iterations and i % show_every_n_iteration == 0:
-        total_fitness = self.current_generation.get_fitness() / self.current_generation.population_size
+        total_fitness = self.current_generation.get_fitness()
         print("ITERATION: {}\tFitness: {:.2}".format(i, total_fitness))
 
       updated_generation = self.new_generation(self.current_generation)

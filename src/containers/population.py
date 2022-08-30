@@ -17,15 +17,15 @@ class Population:
     return (
       "POPULATION\n" +
       "Num Groups: {},\tGroup Size: {}\n".format(self.num_groups, self.group_size) +
-      "Fitness: {:.2}\n\n".format(self.get_fitness() / self.population_size) +
+      "Fitness: {:.2}\n\n".format(self.get_fitness()) +
       "".join([str(g) for g in self.groups]) +
       "\n")
 
   def get_fitness(self):
     sum = 0.0
     for g in self.groups:
-      sum += g.get_fitness()
-    return sum
+      sum += g.get_fitness() * g.group_size
+    return sum / self.population_size
 
   def get_all_individuals(self, sort = False, descending = False):
     all_individuals = []
