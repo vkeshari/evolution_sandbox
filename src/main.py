@@ -4,8 +4,8 @@ from enum import Enum
 from containers import population as pop
 from evolution import crossover as crs
 from evolution import assignment as ass
-from evolution import fitness as fit
 from evolution import world as wrd
+from metrics import fitness as fit
 
 class DebugParams:
   SHOW_ITERATIONS = False
@@ -71,12 +71,12 @@ def initialize_world():
                     mutation_rate = CrossoverParams.MUTATION_RATE,
                     interpolate_genes = CrossoverParams.INTERPOLATE_GENES)
 
-  f = fit.Fitness(time_to_fitness_values = FitnessParams.TIME_TO_FITNESS_VALUES, genome_size = PopulationParams.NUM_ASSIGNMENTS)
+  f = fit.FitnessHistory(time_to_fitness_values = FitnessParams.TIME_TO_FITNESS_VALUES, genome_size = PopulationParams.NUM_ASSIGNMENTS)
 
   w = wrd.World(initial_population = p,
                 assignment = a,
                 crossover = c,
-                fitness = f,
+                fitness_history = f,
                 num_generations = WorldParams.NUM_GENERATIONS,
                 restrict_crossover = restrict_crossover)
   return w
@@ -85,7 +85,7 @@ def main():
   args = sys.argv[1:]
   validate_params()
 
-  all_fitness_data = {}
+  all_fitness_history = {}
   for r in range(WorldParams.NUM_RUNS):
     print ("RUN: {}".format(r))
     w = initialize_world()
@@ -93,8 +93,8 @@ def main():
               show_every_n_iteration = int(WorldParams.NUM_GENERATIONS / DebugParams.NUM_CHECKPOINTS),
               show_final_genomes = DebugParams.SHOW_FINAL_GENOMES,
               show_final_fitness = DebugParams.SHOW_FINAL_FITNESS)
-    fitness_history = w.fitness
-    all_fitness_data[r] = fitness_history
+    fitness_history = w.fitness_history
+    all_fitness_history[r] = fitness_history
 
 if __name__=="__main__":
   main()

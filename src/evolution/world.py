@@ -4,18 +4,19 @@ import numpy as np
 from . import crossover as crs
 from containers import population as pop
 from containers import group as grp
+from metrics import fitness as fit
 
 class World:
 
-  def __init__(self, initial_population, assignment, crossover, fitness, num_generations, restrict_crossover = False):
+  def __init__(self, initial_population, assignment, crossover, fitness_history, num_generations, restrict_crossover = False):
     self.assignment = assignment
     self.crossover = crossover
-    self.fitness = fitness
+    self.fitness_history = fitness_history
     self.num_generations = num_generations
     self.restrict_crossover = restrict_crossover
 
     self.current_generation = initial_population
-    self.fitness.update_iteration(0, initial_population.get_fitness_data())
+    self.fitness_history.update_iteration(0, fit.FitnessData.get_fitness_data(initial_population))
 
   def new_generation(self, population):
     new_groups = []
@@ -56,12 +57,12 @@ class World:
 
       updated_generation = self.new_generation(self.current_generation)
 
-      fitness_data = updated_generation.get_fitness_data()
-      self.fitness.update_iteration(i + 1, fitness_data)
-      self.fitness.update_time_to(i + 1, fitness_data)
+      fitness_data = fit.FitnessData.get_fitness_data(updated_generation)
+      self.fitness_history.update_iteration(i + 1, fitness_data)
+      self.fitness_history.update_time_to(i + 1, fitness_data)
 
       self.current_generation = updated_generation
 
-    self.current_generation.show_stats(show_final_genomes, show_final_fitness)
+    fit.FitnessData.show_stats(self.current_generation, show_final_genomes, show_final_fitness)
     if show_final_fitness:
-      self.fitness.print_time_to()
+      self.fitness_history.print_time_to()
