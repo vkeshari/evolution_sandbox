@@ -8,13 +8,13 @@ from evolution import world as wrd
 from metrics import fitness as fit
 
 class DebugParams:
-  SHOW_ITERATIONS = False
+  SHOW_ITERATIONS = True
   NUM_CHECKPOINTS = 10
 
-  SHOW_RUN_GENOMES = False
-  SHOW_RUN_FITNESS = False
+  SHOW_RUN_GENOMES = True
+  SHOW_RUN_FITNESS = True
 
-  SHOW_AGGREGATED_FITNESS = True
+  SHOW_AGGREGATED_FITNESS = False
 
 class FitnessParams:
   TIME_TO_FITNESS_VALUES = [0.8, 0.9, 0.95, 0.99]
@@ -31,7 +31,7 @@ class PopulationParams:
 
 class WorldParams:
   NUM_GENERATIONS = 100
-  NUM_RUNS = 10
+  NUM_RUNS = 1
 
 class AggregationParams:
   FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
@@ -64,14 +64,19 @@ def validate_params():
 def initialize_world():
   (restrict_crossover, restrict_assignment, group_by_assignment) = get_evolution_constraints()
 
+  # DEFAULT
+  group_size = int(PopulationParams.POPULATION_SIZE / PopulationParams.NUM_GROUPS)
+  initial_assignment_priorities = range(group_size)
+  initial_assignment_sizes = [group_size] * PopulationParams.NUM_GROUPS
+
   p = pop.Population(population_size = PopulationParams.POPULATION_SIZE,
                       num_groups = PopulationParams.NUM_GROUPS,
-                      group_size = int(PopulationParams.POPULATION_SIZE / PopulationParams.NUM_GROUPS),
+                      group_size = group_size,
                       genome_size = PopulationParams.NUM_ASSIGNMENTS)
 
   a = ass.Assignment(restrict_assignment = restrict_assignment,
                       group_by_assignment = group_by_assignment)
-  a.update_assignments(population = p)
+  a.update_assignments(population = p, assignment_priorities = initial_assignment_priorities, assignment_sizes = initial_assignment_sizes)
 
   c = crs.Crossover(crossover_beta_param = CrossoverParams.CROSSOVER_BETA_PARAM,
                     mutation_rate = CrossoverParams.MUTATION_RATE,

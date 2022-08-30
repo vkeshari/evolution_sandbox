@@ -14,8 +14,11 @@ class Individual:
   def __str__(self):
     return "Assignment: {}\tGene: {}\n".format(self.assignment, self.genome)
 
+  def has_assignment(self):
+    return self.assignment > -1
+
   def get_fitness(self):
-    if self.assignment == -1:
+    if not self.has_assignment():
       return 0.0
     else:
       return self.genome.genes[self.assignment]

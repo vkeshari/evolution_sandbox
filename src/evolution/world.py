@@ -23,25 +23,34 @@ class World:
 
     if self.restrict_crossover:
       for g in population.groups:
-        crossed = self.crossover.crossover(g.individuals, g.individuals, population.group_size)
-        new_groups.append(grp.Group(population.group_size, population.genome_size, individuals = crossed))
+        crossover_pool = [i for i in g.individuals if i.has_assignment()]
+        crossed = self.crossover.crossover(crossover_pool, crossover_pool, g.group_size)
+        new_groups.append(grp.Group(g.group_size, g.genome_size, individuals = crossed))
 
     else:
-      all_individuals = []
+      crossover_pool = []
       for g in population.groups:
-        all_individuals += g.individuals
-      crossed = self.crossover.crossover(all_individuals, all_individuals, population.population_size)
+        for i in g.individuals:
+          if i.has_assignment():
+            crossover_pool += g.individuals
+      crossed = self.crossover.crossover(crossover_pool, crossover_pool, population.population_size)
       random.shuffle(crossed)
-      for i in range(population.num_groups):
-        group_individuals = crossed[i * population.group_size : (i + 1) * population.group_size]
-        new_groups.append(grp.Group(population.group_size, population.genome_size, individuals = group_individuals))
+      already_assigned = 0
+      for g in population.groups:
+        new_group_individuals = crossed[already_assigned : already_assigned + g.group_size]
+        new_groups.append(grp.Group(g.group_size, g.genome_size, individuals = new_group_individuals))
+        already_assigned += g.group_size
 
     new_generation = pop.Population(population.population_size,
                                     population.num_groups,
                                     population.group_size,
                                     population.genome_size,
                                     groups = new_groups)
-    self.assignment.update_assignments(new_generation)
+
+    # DEFAULT
+    assignment_priorities = range(new_generation.num_groups)
+    assignment_sizes = [new_generation.group_size] * new_generation.num_groups
+    self.assignment.update_assignments(new_generation, assignment_priorities = assignment_priorities, assignment_sizes = assignment_sizes)
 
     return new_generation
 

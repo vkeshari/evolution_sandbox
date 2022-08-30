@@ -4,20 +4,25 @@ class Assignment:
     self.restrict_assignment = restrict_assignment
     self.group_by_assignment = group_by_assignment
 
-  def shuffle_by_assignment(self, population):
+  def shuffle_by_assignment(self, population, assignment_sizes):
     all_individuals = []
-    for g in population.groups:
-      all_individuals += g.individuals
+    for group in population.groups:
+      all_individuals += group.individuals
 
     for a in range(population.genome_size):
-      population.groups[a].individuals = [i for i in all_individuals if i.assignment == a]
+      group = population.groups[a]
+      group.assignment = a
+      group.group_size = assignment_sizes[a]
+      group.individuals = [i for i in all_individuals if i.assignment == a]
 
-  def update_assignments(self, population):
+  def update_assignments(self, population, assignment_priorities, assignment_sizes):
     if self.restrict_assignment:
-      for i, group in enumerate(population.groups):
-        group.assignment = i
-        for individual in group.individuals:
-          individual.assignment = i
+      for a in range(population.genome_size):
+        group = population.groups[a]
+        group.assignment = a
+        group.group_size = assignment_sizes[a]
+        for individual in sorted(group.individuals, key = lambda i: i.genome.genes[a], reverse = True)[:group.group_size]:
+          individual.assignment = a
 
     else:
       enumerated = []
@@ -25,13 +30,16 @@ class Assignment:
         for j, individual in enumerate(group.individuals):
           enumerated.append({'group': i, 'index': j, 'individual': individual})
 
-      for a in range(population.genome_size):
+      for a in assignment_priorities:
         sorted_for_a = sorted(enumerated, key = lambda e: e['individual'].genome.genes[a], reverse = True)
-        unassigned = [e for e in sorted_for_a if e['individual'].assignment == -1]
-        for k in range(population.group_size):
+        unassigned = [e for e in sorted_for_a if not e['individual'].has_assignment()]
+        for k in range(assignment_sizes[a]):
           group_no = unassigned[k]['group']
           individual_no = unassigned[k]['index']
           population.groups[group_no].individuals[individual_no].assignment = a
 
       if self.group_by_assignment:
-        self.shuffle_by_assignment(population)
+        self.shuffle_by_assignment(population, assignment_sizes)
+
+    for g in population.groups:
+      assert(len(g.individuals) == g.group_size)
