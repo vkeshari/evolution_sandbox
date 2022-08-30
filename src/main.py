@@ -11,8 +11,10 @@ class DebugParams:
   SHOW_ITERATIONS = False
   NUM_CHECKPOINTS = 10
 
-  SHOW_FINAL_GENOMES = False
-  SHOW_FINAL_FITNESS = True
+  SHOW_RUN_GENOMES = False
+  SHOW_RUN_FITNESS = False
+
+  SHOW_AGGREGATED_FITNESS = True
 
 class FitnessParams:
   TIME_TO_FITNESS_VALUES = [0.8, 0.9, 0.95, 0.99]
@@ -29,7 +31,11 @@ class PopulationParams:
 
 class WorldParams:
   NUM_GENERATIONS = 100
-  NUM_RUNS = 1
+  NUM_RUNS = 10
+
+class AggregationParams:
+  FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
+  TIME_AGGREGATION_TYPE = fit.AggregateType.MEDIAN
 
 class EvolutionStrategy(Enum):
   NO_RESTRICTIONS = 0                      #000
@@ -38,7 +44,7 @@ class EvolutionStrategy(Enum):
   CROSSOVER_BY_ASSIGNMENT_ONLY = 3         #101
   ALL_RESTRICTIONS = 4                     #11_
 EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT
-print(EVOLUTION_STRATEGY)
+print("Evolution Strategy: {}".format(EVOLUTION_STRATEGY))
 
 def get_evolution_constraints():
   restrict_crossover = EVOLUTION_STRATEGY in [EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY,
@@ -85,16 +91,27 @@ def main():
   args = sys.argv[1:]
   validate_params()
 
+  print("Fitness Aggregation: {}".format(AggregationParams.FITNESS_AGGREGATION_TYPE))
+  print("Time Aggregation: {}".format(AggregationParams.TIME_AGGREGATION_TYPE))
   all_fitness_history = {}
   for r in range(WorldParams.NUM_RUNS):
-    print ("RUN: {}".format(r))
     w = initialize_world()
+    print ("RUN: {}\tITERATIONS: {}".format(r + 1, w.num_generations))
+
     w.evolve(show_iterations = DebugParams.SHOW_ITERATIONS,
               show_every_n_iteration = int(WorldParams.NUM_GENERATIONS / DebugParams.NUM_CHECKPOINTS),
-              show_final_genomes = DebugParams.SHOW_FINAL_GENOMES,
-              show_final_fitness = DebugParams.SHOW_FINAL_FITNESS)
+              show_final_genomes = DebugParams.SHOW_RUN_GENOMES,
+              show_final_fitness = DebugParams.SHOW_RUN_FITNESS)
     fitness_history = w.fitness_history
-    all_fitness_history[r] = fitness_history
+    all_fitness_history[r + 1] = fitness_history
+
+  aggregate_fitness_history = fit.FitnessHistoryAggregate.get_aggregated_fitness(all_fitness_history,
+                                                                                  fitness_aggregate_type = AggregationParams.FITNESS_AGGREGATION_TYPE,
+                                                                                  time_to_aggregate_type = AggregationParams.TIME_AGGREGATION_TYPE)
+  if DebugParams.SHOW_AGGREGATED_FITNESS:
+    print("\nFINAL METRICS\n")
+    aggregate_fitness_history.history['iterations'][WorldParams.NUM_GENERATIONS].print_fitness_data()
+    aggregate_fitness_history.print_time_to()
 
 if __name__=="__main__":
   main()

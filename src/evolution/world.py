@@ -16,7 +16,7 @@ class World:
     self.restrict_crossover = restrict_crossover
 
     self.current_generation = initial_population
-    self.fitness_history.update_iteration(0, fit.FitnessData.get_fitness_data(initial_population))
+    self.fitness_history.update_iteration(0, fit.FitnessData.from_population(initial_population))
 
   def new_generation(self, population):
     new_groups = []
@@ -46,7 +46,6 @@ class World:
     return new_generation
 
   def evolve(self, show_iterations = False, show_every_n_iteration = 1, show_final_genomes = False, show_final_fitness = False):
-    print("NUM_ITERATIONS: {}".format(self.num_generations))
     if (show_every_n_iteration == 0):
       show_every_n_iteration = 1
 
@@ -57,12 +56,12 @@ class World:
 
       updated_generation = self.new_generation(self.current_generation)
 
-      fitness_data = fit.FitnessData.get_fitness_data(updated_generation)
+      fitness_data = fit.FitnessData.from_population(updated_generation)
       self.fitness_history.update_iteration(i + 1, fitness_data)
       self.fitness_history.update_time_to(i + 1, fitness_data)
 
       self.current_generation = updated_generation
 
-    fit.FitnessData.show_stats(self.current_generation, show_final_genomes, show_final_fitness)
+    fit.FitnessUtil.show_population_stats(self.current_generation, show_final_genomes, show_final_fitness)
     if show_final_fitness:
       self.fitness_history.print_time_to()
