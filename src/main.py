@@ -16,20 +16,20 @@ class DebugParams:
 
   SHOW_AGGREGATED_FITNESS = True
 
-class FitnessParams:
-  TIME_TO_FITNESS_VALUES = [0.8, 0.9, 0.95, 0.99]
-
-class CrossoverParams:
-  CROSSOVER_BETA_PARAM = 2.5
-  INTERPOLATE_GENES = True
-  MUTATION_RATE = 0.01
-
 class PopulationParams:
   POPULATION_SIZE = 100
   NUM_GROUPS = 10
   NUM_ASSIGNMENTS = 10
 
+class EvolutionStrategy(Enum):
+  NO_RESTRICTIONS = 0                      #000
+  NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT = 1  #001
+  CROSSOVER_BY_GROUP_ONLY = 2              #100
+  CROSSOVER_BY_ASSIGNMENT_ONLY = 3         #101
+  ALL_RESTRICTIONS = 4                     #111
+
 class WorldParams:
+  EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
   NUM_GENERATIONS = 100
   NUM_RUNS = 10
   RANDOMIZE_ASSIGNMENT_PRIORITIES = True
@@ -39,23 +39,22 @@ class AggregationParams:
   FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
   TIME_AGGREGATION_TYPE = fit.AggregateType.MEDIAN
 
-class EvolutionStrategy(Enum):
-  NO_RESTRICTIONS = 0                      #000
-  NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT = 1  #001
-  CROSSOVER_BY_GROUP_ONLY = 2              #100
-  CROSSOVER_BY_ASSIGNMENT_ONLY = 3         #101
-  ALL_RESTRICTIONS = 4                     #111
-EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT
-print("Evolution Strategy: {}".format(EVOLUTION_STRATEGY))
+class FitnessParams:
+  TIME_TO_FITNESS_VALUES = [0.7, 0.8, 0.9, 0.95, 0.98, 0.99]
+
+class CrossoverParams:
+  CROSSOVER_BETA_PARAM = 2.5
+  INTERPOLATE_GENES = True
+  MUTATION_RATE = 0.01
 
 def get_evolution_constraints():
-  restrict_crossover = EVOLUTION_STRATEGY in [EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY,
-                                              EvolutionStrategy.CROSSOVER_BY_ASSIGNMENT_ONLY,
-                                              EvolutionStrategy.ALL_RESTRICTIONS]
-  restrict_assignment = EVOLUTION_STRATEGY == EvolutionStrategy.ALL_RESTRICTIONS
-  group_by_assignment = EVOLUTION_STRATEGY in [EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT,
-                                              EvolutionStrategy.CROSSOVER_BY_ASSIGNMENT_ONLY,
-                                              EvolutionStrategy.ALL_RESTRICTIONS]
+  restrict_crossover = WorldParams.EVOLUTION_STRATEGY in [EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY,
+                                                          EvolutionStrategy.CROSSOVER_BY_ASSIGNMENT_ONLY,
+                                                          EvolutionStrategy.ALL_RESTRICTIONS]
+  restrict_assignment = WorldParams.EVOLUTION_STRATEGY == EvolutionStrategy.ALL_RESTRICTIONS
+  group_by_assignment = WorldParams.EVOLUTION_STRATEGY in [EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT,
+                                                            EvolutionStrategy.CROSSOVER_BY_ASSIGNMENT_ONLY,
+                                                            EvolutionStrategy.ALL_RESTRICTIONS]
   return (restrict_crossover, restrict_assignment, group_by_assignment)                                        
 
 def validate_params():
@@ -102,6 +101,7 @@ def main():
   args = sys.argv[1:]
   validate_params()
 
+  print("Evolution Strategy: {}".format(WorldParams.EVOLUTION_STRATEGY))
   print("Fitness Aggregation: {}".format(AggregationParams.FITNESS_AGGREGATION_TYPE))
   print("Time Aggregation: {}".format(AggregationParams.TIME_AGGREGATION_TYPE))
   all_fitness_history = {}
@@ -122,6 +122,7 @@ def main():
   if DebugParams.SHOW_AGGREGATED_FITNESS:
     print("\nFINAL METRICS\n")
     aggregate_fitness_history.history['iterations'][WorldParams.NUM_GENERATIONS].print_fitness_data()
+    print()
     aggregate_fitness_history.print_time_to()
 
 if __name__=="__main__":
