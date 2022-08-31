@@ -113,8 +113,7 @@ def main():
               show_every_n_iteration = int(WorldParams.NUM_GENERATIONS / DebugParams.NUM_CHECKPOINTS),
               show_final_genomes = DebugParams.SHOW_RUN_GENOMES,
               show_final_fitness = DebugParams.SHOW_RUN_FITNESS)
-    fitness_history = w.fitness_history
-    all_fitness_history[r + 1] = fitness_history
+    all_fitness_history[r + 1] = w.fitness_history
 
   aggregate_fitness_history = fit.FitnessHistoryAggregate.get_aggregated_fitness(all_fitness_history,
                                                                                   fitness_aggregate_type = AggregationParams.FITNESS_AGGREGATION_TYPE,
