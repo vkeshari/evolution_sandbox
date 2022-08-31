@@ -162,7 +162,7 @@ class FitnessHistoryAggregate:
       return sorted(vals)[int(0.1 * len(vals))]
     elif aggregate_type == AggregateType.P20:
       return sorted(vals)[int(0.2 * len(vals))]
-    elif aggregate_type == AggregateType.P90:
+    elif aggregate_type == AggregateType.P80:
       return sorted(vals)[int(0.8 * len(vals))]
     elif aggregate_type == AggregateType.P90:
       return sorted(vals)[int(0.9 * len(vals))]
