@@ -8,13 +8,13 @@ from evolution import world as wrd
 from metrics import fitness as fit
 
 class DebugParams:
-  SHOW_ITERATIONS = True
+  SHOW_ITERATIONS = False
   NUM_CHECKPOINTS = 10
 
-  SHOW_RUN_GENOMES = True
-  SHOW_RUN_FITNESS = True
+  SHOW_RUN_GENOMES = False
+  SHOW_RUN_FITNESS = False
 
-  SHOW_AGGREGATED_FITNESS = False
+  SHOW_AGGREGATED_FITNESS = True
 
 class FitnessParams:
   TIME_TO_FITNESS_VALUES = [0.8, 0.9, 0.95, 0.99]
@@ -31,7 +31,9 @@ class PopulationParams:
 
 class WorldParams:
   NUM_GENERATIONS = 100
-  NUM_RUNS = 1
+  NUM_RUNS = 10
+  RANDOMIZE_ASSIGNMENT_PRIORITIES = True
+  RANDOMIZE_ASSIGNMENT_SIZES = True
 
 class AggregationParams:
   FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
@@ -42,8 +44,8 @@ class EvolutionStrategy(Enum):
   NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT = 1  #001
   CROSSOVER_BY_GROUP_ONLY = 2              #100
   CROSSOVER_BY_ASSIGNMENT_ONLY = 3         #101
-  ALL_RESTRICTIONS = 4                     #11_
-EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT
+  ALL_RESTRICTIONS = 4                     #111
+EVOLUTION_STRATEGY = EvolutionStrategy.ALL_RESTRICTIONS
 print("Evolution Strategy: {}".format(EVOLUTION_STRATEGY))
 
 def get_evolution_constraints():
@@ -57,26 +59,28 @@ def get_evolution_constraints():
   return (restrict_crossover, restrict_assignment, group_by_assignment)                                        
 
 def validate_params():
+  assert (PopulationParams.NUM_GROUPS > 0)
   assert (PopulationParams.NUM_GROUPS == PopulationParams.NUM_ASSIGNMENTS)
+  assert (PopulationParams.POPULATION_SIZE > PopulationParams.NUM_GROUPS)
   assert (PopulationParams.POPULATION_SIZE % PopulationParams.NUM_GROUPS == 0)
   assert (PopulationParams.POPULATION_SIZE / PopulationParams.NUM_GROUPS > 2.0)
 
 def initialize_world():
   (restrict_crossover, restrict_assignment, group_by_assignment) = get_evolution_constraints()
 
-  # DEFAULT
   group_size = int(PopulationParams.POPULATION_SIZE / PopulationParams.NUM_GROUPS)
   initial_assignment_priorities = range(group_size)
   initial_assignment_sizes = [group_size] * PopulationParams.NUM_GROUPS
 
   p = pop.Population(population_size = PopulationParams.POPULATION_SIZE,
                       num_groups = PopulationParams.NUM_GROUPS,
-                      group_size = group_size,
-                      genome_size = PopulationParams.NUM_ASSIGNMENTS)
+                      genome_size = PopulationParams.NUM_ASSIGNMENTS,
+                      assignment_priorities = initial_assignment_priorities,
+                      assignment_sizes = initial_assignment_sizes)
 
   a = ass.Assignment(restrict_assignment = restrict_assignment,
                       group_by_assignment = group_by_assignment)
-  a.update_assignments(population = p, assignment_priorities = initial_assignment_priorities, assignment_sizes = initial_assignment_sizes)
+  a.update_assignments(population = p)
 
   c = crs.Crossover(crossover_beta_param = CrossoverParams.CROSSOVER_BETA_PARAM,
                     mutation_rate = CrossoverParams.MUTATION_RATE,
@@ -89,7 +93,9 @@ def initialize_world():
                 crossover = c,
                 fitness_history = f,
                 num_generations = WorldParams.NUM_GENERATIONS,
-                restrict_crossover = restrict_crossover)
+                restrict_crossover = restrict_crossover,
+                randomize_assignment_priorities = WorldParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
+                randomize_assignment_sizes = WorldParams.RANDOMIZE_ASSIGNMENT_SIZES)
   return w
 
 def main():

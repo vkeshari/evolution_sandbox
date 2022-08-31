@@ -8,15 +8,39 @@ from metrics import fitness as fit
 
 class World:
 
-  def __init__(self, initial_population, assignment, crossover, fitness_history, num_generations, restrict_crossover = False):
+  ASSIGNMENT_PRIORITY_RANDOMIZER = np.random.RandomState()
+  ASSIGNMENT_SIZE_RANDOMIZER = np.random.RandomState()
+  INDIVIDUALS_ORDER_RANDOMIZER = np.random.RandomState()
+
+  def __init__(self, initial_population, assignment, crossover, fitness_history, num_generations,
+                restrict_crossover = False,
+                randomize_assignment_priorities = False,
+                randomize_assignment_sizes = False):
     self.assignment = assignment
     self.crossover = crossover
     self.fitness_history = fitness_history
     self.num_generations = num_generations
     self.restrict_crossover = restrict_crossover
+    self.randomize_assignment_priorities = randomize_assignment_priorities
+    self.randomize_assignment_sizes = randomize_assignment_sizes
 
     self.current_generation = initial_population
     self.fitness_history.update_iteration(0, fit.FitnessData.from_population(initial_population))
+
+  def get_assignment_distribution(self, population_size, genome_size):
+    assignment_priorities = [*range(genome_size)]
+    if self.randomize_assignment_priorities:
+      self.ASSIGNMENT_PRIORITY_RANDOMIZER.shuffle(assignment_priorities)
+
+    default_group_size = int(population_size / genome_size)
+    assignment_sizes = {i: default_group_size for i in range(genome_size)}
+    if self.randomize_assignment_sizes:
+      for i in range(population_size):
+        swap_indices = self.ASSIGNMENT_SIZE_RANDOMIZER.randint(0, genome_size, 2)
+        if assignment_sizes[swap_indices[0]] > int(default_group_size / 2):
+          assignment_sizes[swap_indices[0]] -= 1
+          assignment_sizes[swap_indices[1]] += 1
+    return (assignment_priorities, assignment_sizes)
 
   def new_generation(self, population):
     new_groups = []
@@ -34,23 +58,22 @@ class World:
           if i.has_assignment():
             crossover_pool += g.individuals
       crossed = self.crossover.crossover(crossover_pool, crossover_pool, population.population_size)
-      random.shuffle(crossed)
+      self.INDIVIDUALS_ORDER_RANDOMIZER.shuffle(crossed)
       already_assigned = 0
       for g in population.groups:
         new_group_individuals = crossed[already_assigned : already_assigned + g.group_size]
         new_groups.append(grp.Group(g.group_size, g.genome_size, individuals = new_group_individuals))
         already_assigned += g.group_size
 
+    (assignment_priorities, assignment_sizes) = self.get_assignment_distribution(population.population_size, population.num_groups)
     new_generation = pop.Population(population.population_size,
                                     population.num_groups,
-                                    population.group_size,
                                     population.genome_size,
+                                    assignment_priorities,
+                                    assignment_sizes,
                                     groups = new_groups)
 
-    # DEFAULT
-    assignment_priorities = range(new_generation.num_groups)
-    assignment_sizes = [new_generation.group_size] * new_generation.num_groups
-    self.assignment.update_assignments(new_generation, assignment_priorities = assignment_priorities, assignment_sizes = assignment_sizes)
+    self.assignment.update_assignments(new_generation)
 
     return new_generation
 
@@ -59,9 +82,9 @@ class World:
       show_every_n_iteration = 1
 
     for i in range(self.num_generations):
-      if show_iterations and i % show_every_n_iteration == 0:
+      if show_iterations and (i + 1) % show_every_n_iteration == 0:
         total_fitness = self.current_generation.get_fitness()
-        print("ITERATION: {}\tFitness: {:.2}".format(i, total_fitness))
+        print("ITERATION: {}\tFitness: {:.2}".format(i + 1, total_fitness))
 
       updated_generation = self.new_generation(self.current_generation)
 

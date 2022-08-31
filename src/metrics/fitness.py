@@ -4,10 +4,10 @@ import numpy as np
 class FitnessUtil:
 
   @staticmethod
-  def get_subgroup_fitness(individuals):
+  def get_subgroup_fitness(individuals, expected_size):
     fitness = 0.0
     for i in individuals:
-      fitness += i.get_fitness() / len(individuals)
+      fitness += i.get_fitness() / expected_size
     return fitness
 
   @staticmethod
@@ -24,24 +24,12 @@ class FitnessUtil:
     return "Min: {:.2}\t10P: {:.2}\t50P: {:.2}\t90P: {:.2}\tMax: {:.2}".format(a[0], a[10], a[50], a[90], a[100])
 
   @staticmethod
-  def show_population_fitness(population):
-    all_individuals = population.get_all_individuals(sort = True)
-    print("TOTAL FITNESS: {:.2}".format(FitnessUtil.get_subgroup_fitness(all_individuals)))
-    print("Percentiles: {}".format(FitnessUtil.pretty_print_percentiles(FitnessUtil.get_fitness_percentiles(all_individuals))))
-    print("FITNESS BY ASSIGNMENT")
-    for a in range(population.genome_size):
-      assignment_individuals = [i for i in all_individuals if i.assignment == a]
-      print("Assignment {}\tCount: {}\tFitness: {:.2}"
-        .format(a, len(assignment_individuals), FitnessUtil.get_subgroup_fitness(assignment_individuals)))
-      print("Percentiles: {}".format(FitnessUtil.pretty_print_percentiles(FitnessUtil.get_fitness_percentiles(assignment_individuals))))
-
-  @staticmethod
   def show_population_stats(population, show_genomes = False, show_fitness = False):
     if show_genomes:
       print("FINAL POPULATION\n")
       print(population)
     if show_fitness:
-      FitnessUtil.show_population_fitness(population)
+      FitnessData.from_population(population).print_fitness_data()
 
 
 class FitnessData:
@@ -65,12 +53,12 @@ class FitnessData:
     fitness_data = FitnessData(genome_size = population.genome_size)
 
     all_individuals = population.get_all_individuals(sort = True)
-    fitness_data.data['population']['fitness'] = FitnessUtil.get_subgroup_fitness(all_individuals)
+    fitness_data.data['population']['fitness'] = FitnessUtil.get_subgroup_fitness(all_individuals, population.population_size)
     fitness_data.data['population']['percentiles'] = FitnessUtil.get_fitness_percentiles(all_individuals)
 
     for a in range(population.genome_size):
       assignment_individuals = [i for i in all_individuals if i.assignment == a]
-      fitness_data.data['assignment'][a]['fitness'] = FitnessUtil.get_subgroup_fitness(assignment_individuals)
+      fitness_data.data['assignment'][a]['fitness'] = FitnessUtil.get_subgroup_fitness(assignment_individuals, population.assignment_sizes[a])
       fitness_data.data['assignment'][a]['percentiles'] = FitnessUtil.get_fitness_percentiles(assignment_individuals)
 
     return fitness_data
@@ -78,10 +66,10 @@ class FitnessData:
   def print_fitness_data(self):
     print("FITNESS")
     print("POPULATION:\tFitness: {:.2}".format(self.data['population']['fitness']))
-    print("Percentiles: {}".format('\t'.join(["{:.2}".format(val) for p, val in self.data['population']['percentiles'].items()])))
+    print(FitnessUtil.pretty_print_percentiles(self.data['population']['percentiles']))
     for a in range(self.genome_size):
       print("ASSIGNMENT {}:\tFitness: {:.2}".format(a, self.data['assignment'][a]['fitness']))
-      print("Percentiles: {}".format('\t'.join(["{:.2}".format(val) for p, val in self.data['assignment'][a]['percentiles'].items()])))
+      print(FitnessUtil.pretty_print_percentiles(self.data['assignment'][a]['percentiles']))
 
 
 class FitnessHistory:
