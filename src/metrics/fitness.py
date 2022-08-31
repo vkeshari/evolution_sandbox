@@ -137,8 +137,10 @@ class AggregateType(Enum):
 
 class FitnessHistoryAggregate:
 
-  @staticmethod
-  def get_aggregate(vals, num_runs, aggregate_type):
+  MINIMUM_FRACTION_FOR_ORDINAL_METRIC = 0.5
+
+  @classmethod
+  def get_aggregate(cls, vals, num_runs, aggregate_type):
     if len(vals) == 0:
       return np.NaN
 
@@ -147,7 +149,7 @@ class FitnessHistoryAggregate:
     elif aggregate_type == AggregateType.STDEV:
       return np.std(vals)
 
-    if len(vals) < 0.1 * num_runs:
+    if len(vals) < cls.MINIMUM_FRACTION_FOR_ORDINAL_METRIC * num_runs:
       return np.NaN
 
     if aggregate_type == AggregateType.MIN:
@@ -165,9 +167,8 @@ class FitnessHistoryAggregate:
     elif aggregate_type == AggregateType.P10:
       return sorted(vals)[int(0.9 * len(vals))]
 
-
-  @staticmethod
-  def get_aggregated_fitness(fitness_history_runs, fitness_aggregate_type = AggregateType.AVERAGE, time_to_aggregate_type = AggregateType.MEDIAN):
+  @classmethod
+  def get_aggregated_fitness(cls, fitness_history_runs, fitness_aggregate_type = AggregateType.AVERAGE, time_to_aggregate_type = AggregateType.MEDIAN):
     num_runs = len(fitness_history_runs)
     reference = fitness_history_runs[1]
     aggregate = FitnessHistory(reference.time_to_fitness_values, reference.genome_size)

@@ -38,6 +38,3 @@ class Assignment:
 
     if self.group_by_assignment:
       self.shuffle_by_assignment(population)
-
-    #for g in population.groups:
-    #  assert(len(g.individuals) == g.group_size)

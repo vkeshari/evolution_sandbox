@@ -45,7 +45,7 @@ class EvolutionStrategy(Enum):
   CROSSOVER_BY_GROUP_ONLY = 2              #100
   CROSSOVER_BY_ASSIGNMENT_ONLY = 3         #101
   ALL_RESTRICTIONS = 4                     #111
-EVOLUTION_STRATEGY = EvolutionStrategy.ALL_RESTRICTIONS
+EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT
 print("Evolution Strategy: {}".format(EVOLUTION_STRATEGY))
 
 def get_evolution_constraints():
