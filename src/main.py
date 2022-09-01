@@ -38,9 +38,10 @@ class WorldParams:
   NUM_RUNS = 10
   NUM_GENERATIONS = 100
 
-  EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS  # Ignored if LoopParams.MULTI_PARAMS
-  RANDOMIZE_ASSIGNMENT_PRIORITIES = True                  # Ignored if LoopParams.MULTI_PARAMS
-  RANDOMIZE_ASSIGNMENT_SIZES = True                       # Ignored if LoopParams.MULTI_PARAMS
+  # These are ignored if LoopParams.MULTI_PARAMS
+  EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
+  RANDOMIZE_ASSIGNMENT_PRIORITIES = True
+  RANDOMIZE_ASSIGNMENT_SIZES = True
 
 class AggregationParams:
   FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
