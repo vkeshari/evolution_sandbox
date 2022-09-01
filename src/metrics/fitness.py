@@ -179,7 +179,7 @@ class FitnessHistoryAggregate:
       fitness_vals = [r.history['iterations'][i].data['population']['fitness'] for r in fitness_history_runs.values()]
       aggregated_data.data['population']['fitness'] = FitnessHistoryAggregate.get_aggregate(fitness_vals, num_runs, fitness_aggregate_type)
 
-      aggregated_data.data['percentiles'] = {}
+      aggregated_data.data['population']['percentiles'] = {}
       for p in range(0, 101, 10):
         fitness_vals = [r.history['iterations'][i].data['population']['percentiles'][p] for r in fitness_history_runs.values()]
         aggregated_data.data['population']['percentiles'][p] = FitnessHistoryAggregate.get_aggregate(fitness_vals, num_runs, fitness_aggregate_type)
