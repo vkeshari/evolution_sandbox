@@ -62,7 +62,7 @@ def get_evolution_constraints(evolution_strategy):
   group_by_assignment = evolution_strategy in [EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT,
                                                 EvolutionStrategy.CROSSOVER_BY_ASSIGNMENT_ONLY,
                                                 EvolutionStrategy.ALL_RESTRICTIONS]
-  return (restrict_crossover, restrict_assignment, group_by_assignment)                                        
+  return (restrict_crossover, restrict_assignment, group_by_assignment)
 
 def validate_params():
   assert (PopulationParams.NUM_GROUPS > 0)
