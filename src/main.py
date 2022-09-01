@@ -150,7 +150,7 @@ def main():
   datetime_string = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
   if LoopParams.MULTI_PARAMS:
     for evolution_strategy in EvolutionStrategy:
-      if evolution_strategy == EvolutionStrategy.NO_RESTRICTIONS:
+      if evolution_strategy == EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT:
         continue
       for randomize_assignment_priorities in [False, True]:
         for randomize_assignment_sizes in [False, True]:
