@@ -62,8 +62,12 @@ class FitnessTimeToGraph:
         assert(f in kval['population'])
 
         fval = kval['population'][f]
-        if np.isnan(fval) or fval > self.max_iterations:
-          fvals.append(0.5)
+        if np.isnan(fval):
+          fvals.append(self.max_iterations)
+          ax.annotate('x', (text_offset, text_y), va = 'center')
+        elif fval > self.max_iterations:
+          fvals.append(self.max_iterations)
+          ax.annotate(str(fval), (text_offset, text_y), va = 'center')
         else:
           fvals.append(fval)
           ax.annotate(str(fval), (fval + text_offset, text_y), va = 'center')
