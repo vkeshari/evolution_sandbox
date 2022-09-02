@@ -7,6 +7,9 @@ class FitnessHistoryGraph:
     self.max_iterations = max_iterations
     self.iterations_map = {}
 
+  def add_iterations(self, key, iterations):
+    self.iterations_map[key] = iterations
+
   def plot(self, show = False, ax = None):
     if not ax:
         ax = plt.gca()
@@ -21,9 +24,6 @@ class FitnessHistoryGraph:
       ax.step(x_axis, y_axis)
       if show:
         plt.show()
-
-  def add_iterations(self, key, iterations):
-    self.iterations_map[key] = iterations
 
 class FitnessTimeToGraph:
 

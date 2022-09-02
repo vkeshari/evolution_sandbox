@@ -1,13 +1,21 @@
+import params as par
 from metrics import dataio as dat
 from metrics import graph as gra
 
-FILENAME = "Run_p100_a10_r10_i100_ALL_RESTRICTIONS_False_False_20220901130953.data"
-
 def main():
   fhio = dat.FitnessHistoryIO()
-  fitness_history = fhio.read_fitness_history(FILENAME, show = False)
 
-  itg = gra.FitnessCombinedGraph(10)
+  filename = fhio.get_filename(par.DataViewerParams.POPULATION_SIZE,
+                                par.DataViewerParams.NUM_ASSIGNMENTS,
+                                par.DataViewerParams.NUM_RUNS,
+                                par.DataViewerParams.NUM_ITERATIONS,
+                                par.DataViewerParams.EVOLUTION_STRATEGY.name,
+                                par.DataViewerParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
+                                par.DataViewerParams.RANDOMIZE_ASSIGNMENT_SIZES,
+                                par.DataViewerParams.DATETIME_STRING)
+  fitness_history = fhio.read_fitness_history(filename, show = False)
+
+  itg = gra.FitnessCombinedGraph(par.GraphParams.MAX_ITERATIONS)
   itg.add_fitness_history("TEST", fitness_history)
   itg.plot(show = True)
 

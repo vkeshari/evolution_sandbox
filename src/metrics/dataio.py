@@ -3,7 +3,7 @@ import pickle
 import os
 
 class FitnessHistoryJSONSerializer(json.JSONEncoder):
-  
+
   def default(self, o):
     if type(o).__name__ == 'FitnessHistory':
       return o.history
@@ -18,6 +18,14 @@ class FitnessHistoryIO:
     assert i >= 0, "Not run from evolution_sandbox folder. Current directory: {}".format(current_dir)
     self.DATA_DIR = current_dir[: i + 18] + "/data/"
     print (self.DATA_DIR)
+
+  @staticmethod
+  def get_filename(population_size, num_assignments, num_runs, num_iterations, 
+                    evolution_strategy_name, randomize_assignment_priorities, randomize_assignment_sizes,
+                    datetime_string):
+    return "Run_p{}_a{}_r{}_i{}_{}_{}_{}_{}.data".format(population_size, num_assignments, num_runs, num_iterations, 
+                                                          evolution_strategy_name, randomize_assignment_priorities, randomize_assignment_sizes,
+                                                          datetime_string)
 
   def write_fitness_history(self, filename, fitness_history):
     full_filename = self.DATA_DIR + filename
