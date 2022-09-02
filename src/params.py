@@ -49,8 +49,8 @@ class DebugParams:
   SHOW_RUN_GENOMES = False
   SHOW_RUN_FITNESS = False
 
-  SHOW_AGGREGATED_FITNESS = True
-  WRITE_AGGREGATED_FITNESS = False
+  SHOW_AGGREGATED_FITNESS = False
+  WRITE_AGGREGATED_FITNESS = True
 
 # Params for data_viewer.py
 
@@ -66,3 +66,4 @@ class DataViewerParams:
 
 class GraphParams:
   MAX_ITERATIONS = 100
+  TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
