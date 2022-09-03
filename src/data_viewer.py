@@ -26,7 +26,7 @@ def graph_by_strategy():
   fixed = 'RandomPriorities: {}, RandomSizes: {}'.format(
       str(par.DataViewerParams.RANDOMIZE_ASSIGNMENT_PRIORITIES),
       str(par.DataViewerParams.RANDOMIZE_ASSIGNMENT_SIZES))
-  fcg.plot(title = fig_type + '\n' + fixed + '\nKey: ' + variable, show = True)
+  fcg.plot(title = fig_type + '\n' + fixed + '\nKey: ' + variable, show = True, fit_curve = par.GraphParams.FIT_CURVE)
 
 def graph_by_assignment_variations():
   fhio = dat.FitnessHistoryIO()
@@ -50,7 +50,7 @@ def graph_by_assignment_variations():
   fig_type = 'Evolution by Assignment Types'
   variable = '(RandomPriorities, RandomSizes)'
   fixed = 'EvolutionStrategy: {}'.format(par.DataViewerParams.EVOLUTION_STRATEGY.name)
-  fcg.plot(title = fig_type + '\n' + fixed + '\nKey: ' + variable, show = True)
+  fcg.plot(title = fig_type + '\n' + fixed + '\nKey: ' + variable, show = True, fit_curve = par.GraphParams.FIT_CURVE)
 
 def graph_by_assignment():
   fhio = dat.FitnessHistoryIO()
@@ -75,7 +75,7 @@ def graph_by_assignment():
       par.DataViewerParams.EVOLUTION_STRATEGY.name,
       str(par.DataViewerParams.RANDOMIZE_ASSIGNMENT_PRIORITIES),
       str(par.DataViewerParams.RANDOMIZE_ASSIGNMENT_SIZES))
-  fcg.plot(title = fig_type + '\n' + fixed + '\nKey: ' + variable, show = True, by_assignment = True)
+  fcg.plot(title = fig_type + '\n' + fixed + '\nKey: ' + variable, show = True, by_assignment = True, fit_curve = par.GraphParams.FIT_CURVE)
 
 def main():
   graph_by_strategy()

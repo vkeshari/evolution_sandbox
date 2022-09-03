@@ -1,7 +1,17 @@
 import numpy as np
+import scipy.optimize as opt
 from matplotlib import pyplot as plt
 
 class FitnessHistoryGraph:
+
+  LINE_ALPHA = 0.8
+  LINE_WIDTH = 2
+  SCATTER_ALPHA = 0.4
+  SCATTER_SIZE = 5
+
+  @staticmethod
+  def exp_curve_fit_func(x, a, b, c):
+    return a + b * np.exp(-x / c)
 
   def __init__(self, max_iterations):
     self.max_iterations = max_iterations
@@ -10,7 +20,7 @@ class FitnessHistoryGraph:
   def add_iterations(self, key, iterations):
     self.iterations_map[key] = iterations
 
-  def plot(self, show = False, ax = None, by_assignment = False):
+  def plot(self, show = False, ax = None, by_assignment = False, fit_curve = False):
     if not ax:
       ax = plt.gca()
       ax.set_xlabel('Generation No. -->', fontsize = 16)
@@ -27,7 +37,13 @@ class FitnessHistoryGraph:
           y_axis.append(ival.data['population']['fitness'])
         else:
           y_axis.append(ival.data['assignment'][kindex]['fitness'])
-      ax.step(x_axis, y_axis, label = k)
+      if fit_curve:
+        (a, b, c), _ = opt.curve_fit(self.exp_curve_fit_func, x_axis, y_axis)
+        y_fit = [self.exp_curve_fit_func(x, a, b, c) for x in x_axis]
+        ax.scatter(x_axis, y_axis, s = self.SCATTER_SIZE, alpha = self.SCATTER_ALPHA, label = k)
+        ax.plot(x_axis, y_fit, alpha = self.LINE_ALPHA, linewidth = self.LINE_WIDTH, label = k)
+      else:
+        ax.step(x_axis, y_axis, alpha = self.LINE_ALPHA, linewidth = self.LINE_WIDTH, label = k)
 
     ax.set_title('Average Fitness over generations', fontsize = 16)
     ax.grid(visible = True)
@@ -41,6 +57,8 @@ class FitnessHistoryGraph:
       plt.show()
 
 class FitnessTimeToGraph:
+
+  ALPHA = 0.8
 
   def __init__(self, max_iterations, time_to_fitness_values):
     self.max_iterations = max_iterations
@@ -84,7 +102,7 @@ class FitnessTimeToGraph:
         text_y += 1
 
       y_pos = [y + 1 - y_offset for y in range(len(self.time_to_fitness_values))]
-      ax.barh(y_pos, fvals, height = y_multiplier, label = k)
+      ax.barh(y_pos, fvals, height = y_multiplier, label = k, alpha = self.ALPHA)
       for v in fvals:
         if v == 0:
           l = 'N/A'
@@ -116,10 +134,10 @@ class FitnessCombinedGraph:
     self.iterations_graph.add_iterations(key, fitness_history.history['iterations'])
     self.time_to_graph.add_time_to(key, fitness_history.history['time_to'])
 
-  def plot(self, title = '', show = False, by_assignment = False):
+  def plot(self, title = '', show = False, by_assignment = False, fit_curve = False):
     fig, (ax_fit, ax_tt) = plt.subplots(2, 1, figsize = (15, 10))
     fig.suptitle(title, fontsize = 18)
-    self.iterations_graph.plot(ax = ax_fit, by_assignment = by_assignment)
+    self.iterations_graph.plot(ax = ax_fit, by_assignment = by_assignment, fit_curve = fit_curve)
     self.time_to_graph.plot(ax = ax_tt, by_assignment = by_assignment)
 
     if show:

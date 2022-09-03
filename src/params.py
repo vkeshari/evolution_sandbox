@@ -67,4 +67,5 @@ class DataViewerParams:
 
 class GraphParams:
   MAX_ITERATIONS = 100
+  FIT_CURVE = True
   TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
