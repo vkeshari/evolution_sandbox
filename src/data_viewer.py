@@ -2,9 +2,9 @@ import params as par
 from metrics import dataio as dat
 from metrics import graph as gra
 
-def main():
+def graph_by_strategy():
   fhio = dat.FitnessHistoryIO()
-  itg = gra.FitnessCombinedGraph(max_iterations = par.GraphParams.MAX_ITERATIONS,
+  fcg = gra.FitnessCombinedGraph(max_iterations = par.GraphParams.MAX_ITERATIONS,
                                   time_to_fitness_values = par.GraphParams.TIME_TO_FITNESS_VALUES)
 
   for evolution_strategy in par.EvolutionStrategy:
@@ -19,10 +19,68 @@ def main():
                                   par.DataViewerParams.RANDOMIZE_ASSIGNMENT_SIZES,
                                   par.DataViewerParams.DATETIME_STRING)
     fitness_history = fhio.read_fitness_history(filename, show = False)
-    itg.add_fitness_history(key = evolution_strategy.name, fitness_history = fitness_history)
+    fcg.add_fitness_history(key = evolution_strategy.name, fitness_history = fitness_history)
 
-  itg.plot(show = True)
+  fig_type = 'Evolution by Strategy'
+  variable = 'EvolutionStrategy'
+  fixed = 'RandomPriorities: {}, RandomSizes: {}'.format(
+      str(par.DataViewerParams.RANDOMIZE_ASSIGNMENT_PRIORITIES),
+      str(par.DataViewerParams.RANDOMIZE_ASSIGNMENT_SIZES))
+  fcg.plot(title = fig_type + '\n' + fixed + '\nKey: ' + variable, show = True)
 
+def graph_by_assignment_variations():
+  fhio = dat.FitnessHistoryIO()
+  fcg = gra.FitnessCombinedGraph(max_iterations = par.GraphParams.MAX_ITERATIONS,
+                                  time_to_fitness_values = par.GraphParams.TIME_TO_FITNESS_VALUES)
+
+  for randomize_assignment_priorities in [False, True]:
+    for randomize_assignment_sizes in [False, True]:
+      filename = fhio.get_filename(par.DataViewerParams.POPULATION_SIZE,
+                                    par.DataViewerParams.NUM_ASSIGNMENTS,
+                                    par.DataViewerParams.NUM_RUNS,
+                                    par.DataViewerParams.NUM_ITERATIONS,
+                                    par.DataViewerParams.EVOLUTION_STRATEGY.name,
+                                    randomize_assignment_priorities,
+                                    randomize_assignment_sizes,
+                                    par.DataViewerParams.DATETIME_STRING)
+      fitness_history = fhio.read_fitness_history(filename, show = False)
+      key = '(' + str(randomize_assignment_priorities) + ', ' + str(randomize_assignment_sizes) + ')'
+      fcg.add_fitness_history(key = key, fitness_history = fitness_history)
+  
+  fig_type = 'Evolution by Assignment Types'
+  variable = '(RandomPriorities, RandomSizes)'
+  fixed = 'EvolutionStrategy: {}'.format(par.DataViewerParams.EVOLUTION_STRATEGY.name)
+  fcg.plot(title = fig_type + '\n' + fixed + '\nKey: ' + variable, show = True)
+
+def graph_by_assignment():
+  fhio = dat.FitnessHistoryIO()
+  fcg = gra.FitnessCombinedGraph(max_iterations = par.GraphParams.MAX_ITERATIONS,
+                                  time_to_fitness_values = par.GraphParams.TIME_TO_FITNESS_VALUES)
+
+  filename = fhio.get_filename(par.DataViewerParams.POPULATION_SIZE,
+                                par.DataViewerParams.NUM_ASSIGNMENTS,
+                                par.DataViewerParams.NUM_RUNS,
+                                par.DataViewerParams.NUM_ITERATIONS,
+                                par.DataViewerParams.EVOLUTION_STRATEGY.name,
+                                par.DataViewerParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
+                                par.DataViewerParams.RANDOMIZE_ASSIGNMENT_SIZES,
+                                par.DataViewerParams.DATETIME_STRING)
+  fitness_history = fhio.read_fitness_history(filename, show = False)
+  for assignment in range(par.DataViewerParams.NUM_ASSIGNMENTS):
+    fcg.add_fitness_history(key = 'Assignment {}'.format(assignment) , fitness_history = fitness_history)
+  
+  fig_type = 'Evolution by Assignment'
+  variable = 'AssignmentNo'
+  fixed = 'EvolutionStrategy: {}, RandomPriorities: {}, RandomSizes: {}'.format(
+      par.DataViewerParams.EVOLUTION_STRATEGY.name,
+      str(par.DataViewerParams.RANDOMIZE_ASSIGNMENT_PRIORITIES),
+      str(par.DataViewerParams.RANDOMIZE_ASSIGNMENT_SIZES))
+  fcg.plot(title = fig_type + '\n' + fixed + '\nKey: ' + variable, show = True, by_assignment = True)
+
+def main():
+  graph_by_strategy()
+  graph_by_assignment_variations()
+  graph_by_assignment()
 
 if __name__=="__main__":
   main()

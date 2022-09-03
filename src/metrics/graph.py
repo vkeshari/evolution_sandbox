@@ -10,26 +10,30 @@ class FitnessHistoryGraph:
   def add_iterations(self, key, iterations):
     self.iterations_map[key] = iterations
 
-  def plot(self, show = False, ax = None):
+  def plot(self, show = False, ax = None, by_assignment = False):
     if not ax:
       ax = plt.gca()
-      ax.set_xlabel('Generation No. -->')
+      ax.set_xlabel('Generation No. -->', fontsize = 16)
 
-    for k, kval in self.iterations_map.items():
+    for kindex, k in enumerate(self.iterations_map):
+      kval = self.iterations_map[k]
       x_axis = []
       y_axis = []
       for i, ival in kval.items():
         if i > self.max_iterations:
           break
         x_axis.append(int(i))
-        y_axis.append(ival.data['population']['fitness'])
+        if not by_assignment:
+          y_axis.append(ival.data['population']['fitness'])
+        else:
+          y_axis.append(ival.data['assignment'][kindex]['fitness'])
       ax.step(x_axis, y_axis, label = k)
 
-    ax.set_title('Average Fitness over generations')
+    ax.set_title('Average Fitness over generations', fontsize = 16)
     ax.grid(visible = True)
-    ax.legend(loc = 'lower right')
+    ax.legend(loc = 'lower right', fontsize = 12)
     ax.set_xlim(0, self.max_iterations)
-    ax.set_ylabel('Fitness')
+    ax.set_ylabel('Fitness', fontsize = 16)
     ax.set_ylim(0.5, 1.0)
 
     if show:
@@ -46,12 +50,13 @@ class FitnessTimeToGraph:
   def add_time_to(self, key, time_to):
     self.time_to_map[key] = time_to
 
-  def plot(self, show = False, ax = None):
+  def plot(self, show = False, ax = None, by_assignment = False):
     if not ax:
       ax = plt.gca()
 
     y_offset = 0.0
-    for k, kval in self.time_to_map.items():
+    for kindex, k in enumerate(self.time_to_map):
+      kval = self.time_to_map[k]
       y_multiplier = 0.9 / len(self.time_to_map)
       y_offset += y_multiplier
 
@@ -59,9 +64,14 @@ class FitnessTimeToGraph:
       text_offset = self.max_iterations / 200
       text_y = 1 - y_offset
       for f in self.time_to_fitness_values:
-        assert(f in kval['population'])
 
-        fval = kval['population'][f]
+        if not by_assignment:
+          assert(f in kval['population'])
+          fval = kval['population'][f]
+        else:
+          assert(f in kval['assignment'][kindex])
+          fval = kval['assignment'][kindex][f]
+
         if np.isnan(fval):
           fvals.append(self.max_iterations)
           ax.annotate('x', (text_offset, text_y), va = 'center')
@@ -81,12 +91,12 @@ class FitnessTimeToGraph:
         else:
           l = str(v)
 
-    ax.set_title('Median No. of generations to reach fitness')
+    ax.set_title('Median No. of generations to reach fitness', fontsize = 16)
     ax.grid(visible = True, axis = 'x')
-    ax.legend(loc = 'lower right')
-    ax.set_xlabel('Generation No. -->')
+    ax.legend(loc = 'lower right', fontsize = 12)
+    ax.set_xlabel('Generation No. -->', fontsize = 16)
     ax.set_xlim(0, self.max_iterations)
-    ax.set_ylabel('Fitness')
+    ax.set_ylabel('Fitness', fontsize = 16)
     ax.set_ylim(0, len(self.time_to_fitness_values))
     ax.set_yticks(range(len(self.time_to_fitness_values)), labels = self.time_to_fitness_values)
 
@@ -106,10 +116,11 @@ class FitnessCombinedGraph:
     self.iterations_graph.add_iterations(key, fitness_history.history['iterations'])
     self.time_to_graph.add_time_to(key, fitness_history.history['time_to'])
 
-  def plot(self, show = False):
+  def plot(self, title = '', show = False, by_assignment = False):
     fig, (ax_fit, ax_tt) = plt.subplots(2, 1, figsize = (15, 10))
-    self.iterations_graph.plot(ax = ax_fit)
-    self.time_to_graph.plot(ax = ax_tt)
+    fig.suptitle(title, fontsize = 18)
+    self.iterations_graph.plot(ax = ax_fit, by_assignment = by_assignment)
+    self.time_to_graph.plot(ax = ax_tt, by_assignment = by_assignment)
 
     if show:
       plt.tight_layout()
