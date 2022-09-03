@@ -1,14 +1,13 @@
 import datetime
 import sys
 
+import params as par
 from containers import population as pop
 from evolution import crossover as crs
 from evolution import assignment as ass
 from evolution import world as wrd
 from metrics import fitness as fit
 from metrics import dataio as dat
-
-import params as par
 
 def get_evolution_constraints(evolution_strategy):
   restrict_crossover = evolution_strategy in [par.EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY,
@@ -78,15 +77,16 @@ def run_evolution(fhio, datetime_string,
     print ("RUN: {}\tITERATIONS: {}".format(r + 1, w.num_generations))
     w.evolve(show_iterations = par.DebugParams.SHOW_ITERATIONS,
               show_every_n_iteration = int(num_iterations / par.DebugParams.NUM_CHECKPOINTS),
-              show_final_genomes = par.DebugParams.SHOW_RUN_GENOMES,
-              show_final_fitness = par.DebugParams.SHOW_RUN_FITNESS)
+              show_run_genomes = par.DebugParams.SHOW_RUN_GENOMES,
+              show_run_fitness = par.DebugParams.SHOW_RUN_FITNESS,
+              show_stats_at_checkpoints = par.DebugParams.SHOW_STATS_AT_CHECKPOINTS)
     all_fitness_history[r + 1] = w.fitness_history
 
   aggregate_fitness_history = fit.FitnessHistoryAggregate.get_aggregated_fitness(all_fitness_history,
                                                                                   fitness_aggregate_type = par.AggregationParams.FITNESS_AGGREGATION_TYPE,
                                                                                   time_to_aggregate_type = par.AggregationParams.TIME_AGGREGATION_TYPE)
   if par.DebugParams.SHOW_AGGREGATED_FITNESS:
-    print("\nFINAL METRICS\n")
+    print("\nFINAL AGGREGATED METRICS\n")
     aggregate_fitness_history.history['iterations'][num_iterations].print_fitness_data()
     print()
     aggregate_fitness_history.print_time_to()

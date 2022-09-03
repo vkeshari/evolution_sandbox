@@ -77,14 +77,22 @@ class World:
 
     return new_generation
 
-  def evolve(self, show_iterations = False, show_every_n_iteration = 1, show_final_genomes = False, show_final_fitness = False):
+  def evolve(self, show_iterations = False,
+              show_every_n_iteration = 1,
+              show_run_genomes = False,
+              show_run_fitness = False,
+              show_stats_at_checkpoints = False):
     if (show_every_n_iteration == 0):
       show_every_n_iteration = 1
 
     for i in range(self.num_generations):
-      if show_iterations and (i + 1) % show_every_n_iteration == 0:
-        total_fitness = self.current_generation.get_fitness()
-        print("ITERATION: {}\tFitness: {:.2}".format(i + 1, total_fitness))
+      is_checkpoint = (i + 1) % show_every_n_iteration == 0
+      if is_checkpoint:
+        if show_iterations:
+          total_fitness = self.current_generation.get_fitness()
+          print("ITERATION: {}\tFitness: {:.2}".format(i + 1, total_fitness))
+        if show_stats_at_checkpoints:
+          fit.FitnessUtil.show_population_stats(self.current_generation, show_run_genomes, show_run_fitness)
 
       updated_generation = self.new_generation(self.current_generation)
 
@@ -94,6 +102,7 @@ class World:
 
       self.current_generation = updated_generation
 
-    fit.FitnessUtil.show_population_stats(self.current_generation, show_final_genomes, show_final_fitness)
-    if show_final_fitness:
+    print("RUN STATS\n")
+    fit.FitnessUtil.show_population_stats(self.current_generation, show_run_genomes, show_run_fitness)
+    if show_run_fitness:
       self.fitness_history.print_time_to()

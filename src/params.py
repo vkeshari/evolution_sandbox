@@ -48,9 +48,10 @@ class DebugParams:
 
   SHOW_RUN_GENOMES = False
   SHOW_RUN_FITNESS = False
+  SHOW_STATS_AT_CHECKPOINTS = False
 
   SHOW_AGGREGATED_FITNESS = False
-  WRITE_AGGREGATED_FITNESS = True
+  WRITE_AGGREGATED_FITNESS = False
 
 # Params for data_viewer.py
 

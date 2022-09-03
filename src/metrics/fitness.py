@@ -26,7 +26,6 @@ class FitnessUtil:
   @staticmethod
   def show_population_stats(population, show_genomes = False, show_fitness = False):
     if show_genomes:
-      print("FINAL POPULATION\n")
       print(population)
     if show_fitness:
       FitnessData.from_population(population).print_fitness_data()
