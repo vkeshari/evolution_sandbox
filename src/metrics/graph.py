@@ -5,9 +5,9 @@ from matplotlib import pyplot as plt
 class FitnessHistoryGraph:
 
   LINE_ALPHA = 0.8
-  LINE_WIDTH = 2
-  SCATTER_ALPHA = 0.4
-  SCATTER_SIZE = 5
+  LINE_WIDTH = 5
+  SCATTER_ALPHA = 0.1
+  SCATTER_SIZE = 50
 
   @staticmethod
   def exp_curve_fit_func(x, a, b, c):
@@ -40,7 +40,7 @@ class FitnessHistoryGraph:
       if fit_curve:
         (a, b, c), _ = opt.curve_fit(self.exp_curve_fit_func, x_axis, y_axis)
         y_fit = [self.exp_curve_fit_func(x, a, b, c) for x in x_axis]
-        ax.scatter(x_axis, y_axis, s = self.SCATTER_SIZE, alpha = self.SCATTER_ALPHA, label = k)
+        ax.scatter(x_axis, y_axis, s = self.SCATTER_SIZE, alpha = self.SCATTER_ALPHA)
         ax.plot(x_axis, y_fit, alpha = self.LINE_ALPHA, linewidth = self.LINE_WIDTH, label = k)
       else:
         ax.step(x_axis, y_axis, alpha = self.LINE_ALPHA, linewidth = self.LINE_WIDTH, label = k)
