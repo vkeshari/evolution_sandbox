@@ -82,7 +82,8 @@ class DebugParams:
 # Params for data_viewer.py
 
 class DataViewerParams:
-  # The date and time when the script to generate data was run (not the time at which it was actually stored)
+  # The date and time when the script to generate data was run (not the time at which it was actually stored).
+  # By default, this is for the sample data found under data/ and out/
   DATETIME_STRING = '20220905210808'
 
   # Same as for main.py
@@ -110,7 +111,7 @@ class GraphParams:
   TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
   # Only show these many iterations in graph.
   MAX_ITERATIONS = 100
-  # Fit an exponential curve to each series.
+  # Fit an exponential curve to each series in graph.
   FIT_CURVE = False
 
   # Show graphs (UI)
