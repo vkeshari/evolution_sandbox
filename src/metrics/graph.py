@@ -21,7 +21,7 @@ class FitnessHistoryGraph:
   def add_iterations(self, key, iterations):
     self.iterations_map[key] = iterations
 
-  def plot(self, show = False, ax = None, by_assignment = False, fit_curve = False):
+  def plot(self, show = False, ax = None, by_assignment = False, fit_curve = False, savefile = None):
     if not ax:
       ax = plt.gca()
       ax.set_xlabel('Generation No. -->', fontsize = 16)
@@ -56,6 +56,9 @@ class FitnessHistoryGraph:
     if show:
       plt.tight_layout()
       plt.show()
+    if savefile:
+      plt.tight_layout()
+      plt.savefig(savefile)
 
 class FitnessTimeToGraph:
 
@@ -69,7 +72,7 @@ class FitnessTimeToGraph:
   def add_time_to(self, key, time_to):
     self.time_to_map[key] = time_to
 
-  def plot(self, show = False, ax = None, by_assignment = False):
+  def plot(self, show = False, ax = None, by_assignment = False, savefile = None):
     if not ax:
       ax = plt.gca()
 
@@ -122,6 +125,9 @@ class FitnessTimeToGraph:
     if show:
       plt.tight_layout()
       plt.show()
+    if savefile:
+      plt.tight_layout()
+      plt.savefig(savefile)
     
 
 class FitnessCombinedGraph:
@@ -135,7 +141,7 @@ class FitnessCombinedGraph:
     self.iterations_graph.add_iterations(key, fitness_history.history['iterations'])
     self.time_to_graph.add_time_to(key, fitness_history.history['time_to'])
 
-  def plot(self, title = '', show = False, by_assignment = False, fit_curve = False):
+  def plot(self, title = '', show = False, by_assignment = False, fit_curve = False, savefile = None):
     fig, (ax_fit, ax_tt) = plt.subplots(2, 1, figsize = (15, 10))
     fig.suptitle(title, fontsize = 18)
     self.iterations_graph.plot(ax = ax_fit, by_assignment = by_assignment, fit_curve = fit_curve)
@@ -144,3 +150,6 @@ class FitnessCombinedGraph:
     if show:
       plt.tight_layout()
       plt.show()
+    if savefile:
+      plt.tight_layout()
+      plt.savefig(savefile)

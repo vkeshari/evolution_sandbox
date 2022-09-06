@@ -73,6 +73,8 @@ class GraphTypes:
   BY_ASSIGNMENT = False
 
 class GraphParams:
+  TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
   MAX_ITERATIONS = 100
   FIT_CURVE = False
-  TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
+  SHOW_GRAPHS = True
+  SAVE_GRAPHS = False
