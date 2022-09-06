@@ -59,6 +59,8 @@ class FitnessHistoryGraph:
     if savefile:
       plt.tight_layout()
       plt.savefig(savefile)
+      print ("Graph written to: {}".format(savefile))
+      plt.close()
 
 class FitnessTimeToGraph:
 
@@ -128,6 +130,8 @@ class FitnessTimeToGraph:
     if savefile:
       plt.tight_layout()
       plt.savefig(savefile)
+      print ("Graph written to: {}".format(savefile))
+      plt.close()
     
 
 class FitnessCombinedGraph:
@@ -153,3 +157,5 @@ class FitnessCombinedGraph:
     if savefile:
       plt.tight_layout()
       plt.savefig(savefile)
+      print ("Graph written to: {}".format(savefile))
+      plt.close()

@@ -76,5 +76,7 @@ class GraphParams:
   TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
   MAX_ITERATIONS = 100
   FIT_CURVE = False
+
   SHOW_GRAPHS = True
   SAVE_GRAPHS = False
+  ALL_GRAPHS = False
