@@ -1,5 +1,7 @@
 # evolution_sandbox
 
+**Note:** You must attribute references to this or any derivative work to the original author.
+
 **Where things are:**
 
 `src/params.py` : All config lives here. Treat this as command-line params.
@@ -21,6 +23,3 @@ NUM_RUNS        = 100
 `$python3 src/main.py`        : Generates data from simulation
 
 `$python3 src/data_viewer.py` : Generates graphs from data
-
-
-**Note:** You must attribute references to this or any derivative work to the original author.
