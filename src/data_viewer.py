@@ -39,9 +39,7 @@ def graph_by_strategy_run(fitness_history_io,
 
   fig_type = 'Evolution by Strategy'
   variable = 'EvolutionStrategy'
-  fixed = 'RandomPriorities: {}, RandomSizes: {}'.format(
-      str(par.DataViewerParams.RANDOMIZE_ASSIGNMENT_PRIORITIES),
-      str(par.DataViewerParams.RANDOMIZE_ASSIGNMENT_SIZES))
+  fixed = 'RandomPriorities: {}, RandomSizes: {}'.format(str(randomize_assignment_priorities), str(randomize_assignment_sizes))
   savefile = None
   if save:
     savefile = fitness_history_io.get_graph_filename(par.DataViewerParams.POPULATION_SIZE,
@@ -92,7 +90,7 @@ def graph_by_assignment_variations_run(fitness_history_io,
   
   fig_type = 'Evolution by Assignment Types'
   variable = '(RandomPriorities, RandomSizes)'
-  fixed = 'EvolutionStrategy: {}'.format(par.DataViewerParams.EVOLUTION_STRATEGY.name)
+  fixed = 'EvolutionStrategy: {}'.format(evolution_strategy.name)
   savefile = None
   if save:
     savefile = fitness_history_io.get_graph_filename(par.DataViewerParams.POPULATION_SIZE,
@@ -148,9 +146,7 @@ def graph_by_assignment_run(fitness_history_io,
   fig_type = 'Evolution by Assignment'
   variable = 'AssignmentNo'
   fixed = 'EvolutionStrategy: {}, RandomPriorities: {}, RandomSizes: {}'.format(
-      par.DataViewerParams.EVOLUTION_STRATEGY.name,
-      str(par.DataViewerParams.RANDOMIZE_ASSIGNMENT_PRIORITIES),
-      str(par.DataViewerParams.RANDOMIZE_ASSIGNMENT_SIZES))
+      evolution_strategy.name, randomize_assignment_priorities, randomize_assignment_sizes)
   savefile = None
   if save:
     savefile = fitness_history_io.get_graph_filename(par.DataViewerParams.POPULATION_SIZE,
