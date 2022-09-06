@@ -51,7 +51,7 @@ class FitnessData:
   def from_population(population):
     fitness_data = FitnessData(genome_size = population.genome_size)
 
-    all_individuals = population.get_all_individuals(sort = True)
+    all_individuals = population.get_all_individuals(sort = True, assigned = True)
     fitness_data.data['population']['fitness'] = FitnessUtil.get_subgroup_fitness(all_individuals, population.population_size)
     fitness_data.data['population']['percentiles'] = FitnessUtil.get_fitness_percentiles(all_individuals)
 
@@ -92,6 +92,7 @@ class FitnessHistory:
   def update_iteration(self, iteration_no, fitness_data):
     self.history['iterations'][iteration_no] = fitness_data
 
+
   def update_time_to(self, iteration_no, fitness_data):
     for f in self.time_to_fitness_values:
       if f not in self.history['time_to']['population'] and fitness_data.data['population']['fitness'] > f:
@@ -99,6 +100,10 @@ class FitnessHistory:
       for a in fitness_data.data['assignment']:
         if f not in self.history['time_to']['assignment'][a] and fitness_data.data['assignment'][a]['fitness'] > f:
           self.history['time_to']['assignment'][a][f] = iteration_no
+
+  def update_fitness_history(self, iteration_no, fitness_data):
+    self.update_iteration(iteration_no, fitness_data)
+    self.update_time_to(iteration_no, fitness_data)
 
   def print_time_to(self):
     print("TIME TO FITNESS")

@@ -1,4 +1,3 @@
-import random
 import numpy as np
 
 from . import crossover as crs
@@ -8,8 +7,6 @@ from metrics import fitness as fit
 
 class World:
 
-  ASSIGNMENT_PRIORITY_RANDOMIZER = np.random.RandomState()
-  ASSIGNMENT_SIZE_RANDOMIZER = np.random.RandomState()
   INDIVIDUALS_ORDER_RANDOMIZER = np.random.RandomState()
 
   def __init__(self, initial_population, assignment, crossover, fitness_history, num_generations,
@@ -25,22 +22,12 @@ class World:
     self.randomize_assignment_sizes = randomize_assignment_sizes
 
     self.current_generation = initial_population
-    self.fitness_history.update_iteration(0, fit.FitnessData.from_population(initial_population))
+    self.assign_purge_measure(self.current_generation, iteration_no = 0)
 
-  def get_assignment_distribution(self, population_size, genome_size):
-    assignment_priorities = [*range(genome_size)]
-    if self.randomize_assignment_priorities:
-      self.ASSIGNMENT_PRIORITY_RANDOMIZER.shuffle(assignment_priorities)
-
-    default_group_size = int(population_size / genome_size)
-    assignment_sizes = {i: default_group_size for i in range(genome_size)}
-    if self.randomize_assignment_sizes:
-      for i in range(population_size):
-        swap_indices = self.ASSIGNMENT_SIZE_RANDOMIZER.randint(0, genome_size, 2)
-        if assignment_sizes[swap_indices[0]] > int(default_group_size / 2):
-          assignment_sizes[swap_indices[0]] -= 1
-          assignment_sizes[swap_indices[1]] += 1
-    return (assignment_priorities, assignment_sizes)
+  def assign_purge_measure(self, population, iteration_no):
+    self.assignment.update_assignments(population)
+    fitness_data = fit.FitnessData.from_population(population)
+    self.fitness_history.update_fitness_history(iteration_no, fitness_data)
 
   def new_generation(self, population):
     new_groups = []
@@ -65,16 +52,13 @@ class World:
         new_groups.append(grp.Group(g.group_size, g.genome_size, individuals = new_group_individuals))
         already_assigned += g.group_size
 
-    (assignment_priorities, assignment_sizes) = self.get_assignment_distribution(population.population_size, population.num_groups)
+    (assignment_priorities, assignment_sizes) = self.assignment.get_assignment_distribution(population.population_size, population.genome_size)
     new_generation = pop.Population(population.population_size,
                                     population.num_groups,
                                     population.genome_size,
-                                    assignment_priorities,
-                                    assignment_sizes,
+                                    assignment_priorities = assignment_priorities,
+                                    assignment_sizes = assignment_sizes,
                                     groups = new_groups)
-
-    self.assignment.update_assignments(new_generation)
-
     return new_generation
 
   def evolve(self, show_iterations = False,
@@ -95,14 +79,11 @@ class World:
           fit.FitnessUtil.show_population_stats(self.current_generation, show_run_genomes, show_run_fitness)
 
       updated_generation = self.new_generation(self.current_generation)
-
-      fitness_data = fit.FitnessData.from_population(updated_generation)
-      self.fitness_history.update_iteration(i + 1, fitness_data)
-      self.fitness_history.update_time_to(i + 1, fitness_data)
-
+      self.assign_purge_measure(updated_generation, iteration_no = i + 1)
       self.current_generation = updated_generation
 
-    print("RUN STATS\n")
-    fit.FitnessUtil.show_population_stats(self.current_generation, show_run_genomes, show_run_fitness)
-    if show_run_fitness:
-      self.fitness_history.print_time_to()
+    if show_run_genomes or show_run_fitness:
+      print("RUN STATS\n")
+      fit.FitnessUtil.show_population_stats(self.current_generation, show_run_genomes, show_run_fitness)
+      if show_run_fitness:
+        self.fitness_history.print_time_to()

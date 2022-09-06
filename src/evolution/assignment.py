@@ -1,13 +1,34 @@
+import numpy as np
+
 class Assignment:
 
-  def __init__(self, restrict_assignment = False, group_by_assignment = False):
+  ASSIGNMENT_PRIORITY_RANDOMIZER = np.random.RandomState()
+  ASSIGNMENT_SIZE_RANDOMIZER = np.random.RandomState()
+
+  def __init__(self, restrict_assignment = False, group_by_assignment = False,
+                randomize_assignment_priorities = False, randomize_assignment_sizes = False):
     self.restrict_assignment = restrict_assignment
     self.group_by_assignment = group_by_assignment
+    self.randomize_assignment_priorities = randomize_assignment_priorities,
+    self.randomize_assignment_sizes = randomize_assignment_sizes
+
+  def get_assignment_distribution(self, population_size, genome_size):
+    assignment_priorities = [*range(genome_size)]
+    if self.randomize_assignment_priorities:
+      self.ASSIGNMENT_PRIORITY_RANDOMIZER.shuffle(assignment_priorities)
+
+    default_group_size = int(population_size / genome_size)
+    assignment_sizes = {i: default_group_size for i in range(genome_size)}
+    if self.randomize_assignment_sizes:
+      for i in range(population_size):
+        swap_indices = self.ASSIGNMENT_SIZE_RANDOMIZER.randint(0, genome_size, 2)
+        if assignment_sizes[swap_indices[0]] > int(default_group_size / 2):
+          assignment_sizes[swap_indices[0]] -= 1
+          assignment_sizes[swap_indices[1]] += 1
+    return (assignment_priorities, assignment_sizes)
 
   def shuffle_by_assignment(self, population):
-    all_individuals = []
-    for group in population.groups:
-      all_individuals += group.individuals
+    all_individuals = population.get_all_individuals(assigned = True)
 
     for a in range(population.genome_size):
       group = population.groups[a]

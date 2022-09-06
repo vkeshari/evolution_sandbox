@@ -2,7 +2,8 @@ from . import group as grp
 
 class Population:
 
-  def __init__(self, population_size, num_groups, genome_size, assignment_priorities, assignment_sizes, groups = None):
+  def __init__(self, population_size, num_groups, genome_size,
+                assignment_priorities, assignment_sizes, groups = None):
     self.population_size = population_size
     self.num_groups = num_groups
     self.genome_size = genome_size
@@ -28,10 +29,10 @@ class Population:
       sum += g.get_fitness() * g.group_size
     return sum / self.population_size
 
-  def get_all_individuals(self, sort = False, descending = False):
+  def get_all_individuals(self, sort = False, descending = False, assigned = False):
     all_individuals = []
     for g in self.groups:
-      all_individuals += g.individuals
+      all_individuals += [i for i in g.individuals if not assigned or i.has_assignment()]
     if sort:
       all_individuals = sorted(all_individuals, key = lambda i: i.get_fitness(), reverse = descending)
     return all_individuals

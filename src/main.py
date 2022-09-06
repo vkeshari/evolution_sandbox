@@ -30,19 +30,17 @@ def initialize_world(population_size, num_iterations, num_assignments,
                       evolution_strategy, randomize_assignment_priorities, randomize_assignment_sizes):
   (restrict_crossover, restrict_assignment, group_by_assignment) = get_evolution_constraints(evolution_strategy)
 
-  group_size = int(population_size / par.PopulationParams.NUM_GROUPS)
-  initial_assignment_priorities = range(par.PopulationParams.NUM_GROUPS)
-  initial_assignment_sizes = [group_size] * par.PopulationParams.NUM_GROUPS
+  a = ass.Assignment(restrict_assignment = restrict_assignment,
+                      group_by_assignment = group_by_assignment,
+                      randomize_assignment_priorities = randomize_assignment_priorities,
+                      randomize_assignment_sizes = randomize_assignment_sizes)
+  (assignment_priorities, assignment_sizes) = a.get_assignment_distribution(population_size, num_assignments)
 
   p = pop.Population(population_size = population_size,
                       num_groups = num_assignments,
                       genome_size = num_assignments,
-                      assignment_priorities = initial_assignment_priorities,
-                      assignment_sizes = initial_assignment_sizes)
-
-  a = ass.Assignment(restrict_assignment = restrict_assignment,
-                      group_by_assignment = group_by_assignment)
-  a.update_assignments(population = p)
+                      assignment_priorities = assignment_priorities,
+                      assignment_sizes = assignment_sizes)
 
   c = crs.Crossover(crossover_beta_param = par.CrossoverParams.CROSSOVER_BETA_PARAM,
                     mutation_rate = par.CrossoverParams.MUTATION_RATE,
@@ -55,9 +53,7 @@ def initialize_world(population_size, num_iterations, num_assignments,
                 crossover = c,
                 fitness_history = f,
                 num_generations = num_iterations,
-                restrict_crossover = restrict_crossover,
-                randomize_assignment_priorities = randomize_assignment_priorities,
-                randomize_assignment_sizes = randomize_assignment_sizes)
+                restrict_crossover = restrict_crossover)
   return w
 
 def run_evolution(fhio, datetime_string,

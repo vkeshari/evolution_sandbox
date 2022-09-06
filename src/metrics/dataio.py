@@ -17,7 +17,7 @@ class FitnessHistoryIO:
     i = current_dir.rfind('/evolution_sandbox')
     assert i >= 0, "Not run from evolution_sandbox folder. Current directory: {}".format(current_dir)
     self.DATA_DIR = current_dir[: i + 18] + "/data/"
-    print (self.DATA_DIR)
+    print ("Data Directory: " + self.DATA_DIR)
 
   @staticmethod
   def get_filename(population_size, num_assignments, num_runs, num_iterations, 

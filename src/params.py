@@ -17,7 +17,7 @@ class LoopParams:
   MULTI_PARAMS = False
 
 class WorldParams:
-  NUM_RUNS = 10
+  NUM_RUNS = 100
   NUM_GENERATIONS = 100
 
   # These are ignored if LoopParams.MULTI_PARAMS
@@ -27,8 +27,8 @@ class WorldParams:
 
 class PopulationParams:
   POPULATION_SIZE = 100
-  NUM_GROUPS = 10
-  NUM_ASSIGNMENTS = 10
+  NUM_GROUPS = 4
+  NUM_ASSIGNMENTS = 4
 
 class AggregationParams:
   FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
@@ -50,22 +50,29 @@ class DebugParams:
   SHOW_RUN_FITNESS = False
   SHOW_STATS_AT_CHECKPOINTS = False
 
-  SHOW_AGGREGATED_FITNESS = False
+  SHOW_AGGREGATED_FITNESS = True
   WRITE_AGGREGATED_FITNESS = False
 
 # Params for data_viewer.py
 
 class DataViewerParams:
+  DATETIME_STRING = '20220905201601'
   POPULATION_SIZE = 100
-  NUM_ASSIGNMENTS = 10
-  NUM_RUNS = 10
+  NUM_ASSIGNMENTS = 4
+  NUM_RUNS = 100
   NUM_ITERATIONS = 100
+
+  # Ignored depending on graph type
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
   RANDOMIZE_ASSIGNMENT_PRIORITIES = True
   RANDOMIZE_ASSIGNMENT_SIZES = True
-  DATETIME_STRING = ''
+
+class GraphTypes:
+  BY_EVOLUTION_STRATEGY = True
+  BY_ASSIGNMENT_RANDOMIZATION = True
+  BY_ASSIGNMENT = False
 
 class GraphParams:
   MAX_ITERATIONS = 100
-  FIT_CURVE = True
+  FIT_CURVE = False
   TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
