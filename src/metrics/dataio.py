@@ -23,9 +23,9 @@ class FitnessHistoryIO:
   def get_filename(population_size, num_assignments, num_runs, num_iterations, 
                     evolution_strategy_name, randomize_assignment_priorities, randomize_assignment_sizes,
                     datetime_string):
-    return "Run_p{}_a{}_r{}_i{}_{}_{}_{}_{}.data".format(population_size, num_assignments, num_runs, num_iterations, 
-                                                          evolution_strategy_name, randomize_assignment_priorities, randomize_assignment_sizes,
-                                                          datetime_string)
+    return "Run_{}_{}_{}_{}_p{}_a{}_i{}_r{}.data".format(datetime_string, 
+        evolution_strategy_name, randomize_assignment_priorities, randomize_assignment_sizes,
+        population_size, num_assignments, num_iterations, num_runs)
 
   def write_fitness_history(self, filename, fitness_history):
     full_filename = self.DATA_DIR + filename

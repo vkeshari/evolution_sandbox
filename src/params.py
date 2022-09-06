@@ -14,7 +14,7 @@ class EvolutionStrategy(Enum):
 # Params for main.py
 
 class LoopParams:
-  MULTI_PARAMS = False
+  MULTI_PARAMS = True
 
 class WorldParams:
   NUM_RUNS = 100
@@ -56,7 +56,7 @@ class DebugParams:
 # Params for data_viewer.py
 
 class DataViewerParams:
-  DATETIME_STRING = '20220905201601'
+  DATETIME_STRING = '20220905210808'
   POPULATION_SIZE = 100
   NUM_ASSIGNMENTS = 4
   NUM_RUNS = 100
