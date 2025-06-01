@@ -58,6 +58,7 @@ class FitnessHistoryGraph:
       plt.show()
     if savefile:
       plt.tight_layout()
+      savefile.parent.mkdir(exist_ok = True, parents = True)
       plt.savefig(savefile)
       print ("Graph written to: {}".format(savefile))
       plt.close()
@@ -129,6 +130,7 @@ class FitnessTimeToGraph:
       plt.show()
     if savefile:
       plt.tight_layout()
+      savefile.parent.mkdir(exist_ok = True, parents = True)
       plt.savefig(savefile)
       print ("Graph written to: {}".format(savefile))
       plt.close()
@@ -156,6 +158,7 @@ class FitnessCombinedGraph:
       plt.show()
     if savefile:
       plt.tight_layout()
+      savefile.parent.mkdir(exist_ok = True, parents = True)
       plt.savefig(savefile)
       print ("Graph written to: {}".format(savefile))
       plt.close()

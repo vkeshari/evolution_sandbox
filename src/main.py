@@ -88,9 +88,9 @@ def run_evolution(fhio, datetime_string,
     aggregate_fitness_history.print_time_to()
 
   if par.DebugParams.WRITE_AGGREGATED_FITNESS:
-    out_filename = fhio.get_filename(population_size, num_assignments, num_runs, num_iterations, 
-                                      evolution_strategy.name, randomize_assignment_priorities, randomize_assignment_sizes,
-                                      datetime_string)
+    out_filename = fhio.get_data_filename(population_size, num_assignments, num_runs, num_iterations, 
+                                          evolution_strategy.name, randomize_assignment_priorities,
+                                          randomize_assignment_sizes, datetime_string)
     fhio.write_fitness_history(filename = out_filename, fitness_history = aggregate_fitness_history)
 
 

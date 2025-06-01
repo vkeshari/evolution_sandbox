@@ -77,14 +77,14 @@ class DebugParams:
   # After all runs, show a summary of aggregated population metrics.
   SHOW_AGGREGATED_FITNESS = True
   # Write aggregated population metrics above to a file in data/ (filename is generated based on datetime and above parameters).
-  WRITE_AGGREGATED_FITNESS = False
+  WRITE_AGGREGATED_FITNESS = True
 
 # Params for data_viewer.py
 
 class DataViewerParams:
   # The date and time when the script to generate data was run (not the time at which it was actually stored).
   # By default, this is for the sample data found under data/ and out/
-  DATETIME_STRING = '20220905210808'
+  DATETIME_STRING = '20250601210359'
 
   # Same as for main.py
   POPULATION_SIZE = 100
@@ -115,8 +115,8 @@ class GraphParams:
   FIT_CURVE = False
 
   # Show graphs (UI)
-  SHOW_GRAPHS = True
+  SHOW_GRAPHS = False
   # Save graphs to out/ (filename is generated based on above parameters)
-  SAVE_GRAPHS = False
+  SAVE_GRAPHS = True
   # Iterate over all variations of the graph type (described as 'same' under GraphTypes)
-  ALL_GRAPHS = False
+  ALL_GRAPHS = True
