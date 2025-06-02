@@ -72,6 +72,11 @@ class CrossoverParams:
   MUTATION_RATE = 0.01
 
 class DebugParams:
+  # Periodically show no. of completed parallel runs
+  SHOW_RUN_STATUS = True
+  # Time in seconds to wait between showing runs
+  SHOW_RUN_STATUS_DELAY = 3
+
   # Show iteration no. and fitness at checkpoints during a run.
   SHOW_ITERATIONS = False
   # Show these many checkpoints during a run.
@@ -86,8 +91,9 @@ class DebugParams:
 
   # After all runs, show a summary of aggregated population metrics.
   SHOW_AGGREGATED_FITNESS = False
-  # Write aggregated population metrics above to a file in data/ (filename is generated
-  #   based on datetime and above parameters).
+  # Write aggregated population metrics above to a file in data/
+  #   (filename is generated based on datetime and above parameters).
+  # Writing this data is required for creating graphs in DataViewer.
   WRITE_AGGREGATED_FITNESS = True
 
 # Params for data_viewer.py

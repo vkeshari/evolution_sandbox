@@ -72,6 +72,8 @@ def run_evolution(fhio, datetime_string,
   print("Randomize Assignment Sizes: {}".format(randomize_assignment_sizes))
   print("Fitness Aggregation: {}".format(par.AggregationParams.FITNESS_AGGREGATION_TYPE))
   print("Time Aggregation: {}".format(par.AggregationParams.TIME_AGGREGATION_TYPE))
+  print()
+
   all_fitness_history = {}
   with ThreadPoolExecutor() as executor:
     worlds = []
@@ -89,14 +91,20 @@ def run_evolution(fhio, datetime_string,
               show_run_genomes = par.DebugParams.SHOW_RUN_GENOMES,
               show_run_fitness = par.DebugParams.SHOW_RUN_FITNESS,
               show_stats_at_checkpoints = par.DebugParams.SHOW_STATS_AT_CHECKPOINTS))
-
-    ef_status = [ef.done() for ef in evolve_futures]
-    while not all(ef_status):
+    
+    print ("STARTED: {} RUNS".format(len(evolve_futures)))
+    
+    if par.DebugParams.SHOW_RUN_STATUS:
       ef_status = [ef.done() for ef in evolve_futures]
-      num_completed = sum(ef_status)
-      print ("COMPLETED: {}\tOF {}".format(num_completed, num_runs))
-      if num_completed < num_runs:
-        time.sleep(1)
+      while not all(ef_status):
+        ef_status = [ef.done() for ef in evolve_futures]
+        num_completed = sum(ef_status)
+        print ("COMPLETED: {}\tOF {} RUNS".format(num_completed, num_runs))
+        if num_completed < num_runs:
+          time.sleep(par.DebugParams.SHOW_RUN_STATUS_DELAY)
+    else:
+      wait(evolve_futures)
+      print ("COMPLETED: {} RUNS".format(num_runs))
       
     for r, w in enumerate(worlds):
       all_fitness_history[r + 1] = w.fitness_history
@@ -125,9 +133,10 @@ def main():
   args = sys.argv[1:]
   validate_params()
 
-  fhio = dat.FitnessHistoryIO()
   datetime_string = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-  print ("TIMESTAMP:\t{}".format(datetime_string))
+  print ("TIMESTAMP:\t{}\n".format(datetime_string))
+
+  fhio = dat.FitnessHistoryIO()
 
   if par.LoopParams.MULTI_PARAMS:
     for evolution_strategy in par.EvolutionStrategy:
@@ -146,7 +155,7 @@ def main():
                   par.WorldParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
                   par.WorldParams.RANDOMIZE_ASSIGNMENT_SIZES)
   
-  print ("TIMESTAMP:\t{}".format(datetime_string))
+  print ("TIMESTAMP:\t{}\n".format(datetime_string))
 
 if __name__=="__main__":
   main()
