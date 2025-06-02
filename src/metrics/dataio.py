@@ -1,6 +1,6 @@
-from pathlib import Path
 import json
 import pickle
+from pathlib import Path
 
 class FitnessHistoryJSONSerializer(json.JSONEncoder):
 
@@ -20,6 +20,7 @@ class FitnessHistoryIO:
     print ("Data Directory: " + str(self.DATA_DIR))
     self.GRAPH_DIR = current_dir / 'out'
     print ("Graph Directory: " + str(self.GRAPH_DIR))
+    print()
 
   def get_data_filename(self, population_size, num_assignments, num_runs, num_iterations, 
                         evolution_strategy_name, randomize_assignment_priorities,
@@ -31,7 +32,7 @@ class FitnessHistoryIO:
   def get_graph_filename(self, population_size, num_assignments, num_runs, num_iterations, 
                           evolution_strategy_name, randomize_assignment_priorities,
                           randomize_assignment_sizes, datetime_string, graph_type, fit_curve):
-    return self.GRAPH_DIR / datetime_string / "{}_{}_{}_p{}_a{}_i{}_r{}_{}_{}.png".format(
+    return self.GRAPH_DIR / datetime_string / "{}_{}_{}_{}_{}_p{}_a{}_i{}_r{}.png".format(
         fit_curve, graph_type, evolution_strategy_name, randomize_assignment_priorities,
         randomize_assignment_sizes, population_size, num_assignments, num_iterations, num_runs)
 

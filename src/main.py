@@ -1,5 +1,7 @@
 import datetime
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, wait
 
 import params as par
 from containers import population as pop
@@ -71,17 +73,33 @@ def run_evolution(fhio, datetime_string,
   print("Fitness Aggregation: {}".format(par.AggregationParams.FITNESS_AGGREGATION_TYPE))
   print("Time Aggregation: {}".format(par.AggregationParams.TIME_AGGREGATION_TYPE))
   all_fitness_history = {}
-  for r in range(num_runs):
-    w = initialize_world(population_size, num_iterations, num_assignments, evolution_strategy,
-                         randomize_assignment_priorities, randomize_assignment_sizes)
-
-    print ("RUN: {}\tITERATIONS: {}".format(r + 1, w.num_generations))
-    w.evolve(show_iterations = par.DebugParams.SHOW_ITERATIONS,
+  with ThreadPoolExecutor() as executor:
+    worlds = []
+    evolve_futures = []
+    for r in range(num_runs):
+      w = initialize_world(population_size, num_iterations, num_assignments, evolution_strategy,
+                          randomize_assignment_priorities, randomize_assignment_sizes)
+      worlds.append(w)
+      
+      evolve_futures.append(
+          executor.submit(
+              w.evolve,
+              show_iterations = par.DebugParams.SHOW_ITERATIONS,
               show_every_n_iteration = int(num_iterations / par.DebugParams.NUM_CHECKPOINTS),
               show_run_genomes = par.DebugParams.SHOW_RUN_GENOMES,
               show_run_fitness = par.DebugParams.SHOW_RUN_FITNESS,
-              show_stats_at_checkpoints = par.DebugParams.SHOW_STATS_AT_CHECKPOINTS)
-    all_fitness_history[r + 1] = w.fitness_history
+              show_stats_at_checkpoints = par.DebugParams.SHOW_STATS_AT_CHECKPOINTS))
+
+    ef_status = [ef.done() for ef in evolve_futures]
+    while not all(ef_status):
+      ef_status = [ef.done() for ef in evolve_futures]
+      num_completed = sum(ef_status)
+      print ("COMPLETED: {}\tOF {}".format(num_completed, num_runs))
+      if num_completed < num_runs:
+        time.sleep(1)
+      
+    for r, w in enumerate(worlds):
+      all_fitness_history[r + 1] = w.fitness_history
 
   aggregate_fitness_history = \
       fit.FitnessHistoryAggregate.get_aggregated_fitness(
@@ -100,6 +118,7 @@ def run_evolution(fhio, datetime_string,
                       evolution_strategy.name, randomize_assignment_priorities,
                       randomize_assignment_sizes, datetime_string)
     fhio.write_fitness_history(filename = out_filename, fitness_history = aggregate_fitness_history)
+    print()
 
 
 def main():
@@ -108,6 +127,8 @@ def main():
 
   fhio = dat.FitnessHistoryIO()
   datetime_string = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+  print ("TIMESTAMP:\t{}".format(datetime_string))
+
   if par.LoopParams.MULTI_PARAMS:
     for evolution_strategy in par.EvolutionStrategy:
       if evolution_strategy == par.EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT:
@@ -124,6 +145,8 @@ def main():
                   par.PopulationParams.NUM_ASSIGNMENTS, par.WorldParams.EVOLUTION_STRATEGY,
                   par.WorldParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
                   par.WorldParams.RANDOMIZE_ASSIGNMENT_SIZES)
+  
+  print ("TIMESTAMP:\t{}".format(datetime_string))
 
 if __name__=="__main__":
   main()

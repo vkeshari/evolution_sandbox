@@ -29,9 +29,9 @@ class LoopParams:
 
 class WorldParams:
   # Average over these many runs.
-  NUM_RUNS = 10
+  NUM_RUNS = 100
   # Run evolution for these many iterations (per run).
-  NUM_GENERATIONS = 10
+  NUM_GENERATIONS = 100
 
   # These are ignored if LoopParams.MULTI_PARAMS is True,
   # Evolution strategy for crossover and assignment as defined above.
@@ -96,13 +96,13 @@ class DataViewerParams:
   # The date and time when the script to generate data was run
   #   (not the time at which it was actually stored).
   # By default, this is for the sample data found under data/ and out/
-  DATETIME_STRING = '20250602114240'
+  DATETIME_STRING = '20250602125357'
 
   # Same as for main.py
   POPULATION_SIZE = 100
   NUM_ASSIGNMENTS = 4
-  NUM_RUNS = 10
-  NUM_ITERATIONS = 10
+  NUM_RUNS = 100
+  NUM_ITERATIONS = 100
 
   # Same as for main.py, ignored depending on graph type
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
@@ -121,9 +121,9 @@ class GraphTypes:
 
 class GraphParams:
   # Plot the time taken to reach these fitness values.
-  TIME_TO_FITNESS_VALUES = [0.7, 0.8, 0.9]
+  TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
   # Only show these many iterations in graph.
-  MAX_ITERATIONS = 10
+  MAX_ITERATIONS = 100
   # Fit an exponential curve to each series in graph.
   FIT_CURVE = False
 
