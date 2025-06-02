@@ -92,3 +92,5 @@ class World:
                                             show_run_fitness)
       if show_run_fitness:
         self.fitness_history.print_time_to()
+
+    return self.fitness_history

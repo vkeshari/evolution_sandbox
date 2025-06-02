@@ -75,7 +75,7 @@ class DebugParams:
   # Periodically show no. of completed parallel runs
   SHOW_RUN_STATUS = True
   # Time in seconds to wait between showing runs
-  SHOW_RUN_STATUS_DELAY = 3
+  SHOW_RUN_STATUS_DELAY = 1
 
   # Show iteration no. and fitness at checkpoints during a run.
   SHOW_ITERATIONS = False

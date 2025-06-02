@@ -1,7 +1,7 @@
 import datetime
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, wait
+from concurrent.futures import ProcessPoolExecutor, as_completed, wait
 
 import params as par
 from containers import population as pop
@@ -75,13 +75,11 @@ def run_evolution(fhio, datetime_string,
   print()
 
   all_fitness_history = {}
-  with ThreadPoolExecutor() as executor:
-    worlds = []
+  with ProcessPoolExecutor() as executor:
     evolve_futures = []
     for r in range(num_runs):
       w = initialize_world(population_size, num_iterations, num_assignments, evolution_strategy,
                           randomize_assignment_priorities, randomize_assignment_sizes)
-      worlds.append(w)
       
       evolve_futures.append(
           executor.submit(
@@ -106,8 +104,8 @@ def run_evolution(fhio, datetime_string,
       wait(evolve_futures)
       print ("COMPLETED: {} RUNS".format(num_runs))
       
-    for r, w in enumerate(worlds):
-      all_fitness_history[r + 1] = w.fitness_history
+    for r, ef in enumerate(as_completed(evolve_futures)):
+      all_fitness_history[r + 1] = ef.result()
 
   aggregate_fitness_history = \
       fit.FitnessHistoryAggregate.get_aggregated_fitness(
