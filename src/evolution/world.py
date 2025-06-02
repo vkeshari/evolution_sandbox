@@ -49,10 +49,13 @@ class World:
       already_assigned = 0
       for g in population.groups:
         new_group_individuals = crossed[already_assigned : already_assigned + g.group_size]
-        new_groups.append(grp.Group(g.group_size, g.genome_size, individuals = new_group_individuals))
+        new_groups.append(grp.Group(g.group_size, g.genome_size,
+                                    individuals = new_group_individuals))
         already_assigned += g.group_size
 
-    (assignment_priorities, assignment_sizes) = self.assignment.get_assignment_distribution(population.population_size, population.genome_size)
+    (assignment_priorities, assignment_sizes) = \
+        self.assignment.get_assignment_distribution(population.population_size,
+                                                    population.genome_size)
     new_generation = pop.Population(population.population_size,
                                     population.num_groups,
                                     population.genome_size,
@@ -76,7 +79,8 @@ class World:
           total_fitness = self.current_generation.get_fitness()
           print("ITERATION: {}\tFitness: {:.2}".format(i + 1, total_fitness))
         if show_stats_at_checkpoints:
-          fit.FitnessUtil.show_population_stats(self.current_generation, show_run_genomes, show_run_fitness)
+          fit.FitnessUtil.show_population_stats(self.current_generation, show_run_genomes,
+                                                show_run_fitness)
 
       updated_generation = self.new_generation(self.current_generation)
       self.assign_purge_measure(updated_generation, iteration_no = i + 1)
@@ -84,6 +88,7 @@ class World:
 
     if show_run_genomes or show_run_fitness:
       print("RUN STATS\n")
-      fit.FitnessUtil.show_population_stats(self.current_generation, show_run_genomes, show_run_fitness)
+      fit.FitnessUtil.show_population_stats(self.current_generation, show_run_genomes,
+                                            show_run_fitness)
       if show_run_fitness:
         self.fitness_history.print_time_to()

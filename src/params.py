@@ -5,11 +5,20 @@ from metrics import fitness as fit
 # Common params
 
 class EvolutionStrategy(Enum):
-  NO_RESTRICTIONS = 0                      #000 -- no restrictions of any kind. Null/baseline result.
-  NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT = 1  #001 -- same results as NO_RESTRICTIONS, useful for debugging only.
-  CROSSOVER_BY_GROUP_ONLY = 2              #100 -- split population into groups, restrict crossover within each group.
-  CROSSOVER_BY_ASSIGNMENT_ONLY = 3         #101 -- restrict crossover only with other individuals with the same assignment.
-  ALL_RESTRICTIONS = 4                     #111 -- both of the above restrictions.
+  #000 -- no restrictions of any kind. Null/baseline result.
+  NO_RESTRICTIONS = 0
+
+  #001 -- same results as NO_RESTRICTIONS, useful for debugging only.                      
+  NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT = 1
+
+  #100 -- split population into groups, restrict crossover within each group.  
+  CROSSOVER_BY_GROUP_ONLY = 2
+
+  #101 -- restrict crossover only with other individuals with the same assignment.              
+  CROSSOVER_BY_ASSIGNMENT_ONLY = 3
+
+  #111 -- both of the above restrictions.         
+  ALL_RESTRICTIONS = 4                     
 
 # Params for main.py
 
@@ -20,9 +29,9 @@ class LoopParams:
 
 class WorldParams:
   # Average over these many runs.
-  NUM_RUNS = 100
+  NUM_RUNS = 10
   # Run evolution for these many iterations (per run).
-  NUM_GENERATIONS = 100
+  NUM_GENERATIONS = 10
 
   # These are ignored if LoopParams.MULTI_PARAMS is True,
   # Evolution strategy for crossover and assignment as defined above.
@@ -52,7 +61,8 @@ class FitnessParams:
 class AggregationParams:
   # When aggragating over multiple runs, use this metric for fitness.
   FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
-  # When aggragating over multiple runs, use this metric for time to reach fitness levels defined above.
+  # When aggragating over multiple runs, use this metric for time to reach fitness levels
+  #   defined above.
   TIME_AGGREGATION_TYPE = fit.AggregateType.MEDIAN
 
 class CrossoverParams:
@@ -75,22 +85,24 @@ class DebugParams:
   SHOW_STATS_AT_CHECKPOINTS = False
 
   # After all runs, show a summary of aggregated population metrics.
-  SHOW_AGGREGATED_FITNESS = True
-  # Write aggregated population metrics above to a file in data/ (filename is generated based on datetime and above parameters).
+  SHOW_AGGREGATED_FITNESS = False
+  # Write aggregated population metrics above to a file in data/ (filename is generated
+  #   based on datetime and above parameters).
   WRITE_AGGREGATED_FITNESS = True
 
 # Params for data_viewer.py
 
 class DataViewerParams:
-  # The date and time when the script to generate data was run (not the time at which it was actually stored).
+  # The date and time when the script to generate data was run
+  #   (not the time at which it was actually stored).
   # By default, this is for the sample data found under data/ and out/
-  DATETIME_STRING = '20250601210359'
+  DATETIME_STRING = '20250602114240'
 
   # Same as for main.py
   POPULATION_SIZE = 100
   NUM_ASSIGNMENTS = 4
-  NUM_RUNS = 100
-  NUM_ITERATIONS = 100
+  NUM_RUNS = 10
+  NUM_ITERATIONS = 10
 
   # Same as for main.py, ignored depending on graph type
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
@@ -102,15 +114,16 @@ class GraphTypes:
   BY_EVOLUTION_STRATEGY = True
   # Plot by assignment randomization (4 keys) (same evolution strategy).
   BY_ASSIGNMENT_RANDOMIZATION = True
-  # Plot by assignment (NUM_ASSIGNMENTS keys) (same evolution strategy and assignment randomization),
+  # Plot by assignment (NUM_ASSIGNMENTS keys)
+  #   (same evolution strategy and assignment randomization),
   # Very unreadable for large no. of assignments.
   BY_ASSIGNMENT = False
 
 class GraphParams:
   # Plot the time taken to reach these fitness values.
-  TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
+  TIME_TO_FITNESS_VALUES = [0.7, 0.8, 0.9]
   # Only show these many iterations in graph.
-  MAX_ITERATIONS = 100
+  MAX_ITERATIONS = 10
   # Fit an exponential curve to each series in graph.
   FIT_CURVE = False
 

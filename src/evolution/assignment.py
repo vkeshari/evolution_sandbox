@@ -40,7 +40,9 @@ class Assignment:
     if self.restrict_assignment:
       for a in range(population.genome_size):
         group = population.groups[a]
-        for individual in sorted(group.individuals, key = lambda i: i.genome.genes[a], reverse = True)[:population.assignment_sizes[a]]:
+        for individual in sorted(group.individuals, key = lambda i: i.genome.genes[a],
+                                 reverse = True) \
+                              [:population.assignment_sizes[a]]:
           individual.assignment = a
 
     else:
@@ -50,7 +52,8 @@ class Assignment:
           enumerated.append({'group': i, 'index': j, 'individual': individual})
 
       for a in population.assignment_priorities:
-        sorted_for_a = sorted(enumerated, key = lambda e: e['individual'].genome.genes[a], reverse = True)
+        sorted_for_a = sorted(enumerated, key = lambda e: e['individual'].genome.genes[a],
+                              reverse = True)
         unassigned = [e for e in sorted_for_a if not e['individual'].has_assignment()]
         for k in range(population.assignment_sizes[a]):
           group_no = unassigned[k]['group']

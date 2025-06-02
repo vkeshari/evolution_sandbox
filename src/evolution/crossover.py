@@ -20,7 +20,8 @@ class Crossover:
 
     for i in range(genome_size):
       if self.interpolate_genes:
-        sample = self.CROSSOVER_RANDOMIZER.beta(self.crossover_beta_param, self.crossover_beta_param)
+        sample = self.CROSSOVER_RANDOMIZER.beta(self.crossover_beta_param,
+                                                self.crossover_beta_param)
         g.genes[i] = genome1[i] + sample * (genome2[i] - genome1[i])
 
       else:
@@ -46,15 +47,20 @@ class Crossover:
     i1 = sorted(individuals_1, key = lambda i: i.get_fitness(), reverse = True)
     i2 = sorted(individuals_2, key = lambda i: i.get_fitness(), reverse = True)
 
-    i1_indices = [int(x * len(i1)) for x in self.INDIVIDUAL_RANDOMIZER.beta(1.0, self.crossover_beta_param, out_size)]
-    i2_indices = [int(x * len(i2)) for x in self.INDIVIDUAL_RANDOMIZER.beta(1.0, self.crossover_beta_param, out_size)]
+    i1_indices = [int(x * len(i1)) \
+                    for x in self.INDIVIDUAL_RANDOMIZER.beta(
+                        1.0, self.crossover_beta_param, out_size)]
+    i2_indices = [int(x * len(i2)) \
+                    for x in self.INDIVIDUAL_RANDOMIZER.beta(
+                        1.0, self.crossover_beta_param, out_size)]
 
     out = []
     for i in range(out_size):
       g1 = i1[i1_indices[i]].genome.genes
       g2 = i2[i2_indices[i]].genome.genes
 
-      o = ind.Individual(genome_size = genome_size, genome = self.crossover_genomes(g1, g2, genome_size))
+      o = ind.Individual(genome_size = genome_size,
+                         genome = self.crossover_genomes(g1, g2, genome_size))
       out.append(o)
 
     return out

@@ -13,12 +13,14 @@ class Population:
     if groups:
       self.groups = groups
     else:
-      self.groups = [grp.Group(int(population_size / num_groups), genome_size) for i in range(num_groups)]
+      self.groups = [grp.Group(int(population_size / num_groups), genome_size)
+                        for i in range(num_groups)]
 
   def __str__(self):
     return (
       "POPULATION\n" +
-      "Num Groups: {},\tGroup Sizes: {}\n".format(self.num_groups, ' '.join([str(g.group_size) for g in self.groups])) +
+      "Num Groups: {},\tGroup Sizes: {}\n" \
+          .format(self.num_groups, ' '.join([str(g.group_size) for g in self.groups])) +
       "Fitness: {:.2}\n\n".format(self.get_fitness()) +
       "".join([str(g) for g in self.groups]) +
       "\n")
@@ -34,5 +36,6 @@ class Population:
     for g in self.groups:
       all_individuals += [i for i in g.individuals if not assigned or i.has_assignment()]
     if sort:
-      all_individuals = sorted(all_individuals, key = lambda i: i.get_fitness(), reverse = descending)
+      all_individuals = sorted(all_individuals, key = lambda i: i.get_fitness(),
+                               reverse = descending)
     return all_individuals

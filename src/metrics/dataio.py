@@ -22,15 +22,15 @@ class FitnessHistoryIO:
     print ("Graph Directory: " + str(self.GRAPH_DIR))
 
   def get_data_filename(self, population_size, num_assignments, num_runs, num_iterations, 
-                        evolution_strategy_name, randomize_assignment_priorities, randomize_assignment_sizes,
-                        datetime_string):
+                        evolution_strategy_name, randomize_assignment_priorities,
+                        randomize_assignment_sizes, datetime_string):
     return self.DATA_DIR / datetime_string / "{}_{}_{}_p{}_a{}_i{}_r{}.data".format(
         evolution_strategy_name, randomize_assignment_priorities, randomize_assignment_sizes,
         population_size, num_assignments, num_iterations, num_runs)
 
   def get_graph_filename(self, population_size, num_assignments, num_runs, num_iterations, 
-                          evolution_strategy_name, randomize_assignment_priorities, randomize_assignment_sizes,
-                          datetime_string, graph_type, fit_curve):
+                          evolution_strategy_name, randomize_assignment_priorities,
+                          randomize_assignment_sizes, datetime_string, graph_type, fit_curve):
     return self.GRAPH_DIR / datetime_string / "{}_{}_{}_p{}_a{}_i{}_r{}_{}_{}.png".format(
         fit_curve, graph_type, evolution_strategy_name, randomize_assignment_priorities,
         randomize_assignment_sizes, population_size, num_assignments, num_iterations, num_runs)
@@ -47,5 +47,6 @@ class FitnessHistoryIO:
       print("Fitness History read from {}".format(filename))
 
     if show:
-      print(json.dumps(fitness_history, cls = FitnessHistoryJSONSerializer, indent = 2, sort_keys = True))
+      print(json.dumps(fitness_history, cls = FitnessHistoryJSONSerializer, indent = 2,
+                       sort_keys = True))
     return fitness_history

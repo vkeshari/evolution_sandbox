@@ -21,7 +21,8 @@ class FitnessHistoryGraph:
   def add_iterations(self, key, iterations):
     self.iterations_map[key] = iterations
 
-  def plot(self, show = False, ax = None, by_assignment = False, fit_curve = False, savefile = None):
+  def plot(self, show = False, ax = None, by_assignment = False, fit_curve = False,
+           savefile = None):
     if not ax:
       ax = plt.gca()
       ax.set_xlabel('Generation No. -->', fontsize = 16)
@@ -44,7 +45,8 @@ class FitnessHistoryGraph:
         ax.scatter(x_axis, y_axis, s = self.SCATTER_SIZE, alpha = self.SCATTER_ALPHA)
         ax.plot(x_axis, y_fit, alpha = self.LINE_ALPHA_FIT, linewidth = self.LINE_WIDTH, label = k)
       else:
-        ax.step(x_axis, y_axis, alpha = self.LINE_ALPHA_STEP, linewidth = self.LINE_WIDTH, label = k)
+        ax.step(x_axis, y_axis, alpha = self.LINE_ALPHA_STEP, linewidth = self.LINE_WIDTH,
+                label = k)
 
     ax.set_title('Average Fitness over generations', fontsize = 16)
     ax.grid(visible = True)
@@ -147,7 +149,8 @@ class FitnessCombinedGraph:
     self.iterations_graph.add_iterations(key, fitness_history.history['iterations'])
     self.time_to_graph.add_time_to(key, fitness_history.history['time_to'])
 
-  def plot(self, title = '', show = False, by_assignment = False, fit_curve = False, savefile = None):
+  def plot(self, title = '', show = False, by_assignment = False, fit_curve = False,
+           savefile = None):
     fig, (ax_fit, ax_tt) = plt.subplots(2, 1, figsize = (15, 10))
     fig.suptitle(title, fontsize = 18)
     self.iterations_graph.plot(ax = ax_fit, by_assignment = by_assignment, fit_curve = fit_curve)
