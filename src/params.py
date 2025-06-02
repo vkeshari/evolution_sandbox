@@ -76,6 +76,8 @@ class DebugParams:
   SHOW_RUN_STATUS = True
   # Time in seconds to wait between showing runs
   SHOW_RUN_STATUS_DELAY = 1
+  # Show average and median runtime of each run
+  SHOW_RUN_TIME_SUMMARY = True
 
   # Show iteration no. and fitness at checkpoints during a run.
   SHOW_ITERATIONS = False

@@ -1,4 +1,5 @@
 import datetime
+import numpy as np
 import sys
 import time
 from concurrent.futures import ProcessPoolExecutor, as_completed, wait
@@ -75,6 +76,7 @@ def run_evolution(fhio, datetime_string,
   print()
 
   all_fitness_history = {}
+  run_times = []
   with ProcessPoolExecutor() as executor:
     evolve_futures = []
     for r in range(num_runs):
@@ -105,7 +107,15 @@ def run_evolution(fhio, datetime_string,
       print ("COMPLETED: {} RUNS".format(num_runs))
       
     for r, ef in enumerate(as_completed(evolve_futures)):
-      all_fitness_history[r + 1] = ef.result()
+      fitness_history, run_time = ef.result()
+      all_fitness_history[r + 1] = fitness_history
+      run_times.append(run_time)
+  
+  if par.DebugParams.SHOW_RUN_TIME_SUMMARY:
+    print()
+    print("RUN DURATION AVERAGE:\t{}".format(np.average(run_times)))
+    print("RUN DURATION MEDIAN :\t{}".format(np.median(run_times)))
+    print()
 
   aggregate_fitness_history = \
       fit.FitnessHistoryAggregate.get_aggregated_fitness(

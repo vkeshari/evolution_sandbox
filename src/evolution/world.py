@@ -1,3 +1,4 @@
+import datetime
 import numpy as np
 
 from . import crossover as crs
@@ -71,6 +72,8 @@ class World:
               show_stats_at_checkpoints = False):
     if (show_every_n_iteration == 0):
       show_every_n_iteration = 1
+    
+    start_time = datetime.datetime.now()
 
     for i in range(self.num_generations):
       is_checkpoint = (i + 1) % show_every_n_iteration == 0
@@ -85,6 +88,8 @@ class World:
       updated_generation = self.new_generation(self.current_generation)
       self.assign_purge_measure(updated_generation, iteration_no = i + 1)
       self.current_generation = updated_generation
+    
+    end_time = datetime.datetime.now()
 
     if show_run_genomes or show_run_fitness:
       print("RUN STATS\n")
@@ -93,4 +98,4 @@ class World:
       if show_run_fitness:
         self.fitness_history.print_time_to()
 
-    return self.fitness_history
+    return self.fitness_history, end_time - start_time
