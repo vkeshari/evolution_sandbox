@@ -1,8 +1,8 @@
-import datetime
 import numpy as np
 import sys
-import time
 from concurrent.futures import ProcessPoolExecutor, as_completed, wait
+from datetime import datetime
+from time import sleep
 
 import params as par
 from containers import population as pop
@@ -75,6 +75,8 @@ def run_evolution(fhio, datetime_string,
   print("Time Aggregation: {}".format(par.AggregationParams.TIME_AGGREGATION_TYPE))
   print()
 
+  start_time = datetime.now()
+
   all_fitness_history = {}
   run_times = []
   with ProcessPoolExecutor() as executor:
@@ -101,7 +103,7 @@ def run_evolution(fhio, datetime_string,
         num_completed = sum(ef_status)
         print ("COMPLETED: {}\tOF {} RUNS".format(num_completed, num_runs))
         if num_completed < num_runs:
-          time.sleep(par.DebugParams.SHOW_RUN_STATUS_DELAY)
+          sleep(par.DebugParams.SHOW_RUN_STATUS_DELAY)
     else:
       wait(evolve_futures)
       print ("COMPLETED: {} RUNS".format(num_runs))
@@ -111,10 +113,15 @@ def run_evolution(fhio, datetime_string,
       all_fitness_history[r + 1] = fitness_history
       run_times.append(run_time)
   
+  total_time = datetime.now() - start_time
+  
   if par.DebugParams.SHOW_RUN_TIME_SUMMARY:
     print()
     print("RUN DURATION AVERAGE:\t{}".format(np.average(run_times)))
     print("RUN DURATION MEDIAN :\t{}".format(np.median(run_times)))
+    print()
+    print("TOTAL DURATION      :\t{}".format(total_time))
+    print("DURATION PER RUN    :\t{}".format(total_time / num_runs))
     print()
 
   aggregate_fitness_history = \
@@ -141,7 +148,7 @@ def main():
   args = sys.argv[1:]
   validate_params()
 
-  datetime_string = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+  datetime_string = datetime.now().strftime("%Y%m%d%H%M%S")
   print ("TIMESTAMP:\t{}\n".format(datetime_string))
 
   fhio = dat.FitnessHistoryIO()

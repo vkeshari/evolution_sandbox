@@ -1,7 +1,6 @@
-import datetime
 import numpy as np
+from datetime import datetime
 
-from . import crossover as crs
 from containers import population as pop
 from containers import group as grp
 from metrics import fitness as fit
@@ -73,7 +72,7 @@ class World:
     if (show_every_n_iteration == 0):
       show_every_n_iteration = 1
     
-    start_time = datetime.datetime.now()
+    start_time = datetime.now()
 
     for i in range(self.num_generations):
       is_checkpoint = (i + 1) % show_every_n_iteration == 0
@@ -89,7 +88,7 @@ class World:
       self.assign_purge_measure(updated_generation, iteration_no = i + 1)
       self.current_generation = updated_generation
     
-    end_time = datetime.datetime.now()
+    end_time = datetime.now()
 
     if show_run_genomes or show_run_fitness:
       print("RUN STATS\n")

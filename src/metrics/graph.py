@@ -1,6 +1,6 @@
 import numpy as np
-import scipy.optimize as opt
 from matplotlib import pyplot as plt
+from scipy import optimize as opt
 
 class FitnessHistoryGraph:
 
