@@ -31,6 +31,9 @@ def validate_params():
   assert (par.PopulationParams.POPULATION_SIZE % par.PopulationParams.NUM_GROUPS == 0)
   assert (par.PopulationParams.POPULATION_SIZE / par.PopulationParams.NUM_GROUPS > 2.0)
 
+  if par.DebugParams.SAVE_GENOMES_AT_CHECKPOINTS:
+    assert not par.LoopParams.MULTI_PARAMS and par.WorldParams.NUM_RUNS == 1
+
 def initialize_world(population_size, num_iterations, num_assignments, evolution_strategy,
                      randomize_assignment_priorities, randomize_assignment_sizes, pio):
   (restrict_crossover, restrict_assignment, group_by_assignment) = \

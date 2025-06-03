@@ -76,8 +76,6 @@ class PopulationIO:
 
     current_dir = DirectoryValidation.get_directory()
     self.POPULATION_DIR = current_dir / 'population'
-    print ("Population Directory: " + str(self.POPULATION_DIR))
-    print()
   
   def get_population_filename(self, iteration_no):
     return self.POPULATION_DIR / self.datetime_string / "{}_{}_{}_p{}_a{}_g{}.png".format(

@@ -173,9 +173,11 @@ class PopulationGraph:
     self.population = population
   
   def plot(self, title_text = '', show = False, savefile = None):
-    population_size = self.population.population_size
+    group_sizes = [len(g.individuals) for g in self.population.groups]
+    actual_population = sum(group_sizes)
+
     genome_size = self.population.groups[0].genome_size
-    graph_aspect_ratio = population_size / genome_size
+    graph_aspect_ratio = actual_population / genome_size
 
     resolution = tuple([10.8, 10.8 / (graph_aspect_ratio / 2)])
     fig, ax = plt.subplots(figsize = resolution)
@@ -183,12 +185,14 @@ class PopulationGraph:
     ax.set_title(title_text)
     ax.set_xlabel('<-- Individuals -->')
     ax.set_ylabel('Genes')
-
-    num_groups = self.population.num_groups
-    group_size = int(population_size / num_groups)
-    xticks = range(0, population_size + 1, group_size)
+    
+    xticks = [0]
+    cum_gs = 0
+    for gs in group_sizes:
+      cum_gs += gs
+      xticks.append(cum_gs)
     ax.set_xticks(xticks)
-    xgrid = range(0, population_size + 1)
+    xgrid = range(0, actual_population + 1)
     ax.set_xticks(xgrid, minor = True)
 
     yticks = [0, genome_size]
@@ -207,7 +211,7 @@ class PopulationGraph:
     
     shaped_genes = np.transpose(np.array([i['genes'] for i in flat_individuals]))
     ax.imshow(shaped_genes, origin = 'upper', aspect = 1,
-              extent = [0, population_size, genome_size, 0])
+              extent = [0, actual_population, genome_size, 0])
     for xt in xticks:
       plt.axvline(x = xt, ymin = 0, ymax = 1, color = 'white', linewidth = 1, alpha = 0.8)
     
