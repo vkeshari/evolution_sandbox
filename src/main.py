@@ -32,7 +32,7 @@ def validate_params():
   assert (par.PopulationParams.POPULATION_SIZE / par.PopulationParams.NUM_GROUPS > 2.0)
 
 def initialize_world(population_size, num_iterations, num_assignments, evolution_strategy,
-                     randomize_assignment_priorities, randomize_assignment_sizes):
+                     randomize_assignment_priorities, randomize_assignment_sizes, pio):
   (restrict_crossover, restrict_assignment, group_by_assignment) = \
       get_evolution_constraints(evolution_strategy)
 
@@ -61,7 +61,8 @@ def initialize_world(population_size, num_iterations, num_assignments, evolution
                 crossover = c,
                 fitness_history = f,
                 num_generations = num_iterations,
-                restrict_crossover = restrict_crossover)
+                restrict_crossover = restrict_crossover,
+                pio = pio)
   return w
 
 def run_evolution(fhio, datetime_string,
@@ -82,8 +83,15 @@ def run_evolution(fhio, datetime_string,
   with ProcessPoolExecutor() as executor:
     evolve_futures = []
     for r in range(num_runs):
+      pio = dat.PopulationIO(
+                  population_size = population_size,
+                  num_groups = num_assignments,
+                  evolution_strategy_name = evolution_strategy.name,
+                  randomize_assignment_priorities = randomize_assignment_priorities,
+                  randomize_assignment_sizes = randomize_assignment_sizes,
+                  datetime_string = datetime_string)
       w = initialize_world(population_size, num_iterations, num_assignments, evolution_strategy,
-                          randomize_assignment_priorities, randomize_assignment_sizes)
+                            randomize_assignment_priorities, randomize_assignment_sizes, pio)
       
       evolve_futures.append(
           executor.submit(
@@ -92,7 +100,8 @@ def run_evolution(fhio, datetime_string,
               show_every_n_iteration = int(num_iterations / par.DebugParams.NUM_CHECKPOINTS),
               show_run_genomes = par.DebugParams.SHOW_RUN_GENOMES,
               show_run_fitness = par.DebugParams.SHOW_RUN_FITNESS,
-              show_stats_at_checkpoints = par.DebugParams.SHOW_STATS_AT_CHECKPOINTS))
+              show_stats_at_checkpoints = par.DebugParams.SHOW_STATS_AT_CHECKPOINTS,
+              save_genomes_at_checkpoints = par.DebugParams.SAVE_GENOMES_AT_CHECKPOINTS))
     
     print ("STARTED: {} RUNS".format(len(evolve_futures)))
     

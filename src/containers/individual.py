@@ -16,6 +16,9 @@ class Individual:
 
   def has_assignment(self):
     return self.assignment > -1
+  
+  def get_genes(self):
+    return self.genome.genes
 
   def get_fitness(self):
     if not self.has_assignment():

@@ -83,6 +83,8 @@ class DebugParams:
   SHOW_ITERATIONS = False
   # Show these many checkpoints during a run.
   NUM_CHECKPOINTS = 10
+  # Save graphs of full population genomes at every checkpoint.
+  SAVE_GENOMES_AT_CHECKPOINTS = True
 
   # Show final genomes of the entire population at the end of a run.
   SHOW_RUN_GENOMES = False

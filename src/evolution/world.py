@@ -4,6 +4,7 @@ from datetime import datetime
 from containers import population as pop
 from containers import group as grp
 from metrics import fitness as fit
+from metrics import graph as grph
 
 class World:
 
@@ -12,7 +13,8 @@ class World:
   def __init__(self, initial_population, assignment, crossover, fitness_history, num_generations,
                 restrict_crossover = False,
                 randomize_assignment_priorities = False,
-                randomize_assignment_sizes = False):
+                randomize_assignment_sizes = False,
+                pio = None):
     self.assignment = assignment
     self.crossover = crossover
     self.fitness_history = fitness_history
@@ -20,6 +22,7 @@ class World:
     self.restrict_crossover = restrict_crossover
     self.randomize_assignment_priorities = randomize_assignment_priorities
     self.randomize_assignment_sizes = randomize_assignment_sizes
+    self.pio = pio
 
     self.current_generation = initial_population
     self.assign_purge_measure(self.current_generation, iteration_no = 0)
@@ -28,6 +31,21 @@ class World:
     self.assignment.update_assignments(population)
     fitness_data = fit.FitnessData.from_population(population)
     self.fitness_history.update_fitness_history(iteration_no, fitness_data)
+  
+  def process_checkpoint(self, iteration_no, generation, show_iterations, show_stats_at_checkpoints,
+                         show_run_genomes, show_run_fitness, save_genomes_at_checkpoints):
+    if show_iterations:
+      total_fitness = generation.get_fitness()
+      print("ITERATION: {}\tFitness: {:.2}".format(iteration_no, total_fitness))
+    if show_stats_at_checkpoints:
+      fit.FitnessUtil.show_population_stats(generation, show_run_genomes, show_run_fitness)
+    
+    if save_genomes_at_checkpoints:
+      population_graph_title = 'Generation: {gen}'.format(gen = iteration_no)
+      population_graph_filename = self.pio.get_population_filename(iteration_no = iteration_no)
+      grph.PopulationGraph(generation) \
+          .plot(title_text = population_graph_title, savefile = population_graph_filename)
+
 
   def new_generation(self, population):
     new_groups = []
@@ -68,25 +86,26 @@ class World:
               show_every_n_iteration = 1,
               show_run_genomes = False,
               show_run_fitness = False,
-              show_stats_at_checkpoints = False):
+              show_stats_at_checkpoints = False,
+              save_genomes_at_checkpoints = False):
     if (show_every_n_iteration == 0):
       show_every_n_iteration = 1
     
     start_time = datetime.now()
 
-    for i in range(self.num_generations):
-      is_checkpoint = (i + 1) % show_every_n_iteration == 0
-      if is_checkpoint:
-        if show_iterations:
-          total_fitness = self.current_generation.get_fitness()
-          print("ITERATION: {}\tFitness: {:.2}".format(i + 1, total_fitness))
-        if show_stats_at_checkpoints:
-          fit.FitnessUtil.show_population_stats(self.current_generation, show_run_genomes,
-                                                show_run_fitness)
+    self.process_checkpoint(0, self.current_generation, show_iterations, show_stats_at_checkpoints,
+                            show_run_genomes, show_run_fitness, save_genomes_at_checkpoints)
 
+    for i in range(self.num_generations):
       updated_generation = self.new_generation(self.current_generation)
       self.assign_purge_measure(updated_generation, iteration_no = i + 1)
       self.current_generation = updated_generation
+
+      is_checkpoint = (i + 1) % show_every_n_iteration == 0
+      if is_checkpoint:
+        self.process_checkpoint(i + 1, self.current_generation, show_iterations,
+                                show_stats_at_checkpoints, show_run_genomes, show_run_fitness,
+                                save_genomes_at_checkpoints)
     
     end_time = datetime.now()
 

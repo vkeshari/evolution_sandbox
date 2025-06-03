@@ -10,15 +10,26 @@ class FitnessHistoryJSONSerializer(json.JSONEncoder):
     if type(o).__name__ == 'FitnessData':
       return o.data
 
+
+class DirectoryValidation:
+
+  @staticmethod
+  def get_directory():
+    current_dir = Path.cwd()
+    assert 'evolution_sandbox' == current_dir.parts[-1], \
+        print ("Not run from evolution_sandbox folder. Current directory: {}".format(current_dir))
+    
+    return current_dir
+    
+
 class FitnessHistoryIO:
 
   def __init__(self):
-    current_dir = Path.cwd()
-    if not 'evolution_sandbox' == current_dir.parts[-1]:
-      print ("Not run from evolution_sandbox folder. Current directory: {}".format(current_dir))
+    current_dir = DirectoryValidation.get_directory()
     self.DATA_DIR = current_dir / 'data'
-    print ("Data Directory: " + str(self.DATA_DIR))
     self.GRAPH_DIR = current_dir / 'out'
+
+    print ("Data Directory: " + str(self.DATA_DIR))
     print ("Graph Directory: " + str(self.GRAPH_DIR))
     print()
 
@@ -51,3 +62,24 @@ class FitnessHistoryIO:
       print(json.dumps(fitness_history, cls = FitnessHistoryJSONSerializer, indent = 2,
                        sort_keys = True))
     return fitness_history
+
+class PopulationIO:
+
+  def __init__(self, population_size, num_groups, evolution_strategy_name,
+                randomize_assignment_priorities, randomize_assignment_sizes, datetime_string):
+    self.population_size = population_size
+    self.num_groups = num_groups
+    self.evolution_strategy_name = evolution_strategy_name
+    self.randomize_assignment_priorities = randomize_assignment_priorities
+    self.randomize_assignment_sizes = randomize_assignment_sizes
+    self.datetime_string = datetime_string
+
+    current_dir = DirectoryValidation.get_directory()
+    self.POPULATION_DIR = current_dir / 'population'
+    print ("Population Directory: " + str(self.POPULATION_DIR))
+    print()
+  
+  def get_population_filename(self, iteration_no):
+    return self.POPULATION_DIR / self.datetime_string / "{}_{}_{}_p{}_a{}_g{}.png".format(
+        self.evolution_strategy_name, self.randomize_assignment_priorities,
+        self.randomize_assignment_sizes, self.population_size, self.num_groups, iteration_no)

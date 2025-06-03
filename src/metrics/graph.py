@@ -1,5 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.patches import Rectangle
 from scipy import optimize as opt
 
 class FitnessHistoryGraph:
@@ -164,4 +165,64 @@ class FitnessCombinedGraph:
       savefile.parent.mkdir(exist_ok = True, parents = True)
       plt.savefig(savefile)
       print ("Graph written to: {}".format(savefile))
+      plt.close()
+
+
+class PopulationGraph:
+  def __init__(self, population):
+    self.population = population
+  
+  def plot(self, title_text = '', show = False, savefile = None):
+    population_size = self.population.population_size
+    genome_size = self.population.groups[0].genome_size
+    graph_aspect_ratio = population_size / genome_size
+
+    resolution = tuple([10.8, 10.8 / (graph_aspect_ratio / 2)])
+    fig, ax = plt.subplots(figsize = resolution)
+
+    ax.set_title(title_text)
+    ax.set_xlabel('<-- Individuals -->')
+    ax.set_ylabel('Genes')
+
+    num_groups = self.population.num_groups
+    group_size = int(population_size / num_groups)
+    xticks = range(0, population_size + 1, group_size)
+    ax.set_xticks(xticks)
+    xgrid = range(0, population_size + 1)
+    ax.set_xticks(xgrid, minor = True)
+
+    yticks = [0, genome_size]
+    ax.set_yticks(yticks)
+    ygrid = range(0, genome_size + 1)
+    ax.set_yticks(ygrid, minor = True)
+    ax.grid(True, which = 'both', axis = 'both', alpha = 0.5)
+
+    flat_individuals = []
+    for g in self.population.groups:
+      for i in g.individuals:
+        flat_individuals.append({
+            'genes': i.get_genes(),
+            'assignment': i.assignment,
+            'fitness': i.get_fitness()})
+    
+    shaped_genes = np.transpose(np.array([i['genes'] for i in flat_individuals]))
+    ax.imshow(shaped_genes, origin = 'upper', aspect = 1,
+              extent = [0, population_size, genome_size, 0])
+    for xt in xticks:
+      plt.axvline(x = xt, ymin = 0, ymax = 1, color = 'white', linewidth = 1, alpha = 0.8)
+    
+    for i, ind in enumerate(flat_individuals):
+      ass = ind['assignment']
+      if ass > -1:
+        ax.add_patch(Rectangle((i, ass), height = 1, width = 1, edgecolor = 'red',
+                                linewidth = 2, alpha = 1.0, fill = False))
+
+    if show:
+      fig.tight_layout()
+      plt.show()
+    if savefile:
+      fig.tight_layout()
+      savefile.parent.mkdir(exist_ok = True, parents = True)
+      fig.savefig(savefile)
+      print ("Population Graph written to: {}".format(savefile))
       plt.close()
