@@ -90,13 +90,15 @@ def run_evolution(fhio, datetime_string,
   with ProcessPoolExecutor() as executor:
     evolve_futures = []
     for r in range(num_runs):
-      pio = dat.PopulationIO(
-                  population_size = population_size,
-                  num_groups = num_assignments,
-                  evolution_strategy_name = evolution_strategy.name,
-                  randomize_assignment_priorities = randomize_assignment_priorities,
-                  randomize_assignment_sizes = randomize_assignment_sizes,
-                  datetime_string = datetime_string)
+      pio = None
+      if par.DebugParams.SAVE_GENOMES_AT_CHECKPOINTS:
+        pio = dat.PopulationIO(
+                    population_size = population_size,
+                    num_groups = num_assignments,
+                    evolution_strategy_name = evolution_strategy.name,
+                    randomize_assignment_priorities = randomize_assignment_priorities,
+                    randomize_assignment_sizes = randomize_assignment_sizes,
+                    datetime_string = datetime_string)
       w = initialize_world(population_size, num_iterations, num_assignments, evolution_strategy,
                             randomize_assignment_priorities, randomize_assignment_sizes, pio)
       

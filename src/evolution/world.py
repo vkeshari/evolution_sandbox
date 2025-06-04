@@ -40,7 +40,7 @@ class World:
     if show_stats_at_checkpoints:
       fit.FitnessUtil.show_population_stats(generation, show_run_genomes, show_run_fitness)
     
-    if save_genomes_at_checkpoints:
+    if save_genomes_at_checkpoints and self.pio:
       population_graph_title = 'Generation: {gen}'.format(gen = iteration_no)
       population_graph_filename = self.pio.get_population_filename(iteration_no = iteration_no)
       grph.PopulationGraph(generation) \

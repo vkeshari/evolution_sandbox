@@ -145,3 +145,15 @@ class GraphParams:
   SAVE_GRAPHS = True
   # Iterate over all variations (4 + 4) of the graph type (described as 'same' under GraphTypes)
   ALL_GRAPHS = True
+
+# Params for multi_param_run.py
+# All other params above are ignored or modified
+
+class MultiParams:
+  POPULATION_SIZE = 100
+  NUM_ASSIGNMENTS = 5
+  NUM_RUNS = 10
+  NUM_ITERATIONS = 100
+  
+  SHOW_RUN_STATUS_DELAY = 1
+  TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
