@@ -179,7 +179,7 @@ def graph_by_assignment_run(fitness_history_io, evolution_strategy, randomize_as
             savefile = savefile)
 
 
-def generate_fitness_graphs(datetime_string = None):
+def data_viewer(datetime_string = None):
   validate_params()
 
   if not datetime_string:
@@ -204,4 +204,4 @@ def generate_fitness_graphs(datetime_string = None):
                         all_graphs = par.GraphParams.ALL_GRAPHS)
 
 if __name__=="__main__":
-  generate_fitness_graphs()
+  data_viewer()

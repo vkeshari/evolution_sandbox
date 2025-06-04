@@ -11,9 +11,9 @@
 Sample data and graphs available in `data/` and `out/` (run with the following parameters):
 ```
 POPULATION_SIZE = 100
-NUM_ASSIGNMENTS = 4
+NUM_ASSIGNMENTS = 5
 NUM_GENERATIONS = 100
-NUM_RUNS        = 100
+NUM_RUNS        = 10
 ```
 
 ### To Run

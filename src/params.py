@@ -20,7 +20,7 @@ class EvolutionStrategy(Enum):
   #111 -- both of the above restrictions.         
   ALL_RESTRICTIONS = 4                     
 
-# Params for main.py
+# Params for evolution_runner.py
 
 class LoopParams:
   # Iterate over 3 categorical params with 16 possible values:
@@ -29,7 +29,7 @@ class LoopParams:
 
 class WorldParams:
   # Average over these many runs.
-  NUM_RUNS = 100
+  NUM_RUNS = 10
   # Run evolution for these many iterations (per run).
   NUM_GENERATIONS = 100
 
@@ -51,8 +51,8 @@ class PopulationParams:
   # Total no. of assignments available,
   # An equal no. of groups will be created (but enforced only if restricted by evolution strategy),
   # These should always be the same.
-  NUM_GROUPS = 4
-  NUM_ASSIGNMENTS = 4
+  NUM_GROUPS = 5
+  NUM_ASSIGNMENTS = 5
 
 class FitnessParams:
   # Record the time to reach these fitness levels.
@@ -106,15 +106,16 @@ class DataViewerParams:
   # The date and time when the script to generate data was run
   #   (not the time at which it was actually stored).
   # By default, this is for the sample data found under data/ and out/
-  DATETIME_STRING = '20250602125357'
+  DATETIME_STRING = '20250604203404'
 
-  # Same as for main.py
+  # Same as for evolution_runner.py
   POPULATION_SIZE = 100
-  NUM_ASSIGNMENTS = 4
-  NUM_RUNS = 100
+  NUM_ASSIGNMENTS = 5
+  NUM_RUNS = 10
   NUM_ITERATIONS = 100
 
-  # Same as for main.py, ignored depending on GraphTypes and GraphParams.ALL_GRAPHS below
+  # Same as for evolution_runner.py
+  #   Ignored depending on GraphTypes and GraphParams.ALL_GRAPHS below.
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
   RANDOMIZE_ASSIGNMENT_PRIORITIES = True
   RANDOMIZE_ASSIGNMENT_SIZES = True

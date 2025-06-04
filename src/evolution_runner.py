@@ -1,5 +1,4 @@
 import numpy as np
-import sys
 from concurrent.futures import ProcessPoolExecutor, as_completed, wait
 from datetime import datetime
 from time import sleep
