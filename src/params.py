@@ -135,6 +135,7 @@ class GraphParams:
   # Only show these many iterations in graph.
   MAX_ITERATIONS = 100
   # Fit an exponential curve to each series in graph.
+  #   Not recommended: Fitness data over time does not seem to follow an exponential series.
   FIT_CURVE = False
 
   # Show graphs (UI)
