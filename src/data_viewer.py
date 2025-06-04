@@ -2,6 +2,19 @@ import params as par
 from metrics import dataio as dat
 from metrics import graph as gra
 
+def validate_params():
+  assert par.DataViewerParams.NUM_ASSIGNMENTS > 0
+  assert par.DataViewerParams.POPULATION_SIZE > par.DataViewerParams.NUM_ASSIGNMENTS
+  assert par.DataViewerParams.POPULATION_SIZE % par.DataViewerParams.NUM_ASSIGNMENTS == 0
+
+  assert par.DataViewerParams.NUM_RUNS > 0
+  assert par.DataViewerParams.NUM_ITERATIONS >= 10
+  assert par.GraphParams.MAX_ITERATIONS <= par.DataViewerParams.NUM_ITERATIONS
+
+  assert len(par.GraphParams.TIME_TO_FITNESS_VALUES) > 0
+  if par.GraphParams.ALL_GRAPHS:
+    assert not par.GraphParams.SHOW_GRAPHS
+
 def graph_by_strategy(fitness_history_io, show = False, save = False, all_graphs = False):
   if all_graphs:
     for randomize_assignment_priorities in [False, True]:
@@ -16,7 +29,6 @@ def graph_by_strategy(fitness_history_io, show = False, save = False, all_graphs
         randomize_assignment_priorities = par.DataViewerParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
         randomize_assignment_sizes = par.DataViewerParams.RANDOMIZE_ASSIGNMENT_SIZES,
         show = show, save = save)
-
 
 def graph_by_strategy_run(fitness_history_io,
                           randomize_assignment_priorities, randomize_assignment_sizes,
@@ -33,8 +45,7 @@ def graph_by_strategy_run(fitness_history_io,
                                                     par.DataViewerParams.NUM_ITERATIONS,
                                                     evolution_strategy.name,
                                                     randomize_assignment_priorities,
-                                                    randomize_assignment_sizes,
-                                                    par.DataViewerParams.DATETIME_STRING)
+                                                    randomize_assignment_sizes)
     fitness_history = fitness_history_io.read_fitness_history(datafile, show = False)
     fcg.add_fitness_history(key = evolution_strategy.name, fitness_history = fitness_history)
 
@@ -52,7 +63,6 @@ def graph_by_strategy_run(fitness_history_io,
                   "VAR",
                   randomize_assignment_priorities,
                   randomize_assignment_sizes,
-                  par.DataViewerParams.DATETIME_STRING,
                   "BYSTRATEGY",
                   "FIT" if par.GraphParams.FIT_CURVE else "NOFIT")
   fcg.plot(title = fig_type + '\n' + fixed + '\nKey: ' + variable,
@@ -87,8 +97,7 @@ def graph_by_assignment_variations_run(fitness_history_io,
                                                       par.DataViewerParams.NUM_ITERATIONS,
                                                       evolution_strategy.name,
                                                       randomize_assignment_priorities,
-                                                      randomize_assignment_sizes,
-                                                      par.DataViewerParams.DATETIME_STRING)
+                                                      randomize_assignment_sizes)
       fitness_history = fitness_history_io.read_fitness_history(datafile, show = False)
       key = '(' + str(randomize_assignment_priorities) + ', ' \
                 + str(randomize_assignment_sizes) + ')'
@@ -107,7 +116,6 @@ def graph_by_assignment_variations_run(fitness_history_io,
                   evolution_strategy.name,
                   "VAR",
                   "VAR",
-                  par.DataViewerParams.DATETIME_STRING,
                   "BYRANDOMNESS",
                   "FIT" if par.GraphParams.FIT_CURVE else "NOFIT")
   fcg.plot(title = fig_type + '\n' + fixed + '\nKey: ' + variable,
@@ -144,8 +152,7 @@ def graph_by_assignment_run(fitness_history_io, evolution_strategy, randomize_as
                                                   par.DataViewerParams.NUM_ITERATIONS,
                                                   evolution_strategy.name,
                                                   randomize_assignment_priorities,
-                                                  randomize_assignment_sizes,
-                                                  par.DataViewerParams.DATETIME_STRING)
+                                                  randomize_assignment_sizes)
   fitness_history = fitness_history_io.read_fitness_history(datafile, show = False)
   for assignment in range(par.DataViewerParams.NUM_ASSIGNMENTS):
     fcg.add_fitness_history(key = 'Assignment {}'.format(assignment),
@@ -165,15 +172,20 @@ def graph_by_assignment_run(fitness_history_io, evolution_strategy, randomize_as
                   evolution_strategy.name,
                   randomize_assignment_priorities,
                   randomize_assignment_sizes,
-                  par.DataViewerParams.DATETIME_STRING,
                   "BYASSIGNMENT",
                   "FIT" if par.GraphParams.FIT_CURVE else "NOFIT")
   fcg.plot(title = fig_type + '\n' + fixed + '\nKey: ' + variable,
             show = show, by_assignment = True, fit_curve = par.GraphParams.FIT_CURVE,
             savefile = savefile)
 
-def main():
-  fhio = dat.FitnessHistoryIO()
+
+def generate_fitness_graphs(datetime_string = None):
+  validate_params()
+
+  if not datetime_string:
+    datetime_string = par.DataViewerParams.DATETIME_STRING
+
+  fhio = dat.FitnessHistoryIO(datetime_string = datetime_string)
 
   if par.GraphTypes.BY_EVOLUTION_STRATEGY:
     graph_by_strategy(fitness_history_io = fhio,
@@ -192,4 +204,4 @@ def main():
                         all_graphs = par.GraphParams.ALL_GRAPHS)
 
 if __name__=="__main__":
-  main()
+  generate_fitness_graphs()

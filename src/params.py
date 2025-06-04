@@ -33,7 +33,7 @@ class WorldParams:
   # Run evolution for these many iterations (per run).
   NUM_GENERATIONS = 100
 
-  # These are ignored if LoopParams.MULTI_PARAMS is True,
+  # These three parameters are ignored if LoopParams.MULTI_PARAMS is True.
   # Evolution strategy for crossover and assignment as defined above.
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
   # Change the priority of assignments every iteration,
@@ -114,7 +114,7 @@ class DataViewerParams:
   NUM_RUNS = 100
   NUM_ITERATIONS = 100
 
-  # Same as for main.py, ignored depending on graph type
+  # Same as for main.py, ignored depending on GraphTypes and GraphParams.ALL_GRAPHS below
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
   RANDOMIZE_ASSIGNMENT_PRIORITIES = True
   RANDOMIZE_ASSIGNMENT_SIZES = True
@@ -142,5 +142,5 @@ class GraphParams:
   SHOW_GRAPHS = False
   # Save graphs to out/ (filename is generated based on above parameters)
   SAVE_GRAPHS = True
-  # Iterate over all variations of the graph type (described as 'same' under GraphTypes)
+  # Iterate over all variations (4 + 4) of the graph type (described as 'same' under GraphTypes)
   ALL_GRAPHS = True

@@ -25,13 +25,18 @@ def get_evolution_constraints(evolution_strategy):
   return (restrict_crossover, restrict_assignment, group_by_assignment)
 
 def validate_params():
-  assert (par.PopulationParams.NUM_GROUPS > 0)
-  assert (par.PopulationParams.NUM_GROUPS == par.PopulationParams.NUM_ASSIGNMENTS)
-  assert (par.PopulationParams.POPULATION_SIZE > par.PopulationParams.NUM_GROUPS)
-  assert (par.PopulationParams.POPULATION_SIZE % par.PopulationParams.NUM_GROUPS == 0)
-  assert (par.PopulationParams.POPULATION_SIZE / par.PopulationParams.NUM_GROUPS > 2.0)
+  assert par.PopulationParams.NUM_GROUPS > 0
+  assert par.PopulationParams.NUM_GROUPS == par.PopulationParams.NUM_ASSIGNMENTS
+  assert par.PopulationParams.POPULATION_SIZE > par.PopulationParams.NUM_GROUPS
+  assert par.PopulationParams.POPULATION_SIZE % par.PopulationParams.NUM_GROUPS == 0
+  assert par.PopulationParams.POPULATION_SIZE / par.PopulationParams.NUM_GROUPS > 2.0
 
-  if par.DebugParams.SAVE_GENOMES_AT_CHECKPOINTS:
+  assert par.WorldParams.NUM_RUNS > 0
+  assert par.WorldParams.NUM_GENERATIONS >= 10
+
+  if par.DebugParams.SHOW_ITERATIONS \
+      or par.DebugParams.SAVE_GENOMES_AT_CHECKPOINTS \
+      or par.DebugParams.SHOW_STATS_AT_CHECKPOINTS:
     assert not par.LoopParams.MULTI_PARAMS and par.WorldParams.NUM_RUNS == 1
 
 def initialize_world(population_size, num_iterations, num_assignments, evolution_strategy,
@@ -151,19 +156,18 @@ def run_evolution(fhio, datetime_string,
     out_filename = fhio.get_data_filename(
                       population_size, num_assignments, num_runs, num_iterations, 
                       evolution_strategy.name, randomize_assignment_priorities,
-                      randomize_assignment_sizes, datetime_string)
+                      randomize_assignment_sizes)
     fhio.write_fitness_history(filename = out_filename, fitness_history = aggregate_fitness_history)
     print()
 
 
-def main():
-  args = sys.argv[1:]
+def evolution_runner():
   validate_params()
 
   datetime_string = datetime.now().strftime("%Y%m%d%H%M%S")
   print ("TIMESTAMP:\t{}\n".format(datetime_string))
 
-  fhio = dat.FitnessHistoryIO()
+  fhio = dat.FitnessHistoryIO(datetime_string = datetime_string)
 
   if par.LoopParams.MULTI_PARAMS:
     for evolution_strategy in par.EvolutionStrategy:
@@ -183,6 +187,7 @@ def main():
                   par.WorldParams.RANDOMIZE_ASSIGNMENT_SIZES)
   
   print ("TIMESTAMP:\t{}\n".format(datetime_string))
+  return datetime_string
 
 if __name__=="__main__":
-  main()
+  evolution_runner()
