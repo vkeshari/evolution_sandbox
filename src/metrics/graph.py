@@ -1,5 +1,5 @@
 import numpy as np
-from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt, cm
 from matplotlib.patches import Rectangle
 from scipy import optimize as opt
 
@@ -236,11 +236,16 @@ class TuningGraph:
   def __init__(self, pg_vals):
     self.pg_vals = pg_vals
 
-  def plot(self, title_text = '', show = False, savefile = None):
+  def plot(self, graph_vals, title_text = '', show = False, savefile = None):
 
     resolution = tuple([7.2, 7.2])
     fig, ax = plt.subplots(figsize = resolution)
 
+    ax.set_title(title_text)
+
+    for [p, g], f in graph_vals['final_fitness'].items():
+      plt.plot(p, g, marker = 'o', markersize = 10, alpha = 0.8, color = cm.gnuplot2_r(f))
+    
     if show:
       fig.tight_layout()
       plt.show()

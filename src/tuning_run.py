@@ -57,7 +57,7 @@ def get_population_group_pairs():
     for gs in group_size_range:
       if p % gs == 0:
         g = int(p / gs)
-        if g % 5 == 0:
+        if g >= 5:
           pg_vals.append(tuple([p, g]))
 
   print("Total Population and Group Count Pairs: {}".format(len(pg_vals)))
@@ -115,9 +115,9 @@ def make_tuning_graph(fhio, tio, pg_vals, num_runs, num_iterations, evolution_st
                                           randomize_assignment_sizes)
   
   tuning_graph = gra.TuningGraph(pg_vals)
-  graph_title_text = "Strategy: {}, Random Assignment Priorities: {}, Random Assignment Sizes: {}" \
+  graph_title_text = "Strategy: {}\nRandom Assignment Priorities: {}, Random Assignment Sizes: {}" \
       .format(evolution_strategy_name, randomize_assignment_priorities, randomize_assignment_sizes)
-  tuning_graph.plot(title_text = graph_title_text, savefile = save_filename)
+  tuning_graph.plot(graph_vals, title_text = graph_title_text, savefile = save_filename)
 
 def make_tuning_graphs(pg_vals, datetime_string):
   fhio = dat.FitnessHistoryIO(datetime_string)
