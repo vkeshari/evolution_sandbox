@@ -162,11 +162,16 @@ def run_evolution(fhio, datetime_string,
     print()
 
 
-def evolution_runner():
+def evolution_runner(datetime_string = ''):
   validate_params()
 
-  datetime_string = datetime.now().strftime("%Y%m%d%H%M%S")
-  print ("TIMESTAMP:\t{}\n".format(datetime_string))
+  show_timestamp = False
+  if not datetime_string:
+    datetime_string = datetime.now().strftime("%Y%m%d%H%M%S")
+    show_timestamp = True
+  
+  if show_timestamp:
+    print ("TIMESTAMP:\t{}\n".format(datetime_string))
 
   fhio = dat.FitnessHistoryIO(datetime_string = datetime_string)
 
@@ -187,8 +192,8 @@ def evolution_runner():
                   par.WorldParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
                   par.WorldParams.RANDOMIZE_ASSIGNMENT_SIZES)
   
-  print ("TIMESTAMP:\t{}\n".format(datetime_string))
-  return datetime_string
+  if show_timestamp:
+    print ("TIMESTAMP:\t{}\n".format(datetime_string))
 
 if __name__=="__main__":
   evolution_runner()

@@ -157,3 +157,31 @@ class MultiParams:
   
   SHOW_RUN_STATUS_DELAY = 1
   TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
+
+# Params for tuning_run.py
+# All other params above are ignored or modified
+
+class TuningParams:
+  # Use these to generate graphs from saved fitness history data
+  CUSTOM_DATETIME_STRING = ''
+  GRAPHS_ONLY = False
+
+  NUM_RUNS = 10
+  NUM_ITERATIONS = 100
+  RANDOMIZE_ASSIGNMENT_PRIORITIES = True
+
+  EVOLUTION_STRATEGY_VALS = [EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY,
+                             EvolutionStrategy.CROSSOVER_BY_ASSIGNMENT_ONLY]
+  RANDOM_ASSIGNMENT_SIZES_VALS = [False, True]
+
+  MIN_POPULATION = 100
+  MAX_POPULATION = 200
+  POPULATION_STEP = 100
+
+  MIN_GROUP_SIZE = 10
+  MAX_GROUP_SIZE = 20
+  GROUP_SIZE_STEP = 10
+
+  TIME_TO_FITNESS_VALUES = [0.8, 0.9, 0.95]
+  FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
+  TIME_AGGREGATION_TYPE = fit.AggregateType.MEDIAN

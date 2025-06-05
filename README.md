@@ -3,6 +3,8 @@
 > [!IMPORTANT]
 > You must attribute references to this or any derivative work to the original author.
 
+The Evolution Sandbox simulates and compares strategies for optimal evolution in a population with specialization of labor.
+
 ### Where things are
 
 + `src/params.py` : All config lives here. Treat this as command-line params.
@@ -28,3 +30,6 @@ Sample data and graphs available in `data/` and `out/` respectively.
 #### Debugging and targeted scripts
 + `$python3 src/evolution_runner.py` : Generates data from simulation
 + `$python3 src/data_viewer.py`      : Generates graphs from data
+
+### Parameter tuning scripts
++ `$python3 src/tuning_run.py`      : Compares various combinations of population and group sizes.
