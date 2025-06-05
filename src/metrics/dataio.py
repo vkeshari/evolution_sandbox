@@ -92,5 +92,5 @@ class TuningIO:
                           randomize_assignment_priorities, randomize_assignment_sizes):
     return self.TUNING_DIR / "{}_{}_{}_i{}_r{}.png".format(
               evolution_strategy_name, randomize_assignment_priorities,
-              randomize_assignment_sizes, num_runs, num_iterations)
+              randomize_assignment_sizes, num_iterations, num_runs)
 

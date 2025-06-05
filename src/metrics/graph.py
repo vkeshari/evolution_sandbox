@@ -230,3 +230,23 @@ class PopulationGraph:
       fig.savefig(savefile)
       print ("Population Graph written to: {}".format(savefile))
       plt.close()
+
+
+class TuningGraph:
+  def __init__(self, pg_vals):
+    self.pg_vals = pg_vals
+
+  def plot(self, title_text = '', show = False, savefile = None):
+
+    resolution = tuple([7.2, 7.2])
+    fig, ax = plt.subplots(figsize = resolution)
+
+    if show:
+      fig.tight_layout()
+      plt.show()
+    if savefile:
+      fig.tight_layout()
+      savefile.parent.mkdir(exist_ok = True, parents = True)
+      fig.savefig(savefile)
+      print ("Population Graph written to: {}".format(savefile))
+      plt.close()

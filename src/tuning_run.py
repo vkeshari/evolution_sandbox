@@ -3,10 +3,11 @@ from datetime import datetime
 import evolution_runner as evo
 import params as par
 from metrics import dataio as dat
-from metrics import fitness as fit
+from metrics import graph as gra
 
 def validate_range_steps(min_val, max_val, step_size):
-  assert max_val > min_val
+  assert step_size > 0
+  assert max_val > min_val > 0
   assert (max_val - min_val) % step_size == 0
 
 def validate_params():
@@ -16,6 +17,8 @@ def validate_params():
   validate_range_steps(par.TuningParams.MIN_GROUP_SIZE,
                         par.TuningParams.MAX_GROUP_SIZE,
                         par.TuningParams.GROUP_SIZE_STEP)
+  
+  assert par.TuningParams.PLOT_TIME_TO_FITNESS in par.TuningParams.TIME_TO_FITNESS_VALUES
   
   par.LoopParams.MULTI_PARAMS = False
 
@@ -84,7 +87,10 @@ def generate_data_for_population_group_pairs(pg_vals, datetime_string):
 
 def make_tuning_graph(fhio, tio, pg_vals, num_runs, num_iterations, evolution_strategy_name,
                       randomize_assignment_priorities, randomize_assignment_sizes):
-  
+
+  graph_vals = {}
+  graph_vals['final_fitness'] = {}
+  graph_vals['time_to_fitness'] = {}
   for (p, g) in pg_vals:
     data_filename = fhio.get_data_filename(
                         population_size = p, num_assignments = g,
@@ -94,11 +100,24 @@ def make_tuning_graph(fhio, tio, pg_vals, num_runs, num_iterations, evolution_st
                         randomize_assignment_sizes = randomize_assignment_sizes)
     
     fitness_history = fhio.read_fitness_history(data_filename)
+    final_population_fitness = \
+        fitness_history.history['iterations'][num_iterations].data['population']['fitness']
+    f = par.TuningParams.PLOT_TIME_TO_FITNESS
+    time_to_fitness = fitness_history.history['time_to']['population'][f]
+
+    pg_tuple = tuple([p, g])
+    graph_vals['final_fitness'][pg_tuple] = final_population_fitness
+    graph_vals['time_to_fitness'][pg_tuple] = time_to_fitness
   
   save_filename = tio.get_tuning_filename(num_runs, num_iterations,
                                           evolution_strategy_name,
                                           randomize_assignment_priorities,
                                           randomize_assignment_sizes)
+  
+  tuning_graph = gra.TuningGraph(pg_vals)
+  graph_title_text = "Strategy: {}, Random Assignment Priorities: {}, Random Assignment Sizes: {}" \
+      .format(evolution_strategy_name, randomize_assignment_priorities, randomize_assignment_sizes)
+  tuning_graph.plot(title_text = graph_title_text, savefile = save_filename)
 
 def make_tuning_graphs(pg_vals, datetime_string):
   fhio = dat.FitnessHistoryIO(datetime_string)
