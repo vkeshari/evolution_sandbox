@@ -20,6 +20,11 @@ def validate_params():
   
   assert len(par.TuningParams.TIME_TO_FITNESS_VALUES) > 0
   assert par.TuningParams.PLOT_TIME_TO_FITNESS in par.TuningParams.TIME_TO_FITNESS_VALUES
+
+  if par.TuningParams.DIFFERENT_GROUP_AND_ASSIGNMENT_COUNT:
+    assert par.TuningParams.NUM_ASSIGNMENTS > 0
+    assert not set(par.TuningParams.EVOLUTION_STRATEGY_VALS) ^ \
+                  set([par.EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY])
   
   par.LoopParams.MULTI_PARAMS = False
 
@@ -77,7 +82,10 @@ def generate_data_for_population_group_pairs(pg_vals, datetime_string):
 
     par.PopulationParams.POPULATION_SIZE = p
     par.PopulationParams.NUM_GROUPS = g
-    par.PopulationParams.NUM_ASSIGNMENTS = g
+    if par.TuningParams.DIFFERENT_GROUP_AND_ASSIGNMENT_COUNT:
+      par.PopulationParams.NUM_ASSIGNMENTS = par.TuningParams.NUM_ASSIGNMENTS
+    else:
+      par.PopulationParams.NUM_ASSIGNMENTS = g
 
     for es in par.TuningParams.EVOLUTION_STRATEGY_VALS:
       for ras in par.TuningParams.RANDOM_ASSIGNMENT_SIZES_VALS:
@@ -93,8 +101,12 @@ def make_tuning_graph(fhio, tio, pg_vals, num_runs, num_iterations, evolution_st
   graph_vals['final_fitness'] = {}
   graph_vals['time_to_fitness'] = {}
   for (p, g) in pg_vals:
+    if par.TuningParams.DIFFERENT_GROUP_AND_ASSIGNMENT_COUNT:
+      num_assignments = par.TuningParams.NUM_ASSIGNMENTS
+    else:
+      num_assignments = g
     data_filename = fhio.get_data_filename(
-                        population_size = p, num_assignments = g,
+                        population_size = p, num_assignments = num_assignments, num_groups = g,
                         num_runs = num_runs, num_iterations = num_iterations,
                         evolution_strategy_name = evolution_strategy_name,
                         randomize_assignment_priorities = randomize_assignment_priorities,
@@ -117,9 +129,9 @@ def make_tuning_graph(fhio, tio, pg_vals, num_runs, num_iterations, evolution_st
   
   tuning_graph = gra.TuningGraph(pg_vals)
   graph_title_text = ("Strategy: {}\n" \
-                        + "Population Fitness after {} generations (averaged over {} runs)\n" \
+                        + "Average Population Fitness after {} generations\n" \
                         + "Random Assignment Priorities: {}, Random Assignment Sizes: {}") \
-      .format(evolution_strategy_name, num_iterations, num_runs,
+      .format(evolution_strategy_name, num_iterations,
               randomize_assignment_priorities, randomize_assignment_sizes)
   tuning_graph.plot(graph_vals, title_text = graph_title_text, savefile = save_filename)
 

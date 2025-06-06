@@ -107,6 +107,7 @@ def run_evolution(fhio, datetime_string,
         pio = dat.PopulationIO(
                     population_size = population_size,
                     num_groups = num_groups,
+                    num_assignments = num_assignments,
                     evolution_strategy_name = evolution_strategy.name,
                     randomize_assignment_priorities = randomize_assignment_priorities,
                     randomize_assignment_sizes = randomize_assignment_sizes,
@@ -169,7 +170,7 @@ def run_evolution(fhio, datetime_string,
 
   if par.DebugParams.WRITE_AGGREGATED_FITNESS:
     out_filename = fhio.get_data_filename(
-                      population_size, num_assignments, num_runs, num_iterations, 
+                      population_size, num_assignments, num_groups, num_runs, num_iterations, 
                       evolution_strategy.name, randomize_assignment_priorities,
                       randomize_assignment_sizes)
     fhio.write_fitness_history(filename = out_filename, fitness_history = aggregate_fitness_history)
@@ -210,6 +211,8 @@ def evolution_runner(datetime_string = ''):
   
   if show_timestamp:
     print ("TIMESTAMP:\t{}\n".format(datetime_string))
+  
+  return datetime_string
 
 if __name__=="__main__":
   evolution_runner()

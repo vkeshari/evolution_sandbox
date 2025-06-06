@@ -3,7 +3,6 @@ from matplotlib import pyplot as plt, cm
 from matplotlib.patches import Rectangle
 from scipy import optimize as opt
 
-
 class FitnessHistoryGraph:
 
   LINE_ALPHA_STEP = 0.6
@@ -281,5 +280,5 @@ class TuningGraph:
       fig.tight_layout()
       savefile.parent.mkdir(exist_ok = True, parents = True)
       fig.savefig(savefile)
-      print ("Population Graph written to: {}".format(savefile))
+      print ("Tuning Graph written to: {}".format(savefile))
       plt.close()

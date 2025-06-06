@@ -2,10 +2,17 @@ import params as par
 from metrics import dataio as dat
 from metrics import graph as gra
 
+def check_population_divisibility(num_divisions, population_size):
+  assert num_divisions > 0
+  assert population_size > num_divisions
+  assert population_size % num_divisions == 0
+  assert population_size / num_divisions > 2.0
+
 def validate_params():
-  assert par.DataViewerParams.NUM_ASSIGNMENTS > 0
-  assert par.DataViewerParams.POPULATION_SIZE > par.DataViewerParams.NUM_ASSIGNMENTS
-  assert par.DataViewerParams.POPULATION_SIZE % par.DataViewerParams.NUM_ASSIGNMENTS == 0
+  check_population_divisibility(par.DataViewerParams.NUM_GROUPS,
+                                par.DataViewerParams.POPULATION_SIZE)
+  check_population_divisibility(par.DataViewerParams.NUM_ASSIGNMENTS,
+                                par.DataViewerParams.POPULATION_SIZE)
 
   assert par.DataViewerParams.NUM_RUNS > 0
   assert par.DataViewerParams.NUM_ITERATIONS >= 10
@@ -41,6 +48,7 @@ def graph_by_strategy_run(fitness_history_io,
       continue
     datafile = fitness_history_io.get_data_filename(par.DataViewerParams.POPULATION_SIZE,
                                                     par.DataViewerParams.NUM_ASSIGNMENTS,
+                                                    par.DataViewerParams.NUM_GROUPS,
                                                     par.DataViewerParams.NUM_RUNS,
                                                     par.DataViewerParams.NUM_ITERATIONS,
                                                     evolution_strategy.name,
@@ -58,6 +66,7 @@ def graph_by_strategy_run(fitness_history_io,
     savefile = fitness_history_io.get_graph_filename(
                   par.DataViewerParams.POPULATION_SIZE,
                   par.DataViewerParams.NUM_ASSIGNMENTS,
+                  par.DataViewerParams.NUM_GROUPS,
                   par.DataViewerParams.NUM_RUNS,
                   par.DataViewerParams.NUM_ITERATIONS,
                   "VAR",
@@ -93,6 +102,7 @@ def graph_by_assignment_variations_run(fitness_history_io,
     for randomize_assignment_sizes in [False, True]:
       datafile = fitness_history_io.get_data_filename(par.DataViewerParams.POPULATION_SIZE,
                                                       par.DataViewerParams.NUM_ASSIGNMENTS,
+                                                      par.DataViewerParams.NUM_GROUPS,
                                                       par.DataViewerParams.NUM_RUNS,
                                                       par.DataViewerParams.NUM_ITERATIONS,
                                                       evolution_strategy.name,
@@ -111,6 +121,7 @@ def graph_by_assignment_variations_run(fitness_history_io,
     savefile = fitness_history_io.get_graph_filename(
                   par.DataViewerParams.POPULATION_SIZE,
                   par.DataViewerParams.NUM_ASSIGNMENTS,
+                  par.DataViewerParams.NUM_GROUPS,
                   par.DataViewerParams.NUM_RUNS,
                   par.DataViewerParams.NUM_ITERATIONS,
                   evolution_strategy.name,
@@ -148,6 +159,7 @@ def graph_by_assignment_run(fitness_history_io, evolution_strategy, randomize_as
 
   datafile = fitness_history_io.get_data_filename(par.DataViewerParams.POPULATION_SIZE,
                                                   par.DataViewerParams.NUM_ASSIGNMENTS,
+                                                  par.DataViewerParams.NUM_GROUPS,
                                                   par.DataViewerParams.NUM_RUNS,
                                                   par.DataViewerParams.NUM_ITERATIONS,
                                                   evolution_strategy.name,
@@ -167,6 +179,7 @@ def graph_by_assignment_run(fitness_history_io, evolution_strategy, randomize_as
     savefile = fitness_history_io.get_graph_filename(
                   par.DataViewerParams.POPULATION_SIZE,
                   par.DataViewerParams.NUM_ASSIGNMENTS,
+                  par.DataViewerParams.NUM_GROUPS,
                   par.DataViewerParams.NUM_RUNS,
                   par.DataViewerParams.NUM_ITERATIONS,
                   evolution_strategy.name,

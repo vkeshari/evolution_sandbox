@@ -114,10 +114,11 @@ class DataViewerParams:
   # The date and time when the script to generate data was run
   #   (not the time at which it was actually stored).
   # By default, this is for the sample data found under data/ and out/
-  DATETIME_STRING = '20250604203404'
+  DATETIME_STRING = '20250606230314'
 
   # Same as for evolution_runner.py
   POPULATION_SIZE = 100
+  NUM_GROUPS = 5
   NUM_ASSIGNMENTS = 5
   NUM_RUNS = 10
   NUM_ITERATIONS = 100
@@ -189,10 +190,16 @@ class TuningParams:
 
   MIN_GROUP_SIZE = 10
   MAX_GROUP_SIZE = 50
-  GROUP_SIZE_STEP = 5
+  GROUP_SIZE_STEP = 1
 
   FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
   TIME_AGGREGATION_TYPE = fit.AggregateType.MEDIAN
 
   TIME_TO_FITNESS_VALUES = [0.8, 0.9, 0.95]
   PLOT_TIME_TO_FITNESS = 0.9
+
+  # If this is False, NUM_ASSIGNMENTS below is ignored.
+  # If this is True, EVOLUTION_STRATEGY_VALS must only have one value:
+  #   EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY
+  DIFFERENT_GROUP_AND_ASSIGNMENT_COUNT = False
+  NUM_ASSIGNMENTS = 20

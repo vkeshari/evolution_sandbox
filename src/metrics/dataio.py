@@ -31,19 +31,20 @@ class FitnessHistoryIO:
     self.DATA_DIR = current_dir / 'data' / datetime_string
     self.GRAPH_DIR = current_dir / 'out' / datetime_string
 
-  def get_data_filename(self, population_size, num_assignments, num_runs, num_iterations, 
-                        evolution_strategy_name, randomize_assignment_priorities,
+  def get_data_filename(self, population_size, num_assignments, num_groups, num_runs,
+                        num_iterations, evolution_strategy_name, randomize_assignment_priorities,
                         randomize_assignment_sizes):
-    return self.DATA_DIR / "{}_{}_{}_p{}_a{}_i{}_r{}.data".format(
+    return self.DATA_DIR / "{}_{}_{}_p{}_a{}_g{}_i{}_r{}.data".format(
         evolution_strategy_name, randomize_assignment_priorities, randomize_assignment_sizes,
-        population_size, num_assignments, num_iterations, num_runs)
+        population_size, num_assignments, num_groups, num_iterations, num_runs)
 
-  def get_graph_filename(self, population_size, num_assignments, num_runs, num_iterations, 
-                          evolution_strategy_name, randomize_assignment_priorities,
+  def get_graph_filename(self, population_size, num_assignments, num_groups, num_runs,
+                          num_iterations, evolution_strategy_name, randomize_assignment_priorities,
                           randomize_assignment_sizes, graph_type, fit_curve):
-    return self.GRAPH_DIR / "{}_{}_{}_{}_{}_p{}_a{}_i{}_r{}.png".format(
+    return self.GRAPH_DIR / "{}_{}_{}_{}_{}_p{}_a{}_g{}_i{}_r{}.png".format(
         fit_curve, graph_type, evolution_strategy_name, randomize_assignment_priorities,
-        randomize_assignment_sizes, population_size, num_assignments, num_iterations, num_runs)
+        randomize_assignment_sizes, population_size, num_assignments, num_groups, num_iterations,
+        num_runs)
 
   def write_fitness_history(self, filename, fitness_history):
     filename.parent.mkdir(exist_ok = True, parents = True)
@@ -64,9 +65,10 @@ class FitnessHistoryIO:
 
 class PopulationIO:
 
-  def __init__(self, population_size, num_groups, evolution_strategy_name,
+  def __init__(self, population_size, num_groups, num_assignments, evolution_strategy_name,
                 randomize_assignment_priorities, randomize_assignment_sizes, datetime_string):
     self.population_size = population_size
+    self.num_assignments = num_assignments
     self.num_groups = num_groups
     self.evolution_strategy_name = evolution_strategy_name
     self.randomize_assignment_priorities = randomize_assignment_priorities
@@ -76,9 +78,10 @@ class PopulationIO:
     self.POPULATION_DIR = current_dir / 'population' / datetime_string
   
   def get_population_filename(self, iteration_no):
-    return self.POPULATION_DIR / "{}_{}_{}_p{}_a{}_g{}.png".format(
+    return self.POPULATION_DIR / "{}_{}_{}_p{}_a{}_g{}_i{}.png".format(
               self.evolution_strategy_name, self.randomize_assignment_priorities,
-              self.randomize_assignment_sizes, self.population_size, self.num_groups, iteration_no)
+              self.randomize_assignment_sizes, self.population_size, self.num_assignments,
+              self.num_groups, iteration_no)
   
 
 class TuningIO:
