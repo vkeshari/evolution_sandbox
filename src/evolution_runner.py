@@ -46,9 +46,8 @@ def validate_params():
     assert not par.LoopParams.MULTI_PARAMS and par.WorldParams.NUM_RUNS == 1
 
 def initialize_world(population_size, num_iterations, num_groups, num_assignments,
-                      evolution_strategy, randomize_assignment_priorities,
-                      randomize_assignment_sizes, restrict_crossover, restrict_assignment,
-                      group_by_assignment, pio):
+                      randomize_assignment_priorities, randomize_assignment_sizes,
+                      restrict_crossover, restrict_assignment, group_by_assignment, pio):
 
   a = ass.Assignment(restrict_assignment = restrict_assignment,
                       group_by_assignment = group_by_assignment,
@@ -113,9 +112,8 @@ def run_evolution(fhio, datetime_string,
                     randomize_assignment_sizes = randomize_assignment_sizes,
                     datetime_string = datetime_string)
       w = initialize_world(population_size, num_iterations, num_groups, num_assignments,
-                            evolution_strategy, randomize_assignment_priorities,
-                            randomize_assignment_sizes, restrict_crossover, restrict_assignment,
-                            group_by_assignment, pio)
+                            randomize_assignment_priorities, randomize_assignment_sizes,
+                            restrict_crossover, restrict_assignment, group_by_assignment, pio)
       
       evolve_futures.append(
           executor.submit(

@@ -255,7 +255,7 @@ class TuningGraph:
 
     ax.set_title(title_text, fontsize = 'medium')
     ax.set_xlabel("Population Size")
-    ax.set_ylabel("Group Size")
+    ax.set_ylabel("No. of Groups")
 
     xticks = list(range(0, self.ps[-1] + 1, self.pstep))
     ax.set_xticks(xticks)
