@@ -31,6 +31,7 @@ def validate_params():
 
   par.DataViewerParams.POPULATION_SIZE = par.MultiParams.POPULATION_SIZE
   par.DataViewerParams.NUM_ASSIGNMENTS = par.MultiParams.NUM_ASSIGNMENTS
+  par.DataViewerParams.NUM_GROUPS = par.MultiParams.NUM_ASSIGNMENTS
   par.DataViewerParams.NUM_RUNS = par.MultiParams.NUM_RUNS
   par.DataViewerParams.NUM_ITERATIONS = par.MultiParams.NUM_ITERATIONS
 
