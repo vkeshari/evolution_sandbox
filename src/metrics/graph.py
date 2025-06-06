@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt, cm
 from matplotlib.patches import Rectangle
 from scipy import optimize as opt
 
+
 class FitnessHistoryGraph:
 
   LINE_ALPHA_STEP = 0.6
@@ -65,6 +66,7 @@ class FitnessHistoryGraph:
       plt.savefig(savefile)
       print ("Graph written to: {}".format(savefile))
       plt.close()
+
 
 class FitnessTimeToGraph:
 
@@ -233,8 +235,16 @@ class PopulationGraph:
 
 
 class TuningGraph:
+
+  FITNESS_SCALE_FACTOR = 0.7
+
   def __init__(self, pg_vals):
     self.pg_vals = pg_vals
+    [ps, gs] = list(zip(*pg_vals))
+    self.ps = sorted(list(set(ps)))
+    self.gs = sorted(list(set(gs)))
+    self.pstep = self.ps[-1] - self.ps[-2]
+    self.gstep = self.gs[-1] - self.gs[-2]
 
   def plot(self, graph_vals, title_text = '', show = False, savefile = None):
 
@@ -242,10 +252,25 @@ class TuningGraph:
     fig, ax = plt.subplots(figsize = resolution)
 
     ax.set_title(title_text)
+    ax.set_xlabel("Population Size")
+    ax.set_ylabel("Group Size")
+
+    xticks = list(range(0, self.ps[-1] + 1, self.pstep))
+    ax.set_xticks(xticks)
+    yticks = list(range(0, self.gs[-1] + 1, self.gstep))
+    ax.set_yticks(yticks)
+    ax.grid(True, which = 'major', axis = 'both', alpha = 0.5)
+
+    ax.set_xlim([0, self.ps[-1] + self.pstep])
+    ax.set_ylim([0, self.gs[-1] + self.gstep])
 
     for [p, g], f in graph_vals['final_fitness'].items():
-      plt.plot(p, g, marker = 'o', markersize = 10, alpha = 0.8, color = cm.gnuplot2_r(f))
-    
+      scaled_fitness = (f - self.FITNESS_SCALE_FACTOR) / (1.0 - self.FITNESS_SCALE_FACTOR)
+      plt.plot(p, g, marker = 'o', markersize = 10, alpha = 0.6,
+                color = cm.gnuplot2_r(scaled_fitness))
+      plt.text(x = p + 15, y = g, s = "{fit:.2f}".format(fit = f), fontsize = 'small',
+                verticalalignment = 'center')
+
     if show:
       fig.tight_layout()
       plt.show()

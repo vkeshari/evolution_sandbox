@@ -115,8 +115,11 @@ def make_tuning_graph(fhio, tio, pg_vals, num_runs, num_iterations, evolution_st
                                           randomize_assignment_sizes)
   
   tuning_graph = gra.TuningGraph(pg_vals)
-  graph_title_text = "Strategy: {}\nRandom Assignment Priorities: {}, Random Assignment Sizes: {}" \
-      .format(evolution_strategy_name, randomize_assignment_priorities, randomize_assignment_sizes)
+  graph_title_text = ("Strategy: {}\n" \
+                        + "Population Fitness after {} generations (averaged over {} runs)\n" \
+                        + "Random Assignment Priorities: {}, Random Assignment Sizes: {}") \
+      .format(evolution_strategy_name, num_iterations, num_runs,
+              randomize_assignment_priorities, randomize_assignment_sizes)
   tuning_graph.plot(graph_vals, title_text = graph_title_text, savefile = save_filename)
 
 def make_tuning_graphs(pg_vals, datetime_string):
