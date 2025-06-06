@@ -23,25 +23,32 @@ def get_evolution_constraints(evolution_strategy):
                           par.EvolutionStrategy.ALL_RESTRICTIONS]
   return (restrict_crossover, restrict_assignment, group_by_assignment)
 
+def check_population_divisibility(num_divisions, population_size):
+  assert num_divisions > 0
+  assert population_size > num_divisions
+  assert population_size % num_divisions == 0
+  assert population_size / num_divisions > 2.0
+
 def validate_params():
-  assert par.PopulationParams.NUM_GROUPS > 0
-  assert par.PopulationParams.NUM_GROUPS == par.PopulationParams.NUM_ASSIGNMENTS
-  assert par.PopulationParams.POPULATION_SIZE > par.PopulationParams.NUM_GROUPS
-  assert par.PopulationParams.POPULATION_SIZE % par.PopulationParams.NUM_GROUPS == 0
-  assert par.PopulationParams.POPULATION_SIZE / par.PopulationParams.NUM_GROUPS > 2.0
+  check_population_divisibility(par.PopulationParams.NUM_GROUPS,
+                                par.PopulationParams.POPULATION_SIZE)
+  check_population_divisibility(par.PopulationParams.NUM_ASSIGNMENTS,
+                                par.PopulationParams.POPULATION_SIZE)
 
   assert par.WorldParams.NUM_RUNS > 0
   assert par.WorldParams.NUM_GENERATIONS >= 10
+
+  assert len(par.FitnessParams.TIME_TO_FITNESS_VALUES) > 0
 
   if par.DebugParams.SHOW_ITERATIONS \
       or par.DebugParams.SAVE_GENOMES_AT_CHECKPOINTS \
       or par.DebugParams.SHOW_STATS_AT_CHECKPOINTS:
     assert not par.LoopParams.MULTI_PARAMS and par.WorldParams.NUM_RUNS == 1
 
-def initialize_world(population_size, num_iterations, num_assignments, evolution_strategy,
-                     randomize_assignment_priorities, randomize_assignment_sizes, pio):
-  (restrict_crossover, restrict_assignment, group_by_assignment) = \
-      get_evolution_constraints(evolution_strategy)
+def initialize_world(population_size, num_iterations, num_groups, num_assignments,
+                      evolution_strategy, randomize_assignment_priorities,
+                      randomize_assignment_sizes, restrict_crossover, restrict_assignment,
+                      group_by_assignment, pio):
 
   a = ass.Assignment(restrict_assignment = restrict_assignment,
                       group_by_assignment = group_by_assignment,
@@ -51,7 +58,7 @@ def initialize_world(population_size, num_iterations, num_assignments, evolution
       a.get_assignment_distribution(population_size, num_assignments)
 
   p = pop.Population(population_size = population_size,
-                      num_groups = num_assignments,
+                      num_groups = num_groups,
                       genome_size = num_assignments,
                       assignment_priorities = assignment_priorities,
                       assignment_sizes = assignment_sizes)
@@ -73,7 +80,7 @@ def initialize_world(population_size, num_iterations, num_assignments, evolution
   return w
 
 def run_evolution(fhio, datetime_string,
-                  population_size, num_runs, num_iterations, num_assignments,
+                  population_size, num_groups, num_runs, num_iterations, num_assignments,
                   evolution_strategy, randomize_assignment_priorities, randomize_assignment_sizes):
 
   print("Evolution Strategy: {}".format(evolution_strategy))
@@ -82,6 +89,11 @@ def run_evolution(fhio, datetime_string,
   print("Fitness Aggregation: {}".format(par.AggregationParams.FITNESS_AGGREGATION_TYPE))
   print("Time Aggregation: {}".format(par.AggregationParams.TIME_AGGREGATION_TYPE))
   print()
+  
+  (restrict_crossover, restrict_assignment, group_by_assignment) = \
+      get_evolution_constraints(evolution_strategy)
+  if group_by_assignment:
+    assert num_groups == num_assignments
 
   start_time = datetime.now()
 
@@ -94,13 +106,15 @@ def run_evolution(fhio, datetime_string,
       if par.DebugParams.SAVE_GENOMES_AT_CHECKPOINTS:
         pio = dat.PopulationIO(
                     population_size = population_size,
-                    num_groups = num_assignments,
+                    num_groups = num_groups,
                     evolution_strategy_name = evolution_strategy.name,
                     randomize_assignment_priorities = randomize_assignment_priorities,
                     randomize_assignment_sizes = randomize_assignment_sizes,
                     datetime_string = datetime_string)
-      w = initialize_world(population_size, num_iterations, num_assignments, evolution_strategy,
-                            randomize_assignment_priorities, randomize_assignment_sizes, pio)
+      w = initialize_world(population_size, num_iterations, num_groups, num_assignments,
+                            evolution_strategy, randomize_assignment_priorities,
+                            randomize_assignment_sizes, restrict_crossover, restrict_assignment,
+                            group_by_assignment, pio)
       
       evolve_futures.append(
           executor.submit(
@@ -182,13 +196,15 @@ def evolution_runner(datetime_string = ''):
       for randomize_assignment_priorities in [False, True]:
         for randomize_assignment_sizes in [False, True]:
           run_evolution(fhio, datetime_string, par.PopulationParams.POPULATION_SIZE,
-                        par.WorldParams.NUM_RUNS, par.WorldParams.NUM_GENERATIONS,
-                        par.PopulationParams.NUM_ASSIGNMENTS, evolution_strategy,
-                        randomize_assignment_priorities, randomize_assignment_sizes)
+                        par.PopulationParams.NUM_GROUPS, par.WorldParams.NUM_RUNS,
+                        par.WorldParams.NUM_GENERATIONS, par.PopulationParams.NUM_ASSIGNMENTS,
+                        evolution_strategy, randomize_assignment_priorities,
+                        randomize_assignment_sizes)
   else:
     run_evolution(fhio, datetime_string, par.PopulationParams.POPULATION_SIZE,
-                  par.WorldParams.NUM_RUNS, par.WorldParams.NUM_GENERATIONS,
-                  par.PopulationParams.NUM_ASSIGNMENTS, par.WorldParams.EVOLUTION_STRATEGY,
+                  par.PopulationParams.NUM_GROUPS, par.WorldParams.NUM_RUNS,
+                  par.WorldParams.NUM_GENERATIONS, par.PopulationParams.NUM_ASSIGNMENTS,
+                  par.WorldParams.EVOLUTION_STRATEGY,
                   par.WorldParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
                   par.WorldParams.RANDOMIZE_ASSIGNMENT_SIZES)
   

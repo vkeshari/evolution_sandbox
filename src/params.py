@@ -5,20 +5,29 @@ from metrics import fitness as fit
 # Common params
 
 class EvolutionStrategy(Enum):
-  #000 -- no restrictions of any kind. Null/baseline result.
+  # Binary code in description represents:
+  #   restrict crossover (to group),
+  #   restrict assignment (to group),
+  #   group individuals by assignment
+  #     (only to aid crossover and visualization),
+  #     NUM_GROUPS must be the same as NUM_ASSIGNMENTS if this setting is enabled.
+  # e.g. CROSSOVER_BY_ASSIGNMENT_ONLY groups individuals by assignment, then restricts crossover
+  #   to those groups, effectively restricting crossover by assignment.
+
+  # 000 -- no restrictions of any kind. Null/baseline result.
   NO_RESTRICTIONS = 0
 
-  #001 -- same results as NO_RESTRICTIONS, useful for debugging only.                      
+  # 001 -- same results as NO_RESTRICTIONS, useful for debugging and visualization only.
   NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT = 1
 
-  #100 -- split population into groups, restrict crossover within each group.  
+  # 100 -- split population into groups, restrict crossover to within each group.
   CROSSOVER_BY_GROUP_ONLY = 2
 
-  #101 -- restrict crossover only with other individuals with the same assignment.              
+  # 101 -- restrict crossover only with other individuals with the same assignment.
   CROSSOVER_BY_ASSIGNMENT_ONLY = 3
 
-  #111 -- both of the above restrictions.         
-  ALL_RESTRICTIONS = 4                     
+  # 111 -- both of the above restrictions.
+  ALL_RESTRICTIONS = 4
 
 # Params for evolution_runner.py
 
@@ -38,19 +47,18 @@ class WorldParams:
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
   # Change the priority of assignments every iteration,
   # By default, priority is highest for assignment 0 and decreases by assignment no.
-  RANDOMIZE_ASSIGNMENT_PRIORITIES = True
+  RANDOMIZE_ASSIGNMENT_PRIORITIES = False
   # Change the no. of available spots for each assignment every iteration,
   # Each assignment has at least half the default no. of availanle spots,
   # By default, all assignments have the same no. of available spots.
-  RANDOMIZE_ASSIGNMENT_SIZES = True
+  RANDOMIZE_ASSIGNMENT_SIZES = False
 
 class PopulationParams:
   # Total no. of individuals in the population.
   POPULATION_SIZE = 100
 
-  # Total no. of assignments available,
-  # An equal no. of groups will be created (but enforced only if restricted by evolution strategy),
-  # These should always be the same.
+  # Total no. of graoups and assignments available.
+  # These should be the same unless using an evolution strategy that doesn't group by assignment.
   NUM_GROUPS = 5
   NUM_ASSIGNMENTS = 5
 

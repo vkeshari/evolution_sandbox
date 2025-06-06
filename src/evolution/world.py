@@ -41,11 +41,17 @@ class World:
       fit.FitnessUtil.show_population_stats(generation, show_run_genomes, show_run_fitness)
     
     if save_genomes_at_checkpoints and self.pio:
-      population_graph_title = 'Generation: {gen}'.format(gen = iteration_no)
+      population_graph_title = ('Population Snapshot\nEvolution Strategy: {}\n' \
+                                    + 'Random Assignment Priorities: {}, ' \
+                                    + 'Random Assignment Sizes: {}\n' \
+                                    + 'Generation: {}') \
+                                  .format(self.pio.evolution_strategy_name,
+                                          self.pio.randomize_assignment_priorities,
+                                          self.pio.randomize_assignment_sizes,
+                                          iteration_no)
       population_graph_filename = self.pio.get_population_filename(iteration_no = iteration_no)
       grph.PopulationGraph(generation) \
           .plot(title_text = population_graph_title, savefile = population_graph_filename)
-
 
   def new_generation(self, population):
     new_groups = []

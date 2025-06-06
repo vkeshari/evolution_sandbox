@@ -18,6 +18,7 @@ def validate_params():
                         par.TuningParams.MAX_GROUP_SIZE,
                         par.TuningParams.GROUP_SIZE_STEP)
   
+  assert len(par.TuningParams.TIME_TO_FITNESS_VALUES) > 0
   assert par.TuningParams.PLOT_TIME_TO_FITNESS in par.TuningParams.TIME_TO_FITNESS_VALUES
   
   par.LoopParams.MULTI_PARAMS = False

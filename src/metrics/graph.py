@@ -179,14 +179,14 @@ class PopulationGraph:
     actual_population = sum(group_sizes)
 
     genome_size = self.population.groups[0].genome_size
-    graph_aspect_ratio = actual_population / genome_size
+    graph_aspect_ratio = min(4, actual_population / genome_size)
 
-    resolution = tuple([10.8, 10.8 / (graph_aspect_ratio / 2)])
+    resolution = tuple([10.8, 10.8 / graph_aspect_ratio])
     fig, ax = plt.subplots(figsize = resolution)
 
     ax.set_title(title_text)
-    ax.set_xlabel('<-- Individuals -->')
-    ax.set_ylabel('Genes')
+    ax.set_xlabel('<-- Individuals -->', fontsize = 'medium')
+    ax.set_ylabel('Genes', fontsize = 'medium')
     
     xticks = [0]
     cum_gs = 0
@@ -212,8 +212,8 @@ class PopulationGraph:
             'fitness': i.get_fitness()})
     
     shaped_genes = np.transpose(np.array([i['genes'] for i in flat_individuals]))
-    ax.imshow(shaped_genes, origin = 'upper', aspect = 1,
-              extent = [0, actual_population, genome_size, 0])
+    im = ax.imshow(shaped_genes, origin = 'upper', aspect = 1, vmin = 0, vmax = 1,
+                    extent = [0, actual_population, genome_size, 0])
     for xt in xticks:
       plt.axvline(x = xt, ymin = 0, ymax = 1, color = 'white', linewidth = 1, alpha = 0.8)
     
@@ -222,6 +222,9 @@ class PopulationGraph:
       if ass > -1:
         ax.add_patch(Rectangle((i, ass), height = 1, width = 1, edgecolor = 'red',
                                 linewidth = 2, alpha = 1.0, fill = False))
+    cbar = plt.colorbar(im, shrink = 0.75, ticks = np.linspace(0, 1, 6))
+    cbar.set_label('Individual Fitness', size = 'medium')
+    cbar.ax.tick_params(labelsize = 'medium')
 
     if show:
       fig.tight_layout()
@@ -251,7 +254,7 @@ class TuningGraph:
     resolution = tuple([7.2, 7.2])
     fig, ax = plt.subplots(figsize = resolution)
 
-    ax.set_title(title_text)
+    ax.set_title(title_text, fontsize = 'medium')
     ax.set_xlabel("Population Size")
     ax.set_ylabel("Group Size")
 
