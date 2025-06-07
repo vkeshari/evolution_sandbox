@@ -9,7 +9,7 @@ class Assignment:
                 randomize_assignment_priorities = False, randomize_assignment_sizes = False):
     self.restrict_assignment = restrict_assignment
     self.group_by_assignment = group_by_assignment
-    self.randomize_assignment_priorities = randomize_assignment_priorities,
+    self.randomize_assignment_priorities = randomize_assignment_priorities
     self.randomize_assignment_sizes = randomize_assignment_sizes
 
   def get_assignment_distribution(self, population_size, genome_size):

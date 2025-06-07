@@ -108,13 +108,13 @@ class DataViewerParams:
   # The date and time when the script to generate data was run
   #   (not the time at which it was actually stored).
   # By default, this is for the sample data found under data/ and out/
-  DATETIME_STRING = '20250606230314'
+  DATETIME_STRING = '20250608012047'
 
   # Same as for evolution_runner.py
   POPULATION_SIZE = 100
   NUM_GROUPS = 5
   NUM_ASSIGNMENTS = 5
-  NUM_RUNS = 10
+  NUM_RUNS = 100
   NUM_ITERATIONS = 100
 
   # Same as for evolution_runner.py
@@ -135,7 +135,7 @@ class GraphTypes:
 
 class GraphParams:
   # Plot the time taken to reach these fitness values.
-  TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
+  TIME_TO_FITNESS_VALUES = [0.8, 0.9, 0.95]
   # Only show these many iterations in graph.
   MAX_ITERATIONS = 100
   # Fit an exponential curve to each series in graph.
@@ -159,12 +159,12 @@ class MultiParams:
 
   POPULATION_SIZE = 100
   NUM_ASSIGNMENTS = 5
-  NUM_RUNS = 10
+  NUM_RUNS = 100
   NUM_ITERATIONS = 100
   GRAPH_MAX_ITERATIONS = 100
   
   SHOW_RUN_STATUS_DELAY = 1
-  TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
+  TIME_TO_FITNESS_VALUES = [0.8, 0.9, 0.95]
 
 # Params for tuning_run.py
 # All other params above are ignored or modified

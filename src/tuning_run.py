@@ -18,6 +18,9 @@ def validate_params():
                         par.TuningParams.MAX_GROUP_SIZE,
                         par.TuningParams.GROUP_SIZE_STEP)
   
+  has_custom_datetime_string = len(par.TuningParams.CUSTOM_DATETIME_STRING) > 0
+  assert not has_custom_datetime_string ^ par.TuningParams.GRAPHS_ONLY
+  
   assert len(par.TuningParams.TIME_TO_FITNESS_VALUES) > 0
   assert par.TuningParams.PLOT_TIME_TO_FITNESS in par.TuningParams.TIME_TO_FITNESS_VALUES
 

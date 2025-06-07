@@ -6,6 +6,9 @@ import params as par
 from metrics import fitness as fit
 
 def validate_params():
+  has_custom_datetime_string = len(par.MultiParams.CUSTOM_DATETIME_STRING) > 0
+  assert not has_custom_datetime_string ^ par.MultiParams.GRAPHS_ONLY
+  
   assert par.MultiParams.GRAPH_MAX_ITERATIONS <= par.MultiParams.NUM_ITERATIONS
 
   par.WorldParams.NUM_RUNS = par.MultiParams.NUM_RUNS
