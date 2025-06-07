@@ -33,7 +33,7 @@ class EvolutionStrategy(Enum):
 
 class WorldParams:
   # Average over these many runs.
-  NUM_RUNS = 10
+  NUM_RUNS = 100
   # Run evolution for these many iterations (per run).
   NUM_GENERATIONS = 100
 
@@ -120,8 +120,8 @@ class DataViewerParams:
   # Same as for evolution_runner.py
   #   Ignored depending on GraphTypes and GraphParams.ALL_GRAPHS below.
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
-  RANDOMIZE_ASSIGNMENT_PRIORITIES = True
-  RANDOMIZE_ASSIGNMENT_SIZES = True
+  RANDOMIZE_ASSIGNMENT_PRIORITIES = False
+  RANDOMIZE_ASSIGNMENT_SIZES = False
 
 class GraphTypes:
   # Plot by evolution strategy (4 keys) (same assignment randomization).
