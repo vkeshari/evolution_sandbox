@@ -216,11 +216,13 @@ class PopulationGraph:
     for xt in xticks:
       plt.axvline(x = xt, ymin = 0, ymax = 1, color = 'white', linewidth = 1, alpha = 0.8)
     
-    for i, ind in enumerate(flat_individuals):
-      ass = ind['assignment']
-      if ass > -1:
-        ax.add_patch(Rectangle((i, ass), height = 1, width = 1, edgecolor = 'red',
-                                linewidth = 2, alpha = 1.0, fill = False))
+    if len(self.population.assignment_priorities) > 1:
+      for i, ind in enumerate(flat_individuals):
+        ass = ind['assignment']
+        if ass > -1:
+          ax.add_patch(Rectangle((i, ass), height = 1, width = 1, edgecolor = 'red',
+                                  linewidth = 2, alpha = 1.0, fill = False))
+    
     cbar = plt.colorbar(im, shrink = 0.75, ticks = np.linspace(0, 1, 6))
     cbar.set_label('Individual Fitness', size = 'medium')
     cbar.ax.tick_params(labelsize = 'medium')

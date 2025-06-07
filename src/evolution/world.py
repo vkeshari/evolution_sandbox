@@ -34,8 +34,8 @@ class World:
   
   def process_checkpoint(self, iteration_no, generation, show_iterations, show_stats_at_checkpoints,
                          show_run_genomes, show_run_fitness, save_genomes_at_checkpoints):
+    total_fitness = generation.get_fitness()
     if show_iterations:
-      total_fitness = generation.get_fitness()
       print("ITERATION: {}\tFitness: {:.2}".format(iteration_no, total_fitness))
     if show_stats_at_checkpoints:
       fit.FitnessUtil.show_population_stats(generation, show_run_genomes, show_run_fitness)
@@ -44,11 +44,11 @@ class World:
       population_graph_title = ('Population Snapshot\nEvolution Strategy: {}\n' \
                                     + 'Random Assignment Priorities: {}, ' \
                                     + 'Random Assignment Sizes: {}\n' \
-                                    + 'Generation: {}') \
+                                    + 'Generation: {}, Population Fitness: {f:.2f}') \
                                   .format(self.pio.evolution_strategy_name,
                                           self.pio.randomize_assignment_priorities,
                                           self.pio.randomize_assignment_sizes,
-                                          iteration_no)
+                                          iteration_no, f = total_fitness)
       population_graph_filename = self.pio.get_population_filename(iteration_no = iteration_no)
       grph.PopulationGraph(generation) \
           .plot(title_text = population_graph_title, savefile = population_graph_filename)
