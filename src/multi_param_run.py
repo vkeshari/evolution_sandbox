@@ -55,10 +55,10 @@ def generate_multi_param_data(datetime_string):
   for evolution_strategy in par.EvolutionStrategy:
     if evolution_strategy == par.EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT:
       continue
-    par.WorldParams.EVOLUTION_STRATEGY = evolution_strategy
     for randomize_assignment_priorities in [False, True]:
-      par.WorldParams.RANDOMIZE_ASSIGNMENT_PRIORITIES = randomize_assignment_priorities
       for randomize_assignment_sizes in [False, True]:
+        par.WorldParams.EVOLUTION_STRATEGY = evolution_strategy
+        par.WorldParams.RANDOMIZE_ASSIGNMENT_PRIORITIES = randomize_assignment_priorities
         par.WorldParams.RANDOMIZE_ASSIGNMENT_SIZES = randomize_assignment_sizes
 
         evo.evolution_runner(datetime_string = datetime_string)

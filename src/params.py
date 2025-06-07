@@ -176,11 +176,11 @@ class TuningParams:
 
   NUM_RUNS = 10
   NUM_ITERATIONS = 100
-  RANDOMIZE_ASSIGNMENT_PRIORITIES = True
 
   EVOLUTION_STRATEGY_VALS = [EvolutionStrategy.ALL_RESTRICTIONS,
                               EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY,
                               EvolutionStrategy.CROSSOVER_BY_ASSIGNMENT_ONLY]
+  RANDOM_ASSIGNMENT_PRIORITIES_VALS = [False, True]
   RANDOM_ASSIGNMENT_SIZES_VALS = [False, True]
 
   MIN_POPULATION = 100

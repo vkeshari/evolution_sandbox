@@ -31,7 +31,6 @@ def validate_params():
 
   par.WorldParams.NUM_RUNS = par.TuningParams.NUM_RUNS
   par.WorldParams.NUM_GENERATIONS = par.TuningParams.NUM_ITERATIONS
-  par.WorldParams.RANDOMIZE_ASSIGNMENT_PRIORITIES = par.TuningParams.RANDOMIZE_ASSIGNMENT_PRIORITIES
 
   par.FitnessParams.TIME_TO_FITNESS_VALUES = par.TuningParams.TIME_TO_FITNESS_VALUES
   par.AggregationParams.FITNESS_AGGREGATION_TYPE = par.TuningParams.FITNESS_AGGREGATION_TYPE
@@ -89,11 +88,13 @@ def generate_data_for_population_group_pairs(pg_vals, datetime_string):
       par.PopulationParams.NUM_ASSIGNMENTS = g
 
     for es in par.TuningParams.EVOLUTION_STRATEGY_VALS:
-      for ras in par.TuningParams.RANDOM_ASSIGNMENT_SIZES_VALS:
-        par.WorldParams.EVOLUTION_STRATEGY = es
-        par.WorldParams.RANDOMIZE_ASSIGNMENT_SIZES = ras
+      for rap in par.TuningParams.RANDOM_ASSIGNMENT_PRIORITIES_VALS:
+        for ras in par.TuningParams.RANDOM_ASSIGNMENT_SIZES_VALS:
+          par.WorldParams.EVOLUTION_STRATEGY = es
+          par.WorldParams.RANDOMIZE_ASSIGNMENT_SIZES = ras
+          par.WorldParams.RANDOMIZE_ASSIGNMENT_PRIORITIES = rap
 
-        evo.evolution_runner(datetime_string)
+          evo.evolution_runner(datetime_string)
 
 def make_tuning_graph(fhio, tio, pg_vals, num_runs, num_iterations, evolution_strategy_name,
                       randomize_assignment_priorities, randomize_assignment_sizes):
@@ -137,18 +138,20 @@ def make_tuning_graph(fhio, tio, pg_vals, num_runs, num_iterations, evolution_st
   tuning_graph.plot(graph_vals, title_text = graph_title_text, savefile = save_filename)
 
 def make_tuning_graphs(pg_vals, datetime_string):
+
   fhio = dat.FitnessHistoryIO(datetime_string)
   tio = dat.TuningIO(datetime_string)
-  for es in par.TuningParams.EVOLUTION_STRATEGY_VALS:
-    for ras in par.TuningParams.RANDOM_ASSIGNMENT_SIZES_VALS:
 
-      make_tuning_graph(
-          fhio, tio, pg_vals,
-          num_runs = par.TuningParams.NUM_RUNS,
-          num_iterations = par.TuningParams.NUM_ITERATIONS,
-          evolution_strategy_name = es.name,
-          randomize_assignment_priorities = par.TuningParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
-          randomize_assignment_sizes = ras)
+  for es in par.TuningParams.EVOLUTION_STRATEGY_VALS:
+    for rap in par.TuningParams.RANDOM_ASSIGNMENT_PRIORITIES_VALS:
+      for ras in par.TuningParams.RANDOM_ASSIGNMENT_SIZES_VALS:
+        make_tuning_graph(
+            fhio, tio, pg_vals,
+            num_runs = par.TuningParams.NUM_RUNS,
+            num_iterations = par.TuningParams.NUM_ITERATIONS,
+            evolution_strategy_name = es.name,
+            randomize_assignment_priorities = rap,
+            randomize_assignment_sizes = ras)
 
 
 def tuning_run():
