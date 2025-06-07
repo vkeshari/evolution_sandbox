@@ -25,8 +25,6 @@ def validate_params():
     assert par.TuningParams.NUM_ASSIGNMENTS > 0
     assert not set(par.TuningParams.EVOLUTION_STRATEGY_VALS) ^ \
                   set([par.EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY])
-  
-  par.LoopParams.MULTI_PARAMS = False
 
   par.WorldParams.NUM_RUNS = par.TuningParams.NUM_RUNS
   par.WorldParams.NUM_GENERATIONS = par.TuningParams.NUM_ITERATIONS

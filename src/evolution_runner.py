@@ -43,7 +43,7 @@ def validate_params():
   if par.DebugParams.SHOW_ITERATIONS \
       or par.DebugParams.SAVE_GENOMES_AT_CHECKPOINTS \
       or par.DebugParams.SHOW_STATS_AT_CHECKPOINTS:
-    assert not par.LoopParams.MULTI_PARAMS and par.WorldParams.NUM_RUNS == 1
+    assert par.WorldParams.NUM_RUNS == 1
 
 def initialize_world(population_size, num_iterations, num_groups, num_assignments,
                       randomize_assignment_priorities, randomize_assignment_sizes,
@@ -187,30 +187,16 @@ def evolution_runner(datetime_string = ''):
     print ("TIMESTAMP:\t{}\n".format(datetime_string))
 
   fhio = dat.FitnessHistoryIO(datetime_string = datetime_string)
-
-  if par.LoopParams.MULTI_PARAMS:
-    for evolution_strategy in par.EvolutionStrategy:
-      if evolution_strategy == par.EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT:
-        continue
-      for randomize_assignment_priorities in [False, True]:
-        for randomize_assignment_sizes in [False, True]:
-          run_evolution(fhio, datetime_string, par.PopulationParams.POPULATION_SIZE,
-                        par.PopulationParams.NUM_GROUPS, par.WorldParams.NUM_RUNS,
-                        par.WorldParams.NUM_GENERATIONS, par.PopulationParams.NUM_ASSIGNMENTS,
-                        evolution_strategy, randomize_assignment_priorities,
-                        randomize_assignment_sizes)
-  else:
-    run_evolution(fhio, datetime_string, par.PopulationParams.POPULATION_SIZE,
-                  par.PopulationParams.NUM_GROUPS, par.WorldParams.NUM_RUNS,
-                  par.WorldParams.NUM_GENERATIONS, par.PopulationParams.NUM_ASSIGNMENTS,
-                  par.WorldParams.EVOLUTION_STRATEGY,
-                  par.WorldParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
-                  par.WorldParams.RANDOMIZE_ASSIGNMENT_SIZES)
+  
+  run_evolution(fhio, datetime_string, par.PopulationParams.POPULATION_SIZE,
+                par.PopulationParams.NUM_GROUPS, par.WorldParams.NUM_RUNS,
+                par.WorldParams.NUM_GENERATIONS, par.PopulationParams.NUM_ASSIGNMENTS,
+                par.WorldParams.EVOLUTION_STRATEGY,
+                par.WorldParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
+                par.WorldParams.RANDOMIZE_ASSIGNMENT_SIZES)
   
   if show_timestamp:
     print ("TIMESTAMP:\t{}\n".format(datetime_string))
-  
-  return datetime_string
 
 if __name__=="__main__":
   evolution_runner()

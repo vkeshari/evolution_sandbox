@@ -31,26 +31,20 @@ class EvolutionStrategy(Enum):
 
 # Params for evolution_runner.py
 
-class LoopParams:
-  # Iterate over 3 categorical params with 16 possible values:
-  # Evolution strategy (4 keys) and Assignment randomness (4 keys).
-  MULTI_PARAMS = True
-
 class WorldParams:
   # Average over these many runs.
   NUM_RUNS = 10
   # Run evolution for these many iterations (per run).
   NUM_GENERATIONS = 100
 
-  # These three parameters are ignored if LoopParams.MULTI_PARAMS is True.
   # Evolution strategy for crossover and assignment as defined above.
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
   # Change the priority of assignments every iteration,
-  # By default, priority is highest for assignment 0 and decreases by assignment no.
+  #   (by default, priority is highest for assignment 0 and decreases by assignment no.)
   RANDOMIZE_ASSIGNMENT_PRIORITIES = False
-  # Change the no. of available spots for each assignment every iteration,
-  # Each assignment has at least half the default no. of availanle spots,
-  # By default, all assignments have the same no. of available spots.
+  # Change the no. of available spots for each assignment to a random value in every iteration,
+  # Each assignment will have at least half the default no. of available spots,
+  #   (by default, all assignments have the same no. of available spots).
   RANDOMIZE_ASSIGNMENT_SIZES = False
 
 class PopulationParams:
@@ -159,10 +153,15 @@ class GraphParams:
 # All other params above are ignored or modified
 
 class MultiParams:
+  # Use these to generate graphs from saved fitness history data
+  CUSTOM_DATETIME_STRING = ''
+  GRAPHS_ONLY = False
+
   POPULATION_SIZE = 100
   NUM_ASSIGNMENTS = 5
   NUM_RUNS = 10
   NUM_ITERATIONS = 100
+  GRAPH_MAX_ITERATIONS = 100
   
   SHOW_RUN_STATUS_DELAY = 1
   TIME_TO_FITNESS_VALUES = [0.9, 0.95, 0.99]
