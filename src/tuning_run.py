@@ -31,6 +31,7 @@ def validate_params():
 
   par.WorldParams.NUM_RUNS = par.TuningParams.NUM_RUNS
   par.WorldParams.NUM_GENERATIONS = par.TuningParams.NUM_ITERATIONS
+  par.WorldParams.ASSIGNMENT_STRATEGY = par.AssignmentStrategy.ASSIGNMENT_MATCHING
 
   par.FitnessParams.TIME_TO_FITNESS_VALUES = par.TuningParams.TIME_TO_FITNESS_VALUES
   par.AggregationParams.FITNESS_AGGREGATION_TYPE = par.TuningParams.FITNESS_AGGREGATION_TYPE

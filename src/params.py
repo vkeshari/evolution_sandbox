@@ -29,6 +29,16 @@ class EvolutionStrategy(Enum):
   # 111 -- both of the above restrictions.
   ALL_RESTRICTIONS = 4
 
+class AssignmentStrategy(Enum):
+  # Assign individuals to assignments greedily based on assignment priority.
+  #   By default, assignment priority is highest to lowest for assignments 0 to NUM_ASSIGNMENTS - 1,
+  #   The priority order can be randomized in each generation with RANDOMIZE_ASSIGNMENT_PRIORITIES.
+  ASSIGNMENT_PRIORITY = 0
+
+  # Assign individuals to assignments using the assignment matching algorithm.
+  #   The cost of assigning individual i to assignment a is 1 - (i's fitness for a)
+  ASSIGNMENT_MATCHING = 1
+
 # Params for evolution_runner.py
 
 class WorldParams:
@@ -39,8 +49,12 @@ class WorldParams:
 
   # Evolution strategy for crossover and assignment as defined above.
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
-  # Change the priority of assignments every iteration,
-  #   (by default, priority is highest for assignment 0 and decreases by assignment no.)
+
+  # Strategy for assignment of individuals to tasks as defined above.
+  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_PRIORITY
+
+  # Change the priority of assignments every iteration.
+  #   Only applicable if AssignmentStrategy is ASSIGNMENT_PRIORITY.
   RANDOMIZE_ASSIGNMENT_PRIORITIES = False
   # Change the no. of available spots for each assignment to a random value in every iteration,
   # Each assignment will have at least half the default no. of available spots,

@@ -45,11 +45,13 @@ def validate_params():
       or par.DebugParams.SHOW_STATS_AT_CHECKPOINTS:
     assert par.WorldParams.NUM_RUNS == 1
 
-def initialize_world(population_size, num_iterations, num_groups, num_assignments,
+def initialize_world(population_size, num_iterations, num_groups,
+                      num_assignments, assignment_strategy,
                       randomize_assignment_priorities, randomize_assignment_sizes,
                       restrict_crossover, restrict_assignment, group_by_assignment, pio):
 
-  a = ass.Assignment(restrict_assignment = restrict_assignment,
+  a = ass.Assignment(assignment_strategy = assignment_strategy,
+                      restrict_assignment = restrict_assignment,
                       group_by_assignment = group_by_assignment,
                       randomize_assignment_priorities = randomize_assignment_priorities,
                       randomize_assignment_sizes = randomize_assignment_sizes)
@@ -78,11 +80,12 @@ def initialize_world(population_size, num_iterations, num_groups, num_assignment
                 pio = pio)
   return w
 
-def run_evolution(fhio, datetime_string,
-                  population_size, num_groups, num_runs, num_iterations, num_assignments,
-                  evolution_strategy, randomize_assignment_priorities, randomize_assignment_sizes):
+def run_evolution(fhio, datetime_string, population_size, num_groups, num_runs, num_iterations,
+                  num_assignments, evolution_strategy, assignment_strategy,
+                  randomize_assignment_priorities, randomize_assignment_sizes):
 
   print("Evolution Strategy: {}".format(evolution_strategy))
+  print("Assignment Strategy: {}".format(assignment_strategy))
   print("Randomize Assignment Priorities: {}".format(randomize_assignment_priorities))
   print("Randomize Assignment Sizes: {}".format(randomize_assignment_sizes))
   print("Fitness Aggregation: {}".format(par.AggregationParams.FITNESS_AGGREGATION_TYPE))
@@ -108,10 +111,12 @@ def run_evolution(fhio, datetime_string,
                     num_groups = num_groups,
                     num_assignments = num_assignments,
                     evolution_strategy_name = evolution_strategy.name,
+                    assignment_strategy_name = assignment_strategy.name,
                     randomize_assignment_priorities = randomize_assignment_priorities,
                     randomize_assignment_sizes = randomize_assignment_sizes,
                     datetime_string = datetime_string)
-      w = initialize_world(population_size, num_iterations, num_groups, num_assignments,
+      w = initialize_world(population_size, num_iterations, num_groups,
+                            num_assignments, assignment_strategy,
                             randomize_assignment_priorities, randomize_assignment_sizes,
                             restrict_crossover, restrict_assignment, group_by_assignment, pio)
       
@@ -192,6 +197,7 @@ def evolution_runner(datetime_string = ''):
                 par.PopulationParams.NUM_GROUPS, par.WorldParams.NUM_RUNS,
                 par.WorldParams.NUM_GENERATIONS, par.PopulationParams.NUM_ASSIGNMENTS,
                 par.WorldParams.EVOLUTION_STRATEGY,
+                par.WorldParams.ASSIGNMENT_STRATEGY,
                 par.WorldParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
                 par.WorldParams.RANDOMIZE_ASSIGNMENT_SIZES)
   

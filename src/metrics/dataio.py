@@ -66,10 +66,12 @@ class FitnessHistoryIO:
 class PopulationIO:
 
   def __init__(self, population_size, num_groups, num_assignments, evolution_strategy_name,
-                randomize_assignment_priorities, randomize_assignment_sizes, datetime_string):
+                assignment_strategy_name, randomize_assignment_priorities,
+                randomize_assignment_sizes, datetime_string):
     self.population_size = population_size
     self.num_assignments = num_assignments
     self.num_groups = num_groups
+    self.assignment_strategy_name = assignment_strategy_name
     self.evolution_strategy_name = evolution_strategy_name
     self.randomize_assignment_priorities = randomize_assignment_priorities
     self.randomize_assignment_sizes = randomize_assignment_sizes
