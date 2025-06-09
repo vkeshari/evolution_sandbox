@@ -92,10 +92,17 @@ class TuningIO:
 
     current_dir = DirectoryValidation.get_directory()
     self.TUNING_DIR = current_dir / 'tuning' / datetime_string
+    self.GA_TUNING_DIR = current_dir / 'tuning_ga' / datetime_string
   
   def get_tuning_filename(self, num_runs, num_iterations, evolution_strategy_name,
                           randomize_assignment_priorities, randomize_assignment_sizes):
     return self.TUNING_DIR / "{}_{}_{}_i{}_r{}.png".format(
               evolution_strategy_name, randomize_assignment_priorities,
               randomize_assignment_sizes, num_iterations, num_runs)
+  
+  def get_ga_tuning_filename(self, num_runs, num_iterations, population_size,
+                          randomize_assignment_priorities, randomize_assignment_sizes):
+    return self.GA_TUNING_DIR / "{}_{}_p{}_i{}_r{}.png".format(
+              randomize_assignment_priorities, randomize_assignment_sizes,
+              population_size, num_iterations, num_runs)
 

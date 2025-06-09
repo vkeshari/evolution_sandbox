@@ -194,15 +194,15 @@ class TuningParams:
   EVOLUTION_STRATEGY_VALS = [EvolutionStrategy.ALL_RESTRICTIONS,
                               EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY,
                               EvolutionStrategy.CROSSOVER_BY_ASSIGNMENT_ONLY]
-  RANDOM_ASSIGNMENT_PRIORITIES_VALS = [False, True]
+  RANDOM_ASSIGNMENT_PRIORITIES_VALS = [False]
   RANDOM_ASSIGNMENT_SIZES_VALS = [False, True]
 
   MIN_POPULATION = 100
-  MAX_POPULATION = 500
+  MAX_POPULATION = 600
   POPULATION_STEP = 100
 
   MIN_GROUP_SIZE = 10
-  MAX_GROUP_SIZE = 50
+  MAX_GROUP_SIZE = 60
   GROUP_SIZE_STEP = 1
 
   FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
@@ -216,3 +216,29 @@ class TuningParams:
   #   EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY
   DIFFERENT_GROUP_AND_ASSIGNMENT_COUNT = False
   NUM_ASSIGNMENTS = 20
+
+# Params for ga_tuning_run.py
+# All other params above are ignored or modified
+
+class GATuningParams:
+  # Use these to generate graphs from saved fitness history data
+  CUSTOM_DATETIME_STRING = ''
+  GRAPHS_ONLY = False
+
+  NUM_RUNS = 10
+  NUM_ITERATIONS = 100
+
+  RANDOM_ASSIGNMENT_PRIORITIES_VALS = [False]
+  RANDOM_ASSIGNMENT_SIZES_VALS = [False, True]
+
+  POPULATION_SIZE = 300
+
+  MIN_GA = 10
+  MAX_GA = 30
+  GA_STEP = 1
+
+  FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
+  TIME_AGGREGATION_TYPE = fit.AggregateType.MEDIAN
+
+  TIME_TO_FITNESS_VALUES = [0.8, 0.9, 0.95]
+  PLOT_TIME_TO_FITNESS = 0.9

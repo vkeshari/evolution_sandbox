@@ -242,13 +242,16 @@ class TuningGraph:
 
   FITNESS_SCALE_FACTOR = 0.7
 
-  def __init__(self, pg_vals):
-    self.pg_vals = pg_vals
-    [ps, gs] = list(zip(*pg_vals))
-    self.ps = sorted(list(set(ps)))
-    self.gs = sorted(list(set(gs)))
-    self.pstep = self.ps[-1] - self.ps[-2]
-    self.gstep = self.gs[-1] - self.gs[-2]
+  def __init__(self, xy_vals, type = ''):
+    assert type in ['PG', 'GA']
+    self.type = type
+
+    self.xy_vals = xy_vals
+    [xs, ys] = list(zip(*xy_vals))
+    self.xs = sorted(list(set(xs)))
+    self.ys = sorted(list(set(ys)))
+    self.xstep = self.xs[-1] - self.xs[-2]
+    self.ystep = self.ys[-1] - self.ys[-2]
 
   def plot(self, graph_vals, title_text = '', show = False, savefile = None):
 
@@ -256,23 +259,27 @@ class TuningGraph:
     fig, ax = plt.subplots(figsize = resolution)
 
     ax.set_title(title_text, fontsize = 'medium')
-    ax.set_xlabel("Population Size")
-    ax.set_ylabel("No. of Groups")
+    if self.type == 'PG':
+      ax.set_xlabel("Population Size")
+      ax.set_ylabel("No. of Groups / Assignments")
+    elif self.type == 'GA':
+      ax.set_xlabel("No. of Groups")
+      ax.set_ylabel("No. of Assignments")
 
-    xticks = list(range(0, self.ps[-1] + 1, self.pstep))
+    xticks = list(range(0, self.xs[-1] + 1, self.xstep))
     ax.set_xticks(xticks)
-    yticks = list(range(0, self.gs[-1] + 1, self.gstep))
+    yticks = list(range(0, self.ys[-1] + 1, self.ystep))
     ax.set_yticks(yticks)
     ax.grid(True, which = 'major', axis = 'both', alpha = 0.5)
 
-    ax.set_xlim([0, self.ps[-1] + self.pstep])
-    ax.set_ylim([0, self.gs[-1] + self.gstep])
+    ax.set_xlim([0, self.xs[-1] + self.xstep])
+    ax.set_ylim([0, self.ys[-1] + self.ystep])
 
-    for [p, g], f in graph_vals['final_fitness'].items():
+    for [x, y], f in graph_vals['final_fitness'].items():
       scaled_fitness = (f - self.FITNESS_SCALE_FACTOR) / (1.0 - self.FITNESS_SCALE_FACTOR)
-      plt.plot(p, g, marker = 'o', markersize = 10, alpha = 0.6,
+      plt.plot(x, y, marker = 'o', markersize = 10, alpha = 0.6,
                 color = cm.gnuplot2_r(scaled_fitness))
-      plt.text(x = p + 15, y = g, s = "{fit:.2f}".format(fit = f), fontsize = 'small',
+      plt.text(x = x + 15, y = y, s = "{fit:.2f}".format(fit = f), fontsize = 'small',
                 verticalalignment = 'center')
 
     if show:

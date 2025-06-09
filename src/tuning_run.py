@@ -27,7 +27,7 @@ def validate_params():
   if par.TuningParams.DIFFERENT_GROUP_AND_ASSIGNMENT_COUNT:
     assert par.TuningParams.NUM_ASSIGNMENTS > 0
     assert not set(par.TuningParams.EVOLUTION_STRATEGY_VALS) ^ \
-                  set([par.EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY])
+                  {par.EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY}
 
   par.WorldParams.NUM_RUNS = par.TuningParams.NUM_RUNS
   par.WorldParams.NUM_GENERATIONS = par.TuningParams.NUM_ITERATIONS
@@ -130,7 +130,7 @@ def make_tuning_graph(fhio, tio, pg_vals, num_runs, num_iterations, evolution_st
                                           randomize_assignment_priorities,
                                           randomize_assignment_sizes)
   
-  tuning_graph = gra.TuningGraph(pg_vals)
+  tuning_graph = gra.TuningGraph(pg_vals, type = 'PG')
   graph_title_text = ("Strategy: {}\n" \
                         + "Average Population Fitness after {} generations\n" \
                         + "Random Assignment Priorities: {}, Random Assignment Sizes: {}") \
