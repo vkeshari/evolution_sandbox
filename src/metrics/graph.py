@@ -272,14 +272,17 @@ class TuningGraph:
     ax.set_yticks(yticks)
     ax.grid(True, which = 'major', axis = 'both', alpha = 0.5)
 
-    ax.set_xlim([0, self.xs[-1] + self.xstep])
-    ax.set_ylim([0, self.ys[-1] + self.ystep])
+    xlim = self.xs[-1] + self.xstep
+    ylim = self.ys[-1] + self.ystep
+    ax.set_xlim([0, xlim])
+    ax.set_ylim([0, ylim])
 
+    text_shift = int(xlim / 50)
     for [x, y], f in graph_vals['final_fitness'].items():
       scaled_fitness = (f - self.FITNESS_SCALE_FACTOR) / (1.0 - self.FITNESS_SCALE_FACTOR)
       plt.plot(x, y, marker = 'o', markersize = 10, alpha = 0.6,
                 color = cm.gnuplot2_r(scaled_fitness))
-      plt.text(x = x + 15, y = y, s = "{fit:.2f}".format(fit = f), fontsize = 'small',
+      plt.text(x = x + text_shift, y = y, s = "{fit:.2f}".format(fit = f), fontsize = 'small',
                 verticalalignment = 'center')
 
     if show:

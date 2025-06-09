@@ -24,7 +24,7 @@ def validate_params():
   par.WorldParams.NUM_RUNS = par.GATuningParams.NUM_RUNS
   par.WorldParams.NUM_GENERATIONS = par.GATuningParams.NUM_ITERATIONS
   par.WorldParams.EVOLUTION_STRATEGY = par.EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY
-  par.WorldParams.ASSIGNMENT_STRATEGY = par.AssignmentStrategy.ASSIGNMENT_MATCHING
+  par.WorldParams.ASSIGNMENT_STRATEGY = par.GATuningParams.ASSIGNMENT_STRATEGY
 
   par.PopulationParams.POPULATION_SIZE = par.GATuningParams.POPULATION_SIZE
 
@@ -58,7 +58,7 @@ def get_group_assignment_pairs(population_size):
   for g in num_groups_range:
     for a in num_assignments_range:
       if population_size % g == 0 and population_size % a == 0:
-        if g >= 5 and a >= 5:
+        if all([m >= 5 for m in [g, a, population_size / g, population_size / a]]):
           ga_vals.append(tuple([g, a]))
 
   print("Total Groups and Assignment Count Pairs: {}".format(len(ga_vals)))
@@ -86,7 +86,7 @@ def generate_data_for_group_assignment_pairs(ga_vals, datetime_string):
         evo.evolution_runner(datetime_string)
 
 def make_tuning_graph(fhio, tio, ga_vals, num_runs, num_iterations,
-                      population_size, evolution_strategy_name,
+                      population_size, evolution_strategy_name, assignment_strategy_name,
                       randomize_assignment_priorities, randomize_assignment_sizes):
 
   graph_vals = {}
@@ -116,9 +116,9 @@ def make_tuning_graph(fhio, tio, ga_vals, num_runs, num_iterations,
   
   tuning_graph = gra.TuningGraph(ga_vals, type = 'GA')
   graph_title_text = ("Average Population Fitness after {} generations\n" \
-                        + "Population Size: {}\n" \
-                        + "Random Assignment Priorities: {}, Random Assignment Sizes: {}") \
-      .format(num_iterations, population_size,
+                        + "Assignment Strategy: {}, Population Size: {}\n" \
+                        + "Random Assignment Priorities: {}, Random Assignment Sizes: {}\n") \
+      .format(num_iterations, assignment_strategy_name, population_size,
               randomize_assignment_priorities, randomize_assignment_sizes)
   tuning_graph.plot(graph_vals, title_text = graph_title_text, savefile = save_filename)
 
@@ -134,7 +134,8 @@ def make_tuning_graphs(ga_vals, datetime_string):
           num_runs = par.GATuningParams.NUM_RUNS,
           num_iterations = par.GATuningParams.NUM_ITERATIONS,
           population_size = par.GATuningParams.POPULATION_SIZE,
-          evolution_strategy_name = par.GATuningParams.POPULATION_SIZE.name,
+          evolution_strategy_name = par.EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY.name,
+          assignment_strategy_name = par.GATuningParams.ASSIGNMENT_STRATEGY.name,
           randomize_assignment_priorities = rap,
           randomize_assignment_sizes = ras)
 

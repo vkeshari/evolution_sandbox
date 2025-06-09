@@ -13,7 +13,7 @@ def validate_params():
 
   par.WorldParams.NUM_RUNS = par.MultiParams.NUM_RUNS
   par.WorldParams.NUM_GENERATIONS = par.MultiParams.NUM_ITERATIONS
-  par.WorldParams.ASSIGNMENT_STRATEGY = par.AssignmentStrategy.ASSIGNMENT_MATCHING
+  par.WorldParams.ASSIGNMENT_STRATEGY = par.MultiParams.ASSIGNMENT_STRATEGY
 
   par.PopulationParams.POPULATION_SIZE = par.MultiParams.POPULATION_SIZE
   par.PopulationParams.NUM_GROUPS = par.MultiParams.NUM_ASSIGNMENTS

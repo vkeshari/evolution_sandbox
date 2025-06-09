@@ -31,7 +31,7 @@ def validate_params():
 
   par.WorldParams.NUM_RUNS = par.TuningParams.NUM_RUNS
   par.WorldParams.NUM_GENERATIONS = par.TuningParams.NUM_ITERATIONS
-  par.WorldParams.ASSIGNMENT_STRATEGY = par.AssignmentStrategy.ASSIGNMENT_MATCHING
+  par.WorldParams.ASSIGNMENT_STRATEGY = par.TuningParams.ASSIGNMENT_STRATEGY
 
   par.FitnessParams.TIME_TO_FITNESS_VALUES = par.TuningParams.TIME_TO_FITNESS_VALUES
   par.AggregationParams.FITNESS_AGGREGATION_TYPE = par.TuningParams.FITNESS_AGGREGATION_TYPE
@@ -97,7 +97,8 @@ def generate_data_for_population_group_pairs(pg_vals, datetime_string):
 
           evo.evolution_runner(datetime_string)
 
-def make_tuning_graph(fhio, tio, pg_vals, num_runs, num_iterations, evolution_strategy_name,
+def make_tuning_graph(fhio, tio, pg_vals, num_runs, num_iterations,
+                      evolution_strategy_name, assignment_strategy_name,
                       randomize_assignment_priorities, randomize_assignment_sizes):
 
   graph_vals = {}
@@ -131,10 +132,10 @@ def make_tuning_graph(fhio, tio, pg_vals, num_runs, num_iterations, evolution_st
                                           randomize_assignment_sizes)
   
   tuning_graph = gra.TuningGraph(pg_vals, type = 'PG')
-  graph_title_text = ("Strategy: {}\n" \
-                        + "Average Population Fitness after {} generations\n" \
+  graph_title_text = ("Average Population Fitness after {} generations\n" \
+                        + "Evoluion Strategy: {}, Assignment Strategy: {}\n" \
                         + "Random Assignment Priorities: {}, Random Assignment Sizes: {}") \
-      .format(evolution_strategy_name, num_iterations,
+      .format(num_iterations, evolution_strategy_name, assignment_strategy_name,
               randomize_assignment_priorities, randomize_assignment_sizes)
   tuning_graph.plot(graph_vals, title_text = graph_title_text, savefile = save_filename)
 
@@ -151,6 +152,7 @@ def make_tuning_graphs(pg_vals, datetime_string):
             num_runs = par.TuningParams.NUM_RUNS,
             num_iterations = par.TuningParams.NUM_ITERATIONS,
             evolution_strategy_name = es.name,
+            assignment_strategy_name = par.TuningParams.ASSIGNMENT_STRATEGY.name,
             randomize_assignment_priorities = rap,
             randomize_assignment_sizes = ras)
 

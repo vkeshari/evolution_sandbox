@@ -51,7 +51,7 @@ class WorldParams:
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
 
   # Strategy for assignment of individuals to tasks as defined above.
-  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_PRIORITY
+  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_MATCHING
 
   # Change the priority of assignments every iteration.
   #   Only applicable if AssignmentStrategy is ASSIGNMENT_PRIORITY.
@@ -170,6 +170,8 @@ class MultiParams:
   # Use these to generate graphs from saved fitness history data
   CUSTOM_DATETIME_STRING = ''
   GRAPHS_ONLY = False
+  
+  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_MATCHING
 
   POPULATION_SIZE = 100
   NUM_ASSIGNMENTS = 5
@@ -196,6 +198,7 @@ class TuningParams:
                               EvolutionStrategy.CROSSOVER_BY_ASSIGNMENT_ONLY]
   RANDOM_ASSIGNMENT_PRIORITIES_VALS = [False]
   RANDOM_ASSIGNMENT_SIZES_VALS = [False, True]
+  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_MATCHING
 
   MIN_POPULATION = 100
   MAX_POPULATION = 600
@@ -230,7 +233,8 @@ class GATuningParams:
 
   RANDOM_ASSIGNMENT_PRIORITIES_VALS = [False]
   RANDOM_ASSIGNMENT_SIZES_VALS = [False, True]
-
+  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_MATCHING
+  
   POPULATION_SIZE = 300
 
   MIN_GA = 10
