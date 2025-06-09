@@ -277,13 +277,13 @@ class TuningGraph:
     ax.set_xlim([0, xlim])
     ax.set_ylim([0, ylim])
 
-    text_shift = int(xlim / 50)
+    text_shift = xlim / 50
     for [x, y], f in graph_vals['final_fitness'].items():
       scaled_fitness = (f - self.FITNESS_SCALE_FACTOR) / (1.0 - self.FITNESS_SCALE_FACTOR)
       plt.plot(x, y, marker = 'o', markersize = 10, alpha = 0.6,
                 color = cm.gnuplot2_r(scaled_fitness))
       plt.text(x = x + text_shift, y = y, s = "{fit:.2f}".format(fit = f), fontsize = 'small',
-                verticalalignment = 'center')
+                verticalalignment = 'top')
 
     if show:
       fig.tight_layout()
