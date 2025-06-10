@@ -11,16 +11,6 @@ The Evolution Sandbox simulates and compares strategies for optimal evolution in
 + `data/`         : Metrics from runs are stored here in binary format.
 + `out/`          : Graphs made from above data are stored here as PNG images.
 
-Sample data and graphs available in `data/` and `out/` respectively.
-> Sample generated with the following parameters:
-> ```
-> POPULATION_SIZE = 100
-> NUM_ASSIGNMENTS = 5
-> NUM_GROUPS      = 5
-> NUM_GENERATIONS = 100
-> NUM_RUNS        = 10
-> ```
-
 ### Key Parameters
 
 #### Evolution Strategies
@@ -37,7 +27,7 @@ Sample data and graphs available in `data/` and `out/` respectively.
 + `RANDOMIZE_ASSIGNMENT_PRIORITIES`: If using assignment strategy `ASSIGNMENT_PRIORITY`, the priority of tasks is randomized in every generation.
 + `RANDOMIZE_ASSIGNMENT_SIZES`     : Available slots for each task are randomized in every generation.
 
-### To Run
+### How To Run
 
 > [!NOTE]
 > Start here. This wrapper runs simulations for variations of multiple parameters and generates graphs for comparison between them.
@@ -48,6 +38,18 @@ Sample data and graphs available in `data/` and `out/` respectively.
 + `$python3 src/evolution_runner.py`: Generates data from simulation
 + `$python3 src/data_viewer.py`     : Generates graphs from data
 
-### Parameter tuning scripts
+#### Parameter tuning scripts
 + `$python3 src/tuning_run.py`   : Compares various combinations of population and group sizes.
 + `$python3 src/ga_tuning_run.py`: Compares various combinations of assignment and group sizes (only for evolution strategy `CROSSOVER_BY_GROUP_ONLY`)
+
+#### Sample Results for `multi_param_run.py`
+Sample data and graphs available in `data/` and `out/` respectively.
+
+> Sample generated with assignment strategy `ASSIGNMENT_PRIORITY` and the following parameters:
+> ```
+> POPULATION_SIZE = 100
+> NUM_ASSIGNMENTS = 5
+> NUM_GROUPS      = 5
+> NUM_GENERATIONS = 100
+> NUM_RUNS        = 10
+> ```
