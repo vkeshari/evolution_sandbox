@@ -206,7 +206,7 @@ class TuningParams:
 
   MIN_GROUP_SIZE = 10
   MAX_GROUP_SIZE = 60
-  GROUP_SIZE_STEP = 1
+  GROUP_SIZE_STEP = 5
 
   FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
   TIME_AGGREGATION_TYPE = fit.AggregateType.MEDIAN
@@ -239,7 +239,7 @@ class GATuningParams:
 
   MIN_GA = 10
   MAX_GA = 30
-  GA_STEP = 1
+  GA_STEP = 5
 
   FITNESS_AGGREGATION_TYPE = fit.AggregateType.AVERAGE
   TIME_AGGREGATION_TYPE = fit.AggregateType.MEDIAN

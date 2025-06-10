@@ -27,7 +27,7 @@ def check_population_divisibility(num_divisions, population_size):
   assert num_divisions > 0
   assert population_size > num_divisions
   assert population_size % num_divisions == 0
-  assert population_size / num_divisions > 2.0
+  assert population_size / num_divisions >= 2.0
 
 def validate_params():
   check_population_divisibility(par.PopulationParams.NUM_GROUPS,
