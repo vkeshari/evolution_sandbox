@@ -35,6 +35,7 @@ def validate_params():
   par.DebugParams.SHOW_AGGREGATED_FITNESS = False
   par.DebugParams.WRITE_AGGREGATED_FITNESS = True
 
+  par.DataViewerParams.ASSIGNMENT_STRATEGY = par.MultiParams.ASSIGNMENT_STRATEGY
   par.DataViewerParams.POPULATION_SIZE = par.MultiParams.POPULATION_SIZE
   par.DataViewerParams.NUM_ASSIGNMENTS = par.MultiParams.NUM_ASSIGNMENTS
   par.DataViewerParams.NUM_GROUPS = par.MultiParams.NUM_ASSIGNMENTS

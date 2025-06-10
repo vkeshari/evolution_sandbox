@@ -51,7 +51,7 @@ class WorldParams:
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
 
   # Strategy for assignment of individuals to tasks as defined above.
-  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_MATCHING
+  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_PRIORITY
 
   # Change the priority of assignments every iteration.
   #   Only applicable if AssignmentStrategy is ASSIGNMENT_PRIORITY.
@@ -122,7 +122,7 @@ class DataViewerParams:
   # The date and time when the script to generate data was run
   #   (not the time at which it was actually stored).
   # By default, this is for the sample data found under data/ and out/
-  DATETIME_STRING = '20250608012047'
+  DATETIME_STRING = '20250610161216'
 
   # Same as for evolution_runner.py
   POPULATION_SIZE = 100
@@ -134,6 +134,7 @@ class DataViewerParams:
   # Same as for evolution_runner.py
   #   Ignored depending on GraphTypes and GraphParams.ALL_GRAPHS below.
   EVOLUTION_STRATEGY = EvolutionStrategy.NO_RESTRICTIONS
+  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_PRIORITY
   RANDOMIZE_ASSIGNMENT_PRIORITIES = False
   RANDOMIZE_ASSIGNMENT_SIZES = False
 
@@ -171,11 +172,11 @@ class MultiParams:
   CUSTOM_DATETIME_STRING = ''
   GRAPHS_ONLY = False
   
-  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_MATCHING
+  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_PRIORITY
 
   POPULATION_SIZE = 100
   NUM_ASSIGNMENTS = 5
-  NUM_RUNS = 100
+  NUM_RUNS = 10
   NUM_ITERATIONS = 100
   GRAPH_MAX_ITERATIONS = 100
   
@@ -196,9 +197,9 @@ class TuningParams:
   EVOLUTION_STRATEGY_VALS = [EvolutionStrategy.ALL_RESTRICTIONS,
                               EvolutionStrategy.CROSSOVER_BY_GROUP_ONLY,
                               EvolutionStrategy.CROSSOVER_BY_ASSIGNMENT_ONLY]
+  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_PRIORITY
   RANDOM_ASSIGNMENT_PRIORITIES_VALS = [False]
   RANDOM_ASSIGNMENT_SIZES_VALS = [False, True]
-  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_MATCHING
 
   MIN_POPULATION = 100
   MAX_POPULATION = 600
@@ -231,9 +232,9 @@ class GATuningParams:
   NUM_RUNS = 10
   NUM_ITERATIONS = 100
 
+  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_PRIORITY
   RANDOM_ASSIGNMENT_PRIORITIES_VALS = [False]
   RANDOM_ASSIGNMENT_SIZES_VALS = [False, True]
-  ASSIGNMENT_STRATEGY = AssignmentStrategy.ASSIGNMENT_MATCHING
   
   POPULATION_SIZE = 300
 

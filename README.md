@@ -16,9 +16,9 @@ Sample data and graphs available in `data/` and `out/` respectively.
 > ```
 > POPULATION_SIZE = 100
 > NUM_ASSIGNMENTS = 5
-> NUM_GROUPS = 5
+> NUM_GROUPS      = 5
 > NUM_GENERATIONS = 100
-> NUM_RUNS        = 100
+> NUM_RUNS        = 10
 > ```
 
 ### Key Parameters

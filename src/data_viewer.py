@@ -27,17 +27,19 @@ def graph_by_strategy(fitness_history_io, show = False, save = False, all_graphs
     for randomize_assignment_priorities in [False, True]:
       for randomize_assignment_sizes in [False, True]:
         graph_by_strategy_run(fitness_history_io,
+                              assignment_strategy = par.DataViewerParams.ASSIGNMENT_STRATEGY,
                               randomize_assignment_priorities = randomize_assignment_priorities,
                               randomize_assignment_sizes = randomize_assignment_sizes,
                               show = show, save = save)
   else:
     graph_by_strategy_run(
         fitness_history_io,
+        assignment_strategy = par.DataViewerParams.ASSIGNMENT_STRATEGY,
         randomize_assignment_priorities = par.DataViewerParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
         randomize_assignment_sizes = par.DataViewerParams.RANDOMIZE_ASSIGNMENT_SIZES,
         show = show, save = save)
 
-def graph_by_strategy_run(fitness_history_io,
+def graph_by_strategy_run(fitness_history_io, assignment_strategy, 
                           randomize_assignment_priorities, randomize_assignment_sizes,
                           show = False, save = False):
   fcg = gra.FitnessCombinedGraph(max_iterations = par.GraphParams.MAX_ITERATIONS,
@@ -59,8 +61,9 @@ def graph_by_strategy_run(fitness_history_io,
 
   fig_type = 'Evolution by Strategy'
   variable = 'EvolutionStrategy'
-  fixed = 'RandomPriorities: {}, RandomSizes: {}' \
-              .format(str(randomize_assignment_priorities), str(randomize_assignment_sizes))
+  fixed = 'AssignmentStrategy: {}, RandomPriorities: {}, RandomSizes: {}' \
+              .format(assignment_strategy.name,
+                      str(randomize_assignment_priorities), str(randomize_assignment_sizes))
   savefile = None
   if save:
     savefile = fitness_history_io.get_graph_filename(
@@ -83,17 +86,20 @@ def graph_by_assignment_variations(fitness_history_io, show = False, save = Fals
     for evolution_strategy in par.EvolutionStrategy:
       if evolution_strategy == par.EvolutionStrategy.NO_RESTRICTIONS_GROUP_BY_ASSIGNMENT:
         continue
-      graph_by_assignment_variations_run(fitness_history_io,
-                                          evolution_strategy = evolution_strategy,
-                                          show = show, save = save)
+      graph_by_assignment_variations_run(
+          fitness_history_io,
+          evolution_strategy = evolution_strategy,
+          assignment_strategy = par.DataViewerParams.ASSIGNMENT_STRATEGY,
+          show = show, save = save)
   else:
     graph_by_assignment_variations_run(
         fitness_history_io,
         evolution_strategy = par.DataViewerParams.EVOLUTION_STRATEGY,
+        assignment_strategy = par.DataViewerParams.ASSIGNMENT_STRATEGY,
         show = show, save = save)
 
 def graph_by_assignment_variations_run(fitness_history_io,
-                                        evolution_strategy,
+                                        evolution_strategy, assignment_strategy,
                                         show = False, save = False):
   fcg = gra.FitnessCombinedGraph(max_iterations = par.GraphParams.MAX_ITERATIONS,
                                   time_to_fitness_values = par.GraphParams.TIME_TO_FITNESS_VALUES)
@@ -115,7 +121,8 @@ def graph_by_assignment_variations_run(fitness_history_io,
   
   fig_type = 'Evolution by Assignment Types'
   variable = '(RandomPriorities, RandomSizes)'
-  fixed = 'EvolutionStrategy: {}'.format(evolution_strategy.name)
+  fixed = 'EvolutionStrategy: {}, AssignmentStrategy: {}' \
+              .format(evolution_strategy.name, assignment_strategy.name)
   savefile = None
   if save:
     savefile = fitness_history_io.get_graph_filename(
@@ -139,21 +146,25 @@ def graph_by_assignment(fitness_history_io, show = False, save = False, all_grap
         continue
       for randomize_assignment_priorities in [False, True]:
         for randomize_assignment_sizes in [False, True]:
-          graph_by_assignment_run(fitness_history_io,
-                                  evolution_strategy = evolution_strategy,
-                                  randomize_assignment_priorities = randomize_assignment_priorities,
-                                  randomize_assignment_sizes = randomize_assignment_sizes,
-                                  show = show, save = save)
+          graph_by_assignment_run(
+              fitness_history_io,
+              evolution_strategy = evolution_strategy,
+              assignment_strategy = par.DataViewerParams.ASSIGNMENT_STRATEGY,
+              randomize_assignment_priorities = randomize_assignment_priorities,
+              randomize_assignment_sizes = randomize_assignment_sizes,
+              show = show, save = save)
   else:
     graph_by_assignment_run(
         fitness_history_io,
         evolution_strategy = par.DataViewerParams.EVOLUTION_STRATEGY,
+        assignment_strategy = par.DataViewerParams.ASSIGNMENT_STRATEGY,
         randomize_assignment_priorities = par.DataViewerParams.RANDOMIZE_ASSIGNMENT_PRIORITIES,
         randomize_assignment_sizes = par.DataViewerParams.RANDOMIZE_ASSIGNMENT_SIZES,
         show = show, save = save)
 
-def graph_by_assignment_run(fitness_history_io, evolution_strategy, randomize_assignment_priorities,
-                            randomize_assignment_sizes, show = False, save = False):
+def graph_by_assignment_run(fitness_history_io, evolution_strategy, assignment_strategy,
+                            randomize_assignment_priorities, randomize_assignment_sizes,
+                            show = False, save = False):
   fcg = gra.FitnessCombinedGraph(max_iterations = par.GraphParams.MAX_ITERATIONS,
                                   time_to_fitness_values = par.GraphParams.TIME_TO_FITNESS_VALUES)
 
@@ -172,8 +183,9 @@ def graph_by_assignment_run(fitness_history_io, evolution_strategy, randomize_as
   
   fig_type = 'Evolution by Assignment'
   variable = 'AssignmentNo'
-  fixed = 'EvolutionStrategy: {}, RandomPriorities: {}, RandomSizes: {}'.format(
-      evolution_strategy.name, randomize_assignment_priorities, randomize_assignment_sizes)
+  fixed = 'EvolutionStrategy: {}, AssignmentStrategy: {}\nRandomPriorities: {}, RandomSizes: {}' \
+              .format(evolution_strategy.name, assignment_strategy.name,
+                      randomize_assignment_priorities, randomize_assignment_sizes)
   savefile = None
   if save:
     savefile = fitness_history_io.get_graph_filename(
