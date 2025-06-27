@@ -29,15 +29,19 @@ class EvolutionStrategy(Enum):
   # 111 -- both of the above restrictions.
   ALL_RESTRICTIONS = 4
 
+# Note: Assignment strategy is irrelevant for EvolutionStrategy ALL_RESTRICTIONS.
 class AssignmentStrategy(Enum):
+  # Assign tasks at random
+  RANDOM = 0
+
   # Assign individuals to assignments greedily based on assignment priority.
   #   By default, assignment priority is highest to lowest for assignments 0 to NUM_ASSIGNMENTS - 1,
   #   The priority order can be randomized in each generation with RANDOMIZE_ASSIGNMENT_PRIORITIES.
-  ASSIGNMENT_PRIORITY = 0
+  ASSIGNMENT_PRIORITY = 1
 
   # Assign individuals to assignments using the assignment matching algorithm.
   #   The cost of assigning individual i to assignment a is 1 - (i's fitness for a)
-  ASSIGNMENT_MATCHING = 1
+  ASSIGNMENT_MATCHING = 2
 
 # Params for evolution_runner.py
 

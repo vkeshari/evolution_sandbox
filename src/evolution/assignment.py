@@ -5,6 +5,7 @@ import params as par
 
 class Assignment:
 
+  RANDOM_ASSIGNMENT_PICKER = np.random.RandomState()
   ASSIGNMENT_PRIORITY_RANDOMIZER = np.random.RandomState()
   ASSIGNMENT_SIZE_RANDOMIZER = np.random.RandomState()
 
@@ -32,6 +33,19 @@ class Assignment:
           assignment_sizes[swap_indices[1]] += 1
     return (assignment_priorities, assignment_sizes)
   
+  def random_assignment(self, population):
+    enumerated = []
+    for i, group in enumerate(population.groups):
+      for j, individual in enumerate(group.individuals):
+        enumerated.append({'group': i, 'index': j, 'individual': individual})
+    self.RANDOM_ASSIGNMENT_PICKER.shuffle(enumerated)
+
+    assigned = 0
+    for a, size in population.assignment_sizes.items():
+      for e in enumerated[assigned : assigned + size]:
+        population.groups[e['group']].individuals[e['index']].assignment = a
+      assigned += size
+
   def greedy_assignment(self, population):
     enumerated = []
     for i, group in enumerate(population.groups):
@@ -98,7 +112,9 @@ class Assignment:
           individual.assignment = a
 
     else:
-      if self.assignment_strategy == par.AssignmentStrategy.ASSIGNMENT_PRIORITY:
+      if self.assignment_strategy == par.AssignmentStrategy.RANDOM:
+        self.random_assignment(population)
+      elif self.assignment_strategy == par.AssignmentStrategy.ASSIGNMENT_PRIORITY:
         self.greedy_assignment(population)
       elif self.assignment_strategy == par.AssignmentStrategy.ASSIGNMENT_MATCHING:
         self.assignment_matching(population)
