@@ -1,7 +1,7 @@
-# evolution_sandbox
+# Evolution Sandbox Library
 
 > [!IMPORTANT]
-> You must attribute references to this or any derivative work to the original author.
+> Please attribute references to this or any derivative work to the original author.
 
 The Evolution Sandbox simulates and compares strategies for optimal evolution in a population with specialization of labor.
 
