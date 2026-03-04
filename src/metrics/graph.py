@@ -173,7 +173,7 @@ class PopulationGraph:
   def __init__(self, population):
     self.population = population
   
-  def plot(self, title_text = '', show = False, savefile = None):
+  def plot(self, title_text = '', show_genome_assignments = False, show = False, savefile = None):
     group_sizes = [len(g.individuals) for g in self.population.groups]
     actual_population = sum(group_sizes)
 
@@ -216,12 +216,12 @@ class PopulationGraph:
     for xt in xticks:
       plt.axvline(x = xt, ymin = 0, ymax = 1, color = 'white', linewidth = 1, alpha = 0.8)
     
-    if len(self.population.assignment_priorities) > 1:
+    if show_genome_assignments and len(self.population.assignment_priorities) > 1:
       for i, ind in enumerate(flat_individuals):
         ass = ind['assignment']
         if ass > -1:
           ax.add_patch(Rectangle((i, ass), height = 1, width = 1, edgecolor = 'red',
-                                  linewidth = 2, alpha = 1.0, fill = False))
+                                  linewidth = 2, alpha = 0.6, fill = False))
     
     cbar = plt.colorbar(im, shrink = 0.75, ticks = np.linspace(0, 1, 6))
     cbar.set_label('Individual Fitness', size = 'medium')

@@ -33,7 +33,8 @@ class World:
     self.fitness_history.update_fitness_history(iteration_no, fitness_data)
   
   def process_checkpoint(self, iteration_no, generation, show_iterations, show_stats_at_checkpoints,
-                         show_run_genomes, show_run_fitness, save_genomes_at_checkpoints):
+                          show_run_genomes, show_run_fitness, save_genomes_at_checkpoints,
+                          show_genome_assignments):
     total_fitness = generation.get_fitness()
     if show_iterations:
       print("ITERATION: {}\tFitness: {:.2}".format(iteration_no, total_fitness))
@@ -51,7 +52,9 @@ class World:
                                           iteration_no, f = total_fitness)
       population_graph_filename = self.pio.get_population_filename(iteration_no = iteration_no)
       grph.PopulationGraph(generation) \
-          .plot(title_text = population_graph_title, savefile = population_graph_filename)
+          .plot(title_text = population_graph_title,
+                show_genome_assignments = show_genome_assignments,
+                savefile = population_graph_filename)
 
   def new_generation(self, population):
     new_groups = []
@@ -93,14 +96,16 @@ class World:
               show_run_genomes = False,
               show_run_fitness = False,
               show_stats_at_checkpoints = False,
-              save_genomes_at_checkpoints = False):
+              save_genomes_at_checkpoints = False,
+              show_genome_assignments = False):
     if (show_every_n_iteration == 0):
       show_every_n_iteration = 1
     
     start_time = datetime.now()
 
     self.process_checkpoint(0, self.current_generation, show_iterations, show_stats_at_checkpoints,
-                            show_run_genomes, show_run_fitness, save_genomes_at_checkpoints)
+                            show_run_genomes, show_run_fitness, save_genomes_at_checkpoints,
+                            show_genome_assignments)
 
     for i in range(self.num_generations):
       updated_generation = self.new_generation(self.current_generation)
@@ -111,7 +116,7 @@ class World:
       if is_checkpoint:
         self.process_checkpoint(i + 1, self.current_generation, show_iterations,
                                 show_stats_at_checkpoints, show_run_genomes, show_run_fitness,
-                                save_genomes_at_checkpoints)
+                                save_genomes_at_checkpoints, show_genome_assignments)
     
     end_time = datetime.now()
 

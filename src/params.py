@@ -92,6 +92,8 @@ class CrossoverParams:
   MUTATION_RATE = 0.01
 
 class DebugParams:
+  # Overall script run info
+
   # Periodically show no. of completed parallel runs
   SHOW_RUN_STATUS = True
   # Time in seconds to wait between showing runs
@@ -99,19 +101,32 @@ class DebugParams:
   # Show average and median runtime of each run
   SHOW_RUN_TIME_SUMMARY = True
 
-  # Show iteration no. and fitness at checkpoints during a run.
-  SHOW_ITERATIONS = False
-  # Show these many checkpoints during a run.
-  NUM_CHECKPOINTS = 10
-  # Save graphs of full population genomes at every checkpoint.
-  SAVE_GENOMES_AT_CHECKPOINTS = False
+  # Single run debugging
 
   # Show final genomes of the entire population at the end of a run.
   SHOW_RUN_GENOMES = False
   # Show fitness for the entire population at the end of a run.
   SHOW_RUN_FITNESS = False
-  # Also show above stats at each checkpoint (super verbose, for debugging).
+
+  # Debugging at checkpoints during a run
+
+  # Show these many checkpoints during a run.
+  NUM_CHECKPOINTS = 10
+
+  # Info at checkpoints
+  # Show iteration no. and fitness at checkpoints during a run.
+  SHOW_ITERATIONS = False
+  # Also show genomes and fitness at each checkpoint.
+  # WARNING: super verbose, use for single run debugging only.
   SHOW_STATS_AT_CHECKPOINTS = False
+  
+  # Graphs at checkpoints
+  # Save graphs of full population genomes at every checkpoint.
+  SAVE_GENOMES_AT_CHECKPOINTS = False
+  # If saving graphs, also show the assignments in each generation.
+  SHOW_GENOME_ASSIGNMENTS = True
+
+  # Overall script run metrics
 
   # After all runs, show a summary of aggregated population metrics.
   SHOW_AGGREGATED_FITNESS = False

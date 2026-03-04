@@ -128,7 +128,8 @@ def run_evolution(fhio, datetime_string, population_size, num_groups, num_runs, 
               show_run_genomes = par.DebugParams.SHOW_RUN_GENOMES,
               show_run_fitness = par.DebugParams.SHOW_RUN_FITNESS,
               show_stats_at_checkpoints = par.DebugParams.SHOW_STATS_AT_CHECKPOINTS,
-              save_genomes_at_checkpoints = par.DebugParams.SAVE_GENOMES_AT_CHECKPOINTS))
+              save_genomes_at_checkpoints = par.DebugParams.SAVE_GENOMES_AT_CHECKPOINTS,
+              show_genome_assignments = par.DebugParams.SHOW_GENOME_ASSIGNMENTS))
     
     print ("STARTED: {} RUNS".format(len(evolve_futures)))
     
