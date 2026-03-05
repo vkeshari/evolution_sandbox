@@ -5,6 +5,12 @@
 
 The Evolution Sandbox simulates and compares strategies for optimal evolution in a population with specialization of labor.
 
+> [!TIP]
+> Head over to the [Wiki](https://github.com/vkeshari/evolution_sandbox/wiki) for:
+> * **The Evolution Sandbox**: An introduction to genetic algorithms and an overview of the experimental setup in this library.
+> * **Optimized Productivity in populations with specialized labor**: Report on experiments and results using the Evolution Sandbox.
+> > _Last Updated: March 2026_
+
 ### Where things are
 
 + `src/params.py` : All config lives here. Treat this as command-line params.
