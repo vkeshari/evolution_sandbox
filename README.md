@@ -26,6 +26,7 @@ The Evolution Sandbox simulates and compares strategies for optimal evolution in
 + `ALL_RESTRICTIONS`            : Population divided into groups. Crossover restricted to individuals in the same group, and each group has a pre-determined assignment (Artificial Niches).
 
 #### Assignment Strategies
++ `RANDOM`: Assign tasks at random. Baseline result.
 + `ASSIGNMENT_PRIORITY`: Tasks have priorities. The best available Individuals are assigned to tasks greedily, highest task priority first.
 + `ASSIGNMENT_MATCHING`: Tasks and individuals are matched using linear sum optimization to achieve the maximum possible population fitness.
 
