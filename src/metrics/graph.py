@@ -261,10 +261,10 @@ class TuningGraph:
     ax.set_title(title_text, fontsize = 'medium')
     if self.type == 'PG':
       ax.set_xlabel("Population Size")
-      ax.set_ylabel("No. of Groups / Assignments")
+      ax.set_ylabel("No. of Groups / Tasks")
     elif self.type == 'GA':
       ax.set_xlabel("No. of Groups")
-      ax.set_ylabel("No. of Assignments")
+      ax.set_ylabel("No. of Tasks")
 
     xticks = list(range(0, self.xs[-1] + 1, self.xstep))
     ax.set_xticks(xticks)
